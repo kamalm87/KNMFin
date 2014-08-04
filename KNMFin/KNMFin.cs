@@ -622,14 +622,10 @@ namespace KNMFin{
             {
                 StringBuilder sb = new StringBuilder( );
                 sb.Append( baseCompanyQuoteURL );
-                foreach ( string ticker in Tickers )
-                {
-                    if ( ticker == Tickers [ 0 ] )
-                    {
+                foreach ( string ticker in Tickers ){
+                    if ( ticker == Tickers [ 0 ] ){
                         sb.Append( ticker );
-                    }
-                    else
-                    {
+                    } else {
                         sb.Append( "," + ticker );
                     }
                 }
@@ -646,14 +642,13 @@ namespace KNMFin{
             }
 
 
-            public static List<CompanyResult> QueryIndustry( Industry IndustryOfCompanies, MarketQuoteProperties SortProperty, SortDirection SortDirection )
-            {
+            public static List<CompanyResult> QueryIndustry( Industry IndustryOfCompanies, MarketQuoteProperties SortProperty, SortDirection SortDirection ){
 
                 var res = client.DownloadString( baseURL + (int)IndustryOfCompanies + SortProperty.ToString( ) + (char)SortDirection + endUrl ).Split( '\n' );
-
                 var qURL = baseURL + (int)IndustryOfCompanies + SortProperty.ToString( ) + (char)SortDirection + endUrl;
 
                 if ( res == null || res.Count( ) == 0 ) return null;
+
 
                 var companyResults = new List<CompanyResult>( );
                 var colHeaders = res [ 0 ].Replace( "\"", "" ).Split( ',' );

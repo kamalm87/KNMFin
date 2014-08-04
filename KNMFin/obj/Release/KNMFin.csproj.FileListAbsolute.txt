@@ -1,0 +1,8 @@
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\bin\Release\KNMFin.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\bin\Release\KNMFin.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\bin\Release\HtmlAgilityPack.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\bin\Release\HtmlAgilityPack.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\bin\Release\HtmlAgilityPack.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\obj\Release\KNMFin.csprojResolveAssemblyReference.cache
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\obj\Release\KNMFin.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFin\obj\Release\KNMFin.pdb
