@@ -719,9 +719,11 @@ namespace KNMFin{
         }
     }
 
-    namespace Google{
+    namespace Google
+    {
         public class CompanyInfo
         {
+
             private static string baseURL = @"https://www.google.com/finance?q=";
             private System.Net.WebClient client = new System.Net.WebClient( );
             private System.IO.MemoryStream ms = new System.IO.MemoryStream( );
@@ -777,8 +779,10 @@ namespace KNMFin{
             public string EdgarURLLink { get; set; }
 
 
+
             public CompanyInfo( string ticker )
             {
+
                 if ( !IsInit ) InitStaticContainers( );
 
                 using ( var stream = client.OpenRead( baseURL + ticker ) )
@@ -790,8 +794,10 @@ namespace KNMFin{
 
                 var nodes = html.DocumentNode;
                 var test = nodes.SelectNodes( "//div" ).Where( i => i.Attributes.Where( j => j.Value == "sfe-section" ).Count( ) > 0 );
+
                 if ( test.Count( ) == 0 )
                 {
+
                     var didYouMeanLink = nodes.SelectNodes( "//div//font//a" );
                     if ( didYouMeanLink != null && didYouMeanLink.Count( ) != 0 )
                     {
@@ -871,182 +877,35 @@ namespace KNMFin{
             private void SetFinancialRatios( HtmlNodeCollection nodes )
             {
                 if ( nodes.Count( ) == 0 ) return;
-
-                int indexFirst, indexSecond, digits = 0;
+                // First Column contains ([] represents index in array):
+                // Range[0], 52Week[1], Open[2], Vol/Avg[3], Market Cap[4], P/E[5]
                 string [] firstCol = nodes [ 0 ].ChildNodes.Where( i => i.InnerText != "\n" )
                     .Select( ( i ) => i.InnerText ).ToArray<string>( ).Select( i => i.Replace( "\n", " " )
                     .Substring( 1, i.Length - 1 ) ).ToArray<string>( );
-                indexFirst = firstCol [ 0 ].IndexOf( " " );
-                indexSecond = firstCol [ 0 ].IndexOf( " ", indexFirst + 1 );
-                var tempVal1 = firstCol [ 0 ].Substring( indexFirst + 2, indexSecond );
-                indexFirst = firstCol [ 0 ].IndexOf( " - ", indexSecond + 1 );
-                indexSecond = firstCol [ 0 ].IndexOf( " ", indexFirst + 3 );
-                var tempVal2 = firstCol [ 0 ].Substring( indexFirst + 3, firstCol [ 0 ].Length - indexFirst - 5 );
-                foreach ( char c in tempVal1 )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    RangeLow = null; // Property assignment 
-                    RangeHigh = null; // Property assignment 
-                }
-                else
-                {
-                    RangeLow = Convert.ToDouble( tempVal1.Replace( "-", "" ) ); // Property assignment 
-                    RangeHigh = Convert.ToDouble( tempVal2.Replace( "-", "" ) ); // Property assignment 
-                }
-
-                indexFirst = firstCol [ 1 ].IndexOf( " ", 5 );
-                indexSecond = firstCol [ 1 ].IndexOf( "-" );
-
-                tempVal1 = firstCol [ 1 ].Substring( indexFirst + 2, indexSecond - indexFirst - 2 );
-                FiftyTwoWeekLow = Convert.ToDouble( tempVal1 ); // Property assignment 
-                tempVal2 = firstCol [ 1 ].Substring( indexSecond + 2, firstCol [ 1 ].Length - indexSecond - 4 );
-                FiftyTwoWeekHigh = Convert.ToDouble( tempVal2 ); // Property assignment 
-                indexFirst = firstCol [ 2 ].IndexOf( " " );
-                tempVal1 = firstCol [ 2 ].Substring( indexFirst + 1 ).Replace( " ", "" );
-                digits = 0;
-                foreach ( char c in tempVal1 )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    Open = null;
-                }
-                else
-                {
-                    Open = Convert.ToDouble( tempVal1 ); // Property assignment  
-                }
-                tempVal2 = firstCol [ 3 ].Replace( " ", "" );
-                indexFirst = tempVal2.IndexOf( "." );
-                indexSecond = tempVal2.IndexOf( "/", indexFirst );
-                tempVal1 = tempVal2.Substring( indexFirst + 1, indexSecond - indexFirst - 1 );
-                if ( tempVal1.Contains( "M" ) || tempVal1.Contains( "B" ) )
-                {
-                    VolumeAverage = Convert.ToDouble( tempVal1.Substring( 0, tempVal1.Length - 2 ) ); // Property assignment 
-                }
-                else
-                {
-                    VolumeAverage = Convert.ToDouble( tempVal1 ); // Property assignment 
-                }
-                if ( tempVal2.Contains( "M" ) )
-                {
-                    double million = 1000000;
-                    double intermed = Convert.ToDouble( tempVal2.Substring( indexSecond + 1, tempVal2.Length - indexSecond - 2 ) );
-                    VolumeTotal = intermed * million; // Property assignment 
-                    VolumeAverage = VolumeAverage < 1000 ? VolumeAverage * million : VolumeAverage; // Property assignment 
-                }
-                else
-                {
-                    double million = 1000000;
-                    double billion = 1000000000;
-                    double intermed = Convert.ToDouble( tempVal2.Substring( indexSecond + 1, tempVal2.Length - indexSecond - 2 ) );
-                    VolumeTotal = intermed < 1000 ? intermed * billion : intermed; // Property assignment 
-                    VolumeAverage = VolumeAverage < 1000 ? VolumeAverage * billion : VolumeAverage; // Property assignment 
-                }
-                indexFirst = firstCol [ 4 ].IndexOf( " ", 4 );
-                tempVal1 = firstCol [ 4 ].Substring( indexFirst ).Replace( " ", "" );
-                MarketCap = ( tempVal1 [ tempVal1.Length - 1 ] ).ToString( ).ToUpper( ) == "B" // Property assignment
-                    ? Convert.ToDouble( tempVal1.Substring( 0, tempVal1.Length - 2 ) ) * 1000000000
-                    : Convert.ToDouble( tempVal1.Substring( 0, tempVal1.Length - 2 ) ) * 1000000;
-                indexFirst = firstCol [ 5 ].IndexOf( " " );
-                tempVal1 = firstCol [ 5 ].Substring( indexFirst + 1 ).Replace( " ", "" );
-                digits = 0;
-                foreach ( char c in tempVal1 )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    PriceEarnings = null;
-                }
-                else
-                {
-                    PriceEarnings = Convert.ToDouble( tempVal1 );  // Property assignment  
-                }
+                var range = ParseRange( firstCol [ 0 ] );
+                RangeLow = range [ 0 ];
+                RangeHigh = range [ 1 ];
+                var _52Week = Parse52Week( firstCol [ 1 ] );
+                FiftyTwoWeekLow = _52Week [ 0 ];
+                FiftyTwoWeekHigh = _52Week [ 1 ];
+                Open = ParseOpen( firstCol [ 2 ] ) != null ? Convert.ToDouble( ParseOpen( firstCol [ 2 ] ) ) : 0;
+                var vol = ParseVolume( firstCol [ 3 ] );
+                VolumeAverage = vol [ 0 ];
+                VolumeTotal = vol [ 1 ];
+                MarketCap = ParseMarketCap( firstCol [ 4 ] );
+                PriceEarnings = ParsePriceEarnings( firstCol [ 5 ] );
+                // Second Column contains ([] represents index in array):
+                // Div/Yield[0], EPS[1], Shares[2], Beta[3], Instituional Ownership[4]
                 string [] secondCol = nodes [ 1 ].ChildNodes.Where( i => i.InnerText != "\n" )
                         .Select( i => i.InnerText ).ToArray<string>( )
                         .Select( i => i.Replace( "\n", " " ) ).ToArray<string>( );
-                digits = 0;
-                foreach ( char c in secondCol [ 0 ] )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    Dividend = null; // Property assignment
-                    DividendYield = null; // Property assignment
-                }
-                else
-                {
-                    indexFirst = secondCol [ 0 ].IndexOf( " ", 2 );
-                    indexSecond = secondCol [ 0 ].IndexOf( "/", indexFirst + 1 );
-                    if ( indexFirst != -1 && indexSecond != -1 )
-                    {
-                        tempVal1 = secondCol [ 0 ].Substring( indexFirst + 1, indexSecond - indexFirst - 1 ).Replace( " ", "" ).Replace( "*", "" );
-                        tempVal2 = secondCol [ 0 ].Substring( indexSecond + 1, secondCol [ 0 ].Length - indexSecond - 2 );
-                        if ( Char.IsDigit( tempVal1 [ 0 ] ) ) Dividend = Convert.ToDouble( tempVal1 ); // Property assignment
-                        if ( Char.IsDigit( tempVal2 [ 0 ] ) ) DividendYield = Convert.ToDouble( tempVal2 ); // Property assignment
-                    }
-
-                }
-                indexFirst = secondCol [ 1 ].IndexOf( " ", 2 );
-                if ( indexFirst != -1 )
-                {
-                    tempVal1 = secondCol [ 1 ].Substring( indexFirst + 1, secondCol [ 1 ].Length - indexFirst - 1 ).Replace( "*", "" );
-                }
-
-                digits = 0;
-                foreach ( char c in tempVal1 )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    EarningsPerShare = null;
-                }
-                else
-                {
-                    EarningsPerShare = Convert.ToDouble( tempVal1 ); // Property assignment
-                }
-                indexFirst = secondCol [ 2 ].IndexOf( " ", 2 );
-                tempVal1 = secondCol [ 2 ].Substring( indexFirst + 1 ).Replace( " ", "" );
-                Shares = tempVal1.Contains( "M" ) // Property assignment
-                    ? Convert.ToDouble( tempVal1.Substring( 0, tempVal1.Length - 1 ) ) * 1000000
-                    : tempVal1.Contains( "B" ) ? Convert.ToDouble( tempVal1.Substring( 0, tempVal1.Length - 1 ) ) * 1000000
-                    : Convert.ToDouble( tempVal1.Substring( 0, tempVal1.Length - 1 ) ) * 1000000;
-                indexFirst = secondCol [ 3 ].IndexOf( " ", 2 );
-                tempVal1 = secondCol [ 3 ].Substring( indexFirst + 1 ).Replace( " ", "" );
-                digits = 0;
-                foreach ( char c in tempVal1 )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    Beta = null; // Property assignment
-                }
-                else
-                {
-                    Beta = Convert.ToDouble( tempVal1 ); // Property assignment
-                }
-                indexFirst = secondCol [ 4 ].IndexOf( " ", 9 );
-                tempVal1 = secondCol [ 4 ].Substring( indexFirst + 1 ).Replace( " ", "" );
-                digits = 0;
-                foreach ( char c in tempVal1 )
-                {
-                    if ( Char.IsDigit( c ) ) ++digits;
-                }
-                if ( digits == 0 )
-                {
-                    InstitutionalOwnership = null;
-                }
-                else
-                {
-                    InstitutionalOwnership = Convert.ToDouble( tempVal1.Replace( " ", "" ).Substring( 0, tempVal1.Length - 1 ) ) / 100.0; // Property assignment
-                }
+                var divs = ParseDividend( secondCol [ 0 ] );
+                Dividend = divs != null ? divs [ 0 ] : null;
+                DividendYield = divs != null ? divs [ 1 ] : null;
+                EarningsPerShare = ParseEarningsPerShare( secondCol [ 1 ] );
+                Shares = ParseShares( secondCol [ 2 ] );
+                Beta = ParseBeta( secondCol [ 3 ] );
+                InstitutionalOwnership = ParseInstituionalOwnership( secondCol [ 4 ] );
             }
 
             private void SetKeyRatios( HtmlNodeCollection Nodes )
@@ -1153,7 +1012,6 @@ namespace KNMFin{
                                     rawStats [ 1 ].Substring( whiteS + 5, rawStats [ 1 ].Length - ( whiteS + 5 ) ) );
                 }
 
-
                 // CDP score
 
 
@@ -1168,11 +1026,9 @@ namespace KNMFin{
                            .Where( k => k.ChildNodes.Count > 7 ).Where( m => m.ChildNodes.Where( n => n.Name == "br" ).Count( ) > 3 ).Select( o => o.ChildNodes.ToArray<HtmlNode>( ) ).FirstOrDefault( );
                 if ( baseQ == null ) return;
 
-
                 string [] vals = baseQ.Where( p => p.Name == "#text" ).Select( q => q.InnerText )
                     .Where( c => c != "\n" ).ToArray<string>( );
                 Address a = new Address( );
-
 
                 // var vals = nodes [3].ChildNodes.Where( i => i.InnerText != String.Empty && i.InnerText != "\n" && i.InnerText != "Map" ).Select( i => i.InnerText ).ToArray<string>( );
 
@@ -1238,6 +1094,247 @@ namespace KNMFin{
 
                 IsInit = true;
             }
+
+            // Auxiliary functions for SetFinancial Ratios
+            private static bool ContainsDigits( string [] inputs )
+            {
+                foreach ( char c in inputs [ 0 ] )
+                {
+                    if ( Char.IsDigit( c ) ) return true;
+                }
+                return false;
+            }
+
+            private static bool ContainsDigits( string input )
+            {
+                foreach ( char c in input )
+                {
+                    if ( Char.IsDigit( c ) ) return true;
+                }
+                return false;
+            }
+
+            private static string [] ParseIfDigits( string [] inputs, Func<string [], bool> Predicate, Func<string [], string []> Parse )
+            {
+                if ( Predicate.Invoke( inputs ) )
+                {
+                    return Parse.Invoke( inputs );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            private static string [] ReplaceInputDashes( string [] input )
+            {
+                return new string [] { input [ 0 ].Replace( "-", "" ), input [ 1 ].Replace( "-", "" ) };
+            }
+
+            private static Double? [] Parse52Week( string input )
+            {
+                if ( input.Contains( "&nbsp;&nbsp;" ) ) return new Double? [] { null, null };
+                int index1 = input.IndexOf( " ", 5 ), index2 = input.IndexOf( "-" );
+                string input1 = input.Substring( index1 + 2, input.Length - index1 - 2 );
+
+                if ( ContainsDigits( new string [] { input1 } ) )
+                {
+                    string [] input2 = input1.Replace( "-", "" ).Split( ' ' ).Where( i => i != string.Empty ).ToArray<string>( );
+                    Double? res1 = Convert.ToDouble( input2 [ 0 ] ), res2 = Convert.ToDouble( input2 [ 1 ] );
+                    return new Double? [] { res1, res2 };
+                }
+                else
+                {
+                    return new Double? [] { null, null };
+                }
+            }
+
+            private static Double? [] ParseRange( string input )
+            {
+                int index1 = input.IndexOf( " " ), index2 = input.IndexOf( " ", index1 + 1 );
+                string input1 = input.Substring( index1 + 2, index2 );
+                index1 = input.IndexOf( " - ", index2 + 1 );
+                index2 = input.IndexOf( " ", index1 + 3 );
+                string input2 = input.Substring( index1 + 3, input.Length - index1 - 5 );
+
+                string [] inputs = new string [] { input1, input2 };
+                inputs = ParseIfDigits( inputs, ContainsDigits, ReplaceInputDashes );
+                Double? res1 = inputs != null ? Convert.ToDouble( inputs [ 0 ] ) : (double?)null,
+                        res2 = inputs != null ? Convert.ToDouble( inputs [ 1 ] ) : (double?)null;
+                return new Double? [] { res1, res2 };
+            }
+
+            private static Double? ParseOpen( string input )
+            {
+                int index1 = input.IndexOf( " " ), index2 = input.IndexOf( " ", index1 + 1 );
+                string input1 = input.Substring( index1 + 1 ).Replace( " ", "" );
+
+                if ( ContainsDigits( input1 ) )
+                {
+                    return Convert.ToDouble( input1 );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            private static Double? [] ParseVolume( string input )
+            {
+
+                string temp = input.Replace( " ", "" );
+                int index1 = temp.IndexOf( "." );
+                int index2 = temp.IndexOf( "/", index1 );
+
+                if ( index1 != -1 && index2 != -1 )
+                {
+                    Double? result1 = null, result2 = null;
+                    double million = 1000000, billion = 1000000000;
+
+                    string input1 = temp.Substring( index1 + 1, index2 - index1 - 1 );
+                    string input2 = input.Substring( index2 + input1.Length ).Replace( " ", "" ).Replace( "/", "" );
+
+                    result1 = input1.Contains( "M" ) ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * million
+                                                    : input1.Contains( "B" )
+                                                        ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * billion
+                                                        : Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) );
+
+                    result2 = input2.Contains( "M" ) ? Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) ) * million
+                                                    : input2.Contains( "B" )
+                                                        ? Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) ) * billion
+                                                        : Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) );
+
+                    return new Double? [] { result1, result2 };
+                }
+                else
+                {
+                    return new Double? [] { null, null }; ;
+                }
+            }
+
+            private static Double? ParseMarketCap( string input )
+            {
+                int index1 = input.IndexOf( " ", 4 );
+                string input1 = input.Substring( index1 ).Replace( " ", "" );
+
+                if ( ContainsDigits( input1 ) )
+                {
+                    double million = 1000000, billion = 1000000000;
+                    return input1.Contains( "B" ) ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * billion
+                        : input1.Contains( "M" ) ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * million
+                        : Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) );
+                }
+                return null;
+            }
+
+            private static Double? ParsePriceEarnings( string input )
+            {
+                int index1 = input.IndexOf( " " );
+                string input1 = input.Substring( index1 ).Replace( " ", "" );
+                if ( ContainsDigits( input1 ) )
+                {
+                    return Convert.ToDouble( input1 );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            private static Double? [] ParseDividend( string input )
+            {
+                if ( input.Contains( "&nbsp;&nbsp;" ) ) return null;
+
+                int index1 = input.IndexOf( " ", 2 );
+                if ( index1 != -1 )
+                {
+                    int index2 = input.IndexOf( "/", index1 + 1 );
+                    string input1 = input.Substring( index1 + 1, index2 - index1 - 1 ).Replace( " ", "" );
+                    string input2 = input.Substring( index2 + 1, input.Length - index2 - 2 ).Replace( " ", "" ).Replace( "/", "" );
+                    return new Double? [] { Char.IsDigit( input1 [ 0 ] ) ? Convert.ToDouble( input1 ) : (double?)null,
+                                        Char.IsDigit( input2 [ 0 ] ) ? Convert.ToDouble( input2 ) : (double?)null
+                                        };
+                }
+                else
+                {
+                    return new Double? [] { null, null };
+                }
+            }
+
+            private static Double? ParseEarningsPerShare( string input )
+            {
+                int index1 = input.IndexOf( " ", 2 );
+                if ( index1 != -1 )
+                {
+                    string input1 = input.Substring( index1 + 1, input.Length - index1 - 1 ).Replace( "*", "" );
+                    return Convert.ToDouble( input1 );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            private static Double? ParseShares( string input )
+            {
+                int index1 = input.IndexOf( " ", 2 );
+                if ( index1 != -1 )
+                {
+                    string input1 = input.Substring( index1 + 1 ).Replace( " ", "" );
+                    double million = 1000000, billion = 1000000000;
+                    return input1.Contains( "M" ) ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * million
+                        : input1.Contains( "B" ) ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * billion
+                        : Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) );
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            private static Double? ParseBeta( string input )
+            {
+                int index1 = input.IndexOf( " ", 2 );
+                if ( index1 != -1 )
+                {
+                    string input1 = input.Substring( index1 + 1 ).Replace( " ", "" );
+                    if ( ContainsDigits( input1 ) )
+                    {
+                        return Convert.ToDouble( input1 );
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            private static Double? ParseInstituionalOwnership( string input )
+            {
+                int index1 = input.IndexOf( " ", 9 );
+
+                if ( index1 != -1 )
+                {
+                    string input1 = input.Substring( index1 + 1 ).Replace( " ", "" );
+                    if ( ContainsDigits( input1 ) )
+                    {
+                        return Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) / 100.0;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         public enum KeyStatPeriod
@@ -1285,4 +1382,6 @@ namespace KNMFin{
             public string Fax { get; set; }
         }
     }
+
+
 }
