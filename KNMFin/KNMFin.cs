@@ -772,6 +772,10 @@ namespace KNMFin{
             // private List<object> Relatedcompanies ;
 
 
+            public List<IncomeStatement> IncomeStatements { get; set; }
+            public List<BalanceSheet> BalanceSheets { get; set; }
+            public List<CashFlowStatement> CashFlowStatements { get; set; }
+
             public Address Address { get; set; }
 
             // Misc
@@ -780,11 +784,9 @@ namespace KNMFin{
 
 
 
-            public CompanyInfo( string ticker )
+            public CompanyInfo( string ticker, bool FetchFinancials = false )
             {
-
                 if ( !IsInit ) InitStaticContainers( );
-
                 using ( var stream = client.OpenRead( baseURL + ticker ) )
                 {
                     stream.CopyTo( ms );
@@ -797,17 +799,12 @@ namespace KNMFin{
 
                 if ( test.Count( ) == 0 )
                 {
-
                     var didYouMeanLink = nodes.SelectNodes( "//div//font//a" );
                     if ( didYouMeanLink != null && didYouMeanLink.Count( ) != 0 )
                     {
                         string didYouMeanSuggestion = didYouMeanLink.Where( i => i.Attributes.Where( j => j.Name == "href" ).Count( ) != 0 ).Select( k => k.Attributes [ 0 ].Value ).FirstOrDefault( ).ToString( );
-
-
-
                         var nQ = baseURL.Substring( 0, baseURL.Length - 3 ) + "/" + didYouMeanSuggestion;
                         ms.SetLength( 0 );
-
 
                         using ( var stream = client.OpenRead( baseURL.Substring( 0, baseURL.Length - 3 ) + "/" + didYouMeanSuggestion ) )
                         {
@@ -831,17 +828,21 @@ namespace KNMFin{
                 {
                     ProcessResponseWithResults( nodes );
                 }
+                if ( FetchFinancials )
+                {
+                    ProcessFinancialStatements( nodes );
+                }
+            }
 
-
-                // BLACK MAGIC
-                /*
-                var t = nodes.SelectNodes( "//div" ).Where( i => i.Attributes.Where( j => j.Value == "sfe-section" ).Count( ) > 0 )
-                    .Where( k => k.ChildNodes.Count > 7 ).Where( m => m.ChildNodes.Where( n => n.Name == "br" ).Count( ) > 3 ).Select( o => o.ChildNodes.ToArray<HtmlNode>( ) ).FirstOrDefault( ).Where( a => a.Name == "#text" ).Select( b => b.InnerText )
-                    .Where( c => c != "\n" );
-                 * */
-
-
-
+            private void ProcessFinancialStatements( HtmlNode baseNode )
+            {
+                var q1 = baseNode.SelectSingleNode( "//div[contains(@class, 'fjfe-nav')]" );
+                var q2 = q1.SelectNodes( ".//ul//li//a" ).Where( h => h.InnerText == "Financials" )
+                    .Select( i => i.Attributes.Select( j => j.Value.Replace( "%", ":" ).Replace( "&amp;", "&" ) ) ).FirstOrDefault( ).FirstOrDefault( );
+                var fs = Google.FSF.CreateFinancialStatements( "http://www.google.com" + q2 );
+                IncomeStatements = fs.Item1;
+                BalanceSheets = fs.Item2;
+                CashFlowStatements = fs.Item3;
             }
 
             private void ProcessResponseWithResults( HtmlNode nodes )
@@ -1198,12 +1199,17 @@ namespace KNMFin{
                                                     : input1.Contains( "B" )
                                                         ? Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) ) * billion
                                                         : Convert.ToDouble( input1.Substring( 0, input1.Length - 1 ) );
-
-                    result2 = input2.Contains( "M" ) ? Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) ) * million
-                                                    : input2.Contains( "B" )
-                                                        ? Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) ) * billion
-                                                        : Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) );
-
+                    if ( ContainsDigits( input2 ) )
+                    {
+                        result2 = input2.Contains( "M" ) ? Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) ) * million
+                                                        : input2.Contains( "B" )
+                                                            ? Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) ) * billion
+                                                            : Convert.ToDouble( input2.Substring( 0, input2.Length - 1 ) );
+                    }
+                    else
+                    {
+                        result2 = null;
+                    }
                     return new Double? [] { result1, result2 };
                 }
                 else
@@ -1381,6 +1387,554 @@ namespace KNMFin{
             public string Phone { get; set; }
             public string Fax { get; set; }
         }
+
+        static class FSF
+        {
+
+            public static Tuple<List<IncomeStatement>, List<BalanceSheet>, List<CashFlowStatement>> CreateFinancialStatements( string urlPath )
+            {
+
+                List<Tuple<Tuple<string, List<string>>, Dictionary<string, List<string>>>> ParsedData = ParseFinancialData( urlPath );
+
+                List<IncomeStatement> IncomeStatements = new List<IncomeStatement>( );
+                List<BalanceSheet> BalanceSheets = new List<BalanceSheet>( );
+                List<CashFlowStatement> CashFlowStatements = new List<CashFlowStatement>( );
+
+                foreach ( var info in ParsedData )
+                {
+                    if ( info.Item2.Count == 49 )
+                    {
+                        IncomeStatements.AddRange( CreateIncomeStatements( info.Item1.Item2, info.Item2 ) );
+                    }
+                    if ( info.Item2.Count == 42 )
+                    {
+                        BalanceSheets.AddRange( CreateBalanceSheets( info.Item1.Item2, info.Item2 ) );
+                    }
+                    if ( info.Item2.Count == 19 )
+                    {
+                        CashFlowStatements.AddRange( CreateCashFlowStatements( info.Item1.Item2, info.Item2 ) );
+                    }
+                }
+                return new Tuple<List<IncomeStatement>, List<BalanceSheet>, List<CashFlowStatement>>( IncomeStatements, BalanceSheets, CashFlowStatements );
+            }
+
+            static DateTime ParseDateFromColumnHeader( string input )
+            {
+
+                int index1, index2;
+                index1 = input.IndexOf( "-" );
+                index2 = input.IndexOf( "-", index1 + 1 );
+                int year = Convert.ToInt16( input.Substring( index1 - 4, 4 ) ),
+                    month = Convert.ToInt16( input.Substring( index1 + 1, input.Length - index2 - 1 ) ),
+                    day = Convert.ToInt16( input.Substring( input.Length - 2, 2 ) );
+                return new DateTime( year, month, day );
+            }
+
+            static List<IncomeStatement> CreateIncomeStatements( List<string> ColumnHeaders, Dictionary<string, List<string>> Data )
+            {
+                if ( Data.Count != 49 || ColumnHeaders.Count != Data.FirstOrDefault( ).Value.Count ) throw new Exception( "The format has changed--inaccurate data" );
+
+                decimal multipler = 1000000;
+
+                Dictionary<int, IncomeStatement> tempMapping = new Dictionary<int, IncomeStatement>( );
+
+                for ( int i = 0; i < ColumnHeaders.Count; i++ )
+                {
+                    Period p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    DateTime dt = ParseDateFromColumnHeader( ColumnHeaders [ i ] );
+                    tempMapping.Add( i, new IncomeStatement( p, dt ) );
+                }
+
+
+                foreach ( var item in Data.Keys )
+                {
+                    // 0
+                    if ( item == "Revenue" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Revenue = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 1
+                    if ( item == "Other Revenue, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Revenue_Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 2
+                    if ( item == "Total Revenue" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Revenue = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 3
+                    if ( item == "Cost of Revenue, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cost_of_Revenue_Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 4
+                    if ( item == "Gross Profit" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Gross_Profit = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 5
+                    if ( item == "Selling/General/Admin. Expenses, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Selling_and_General_and_Admin_Expenses_Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 6
+                    if ( item == "Research & Development" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Research_and_Development = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 7
+                    if ( item == "Depreciation/Amortization" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Depreciation_and_Amortization = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 8
+                    if ( item == "Interest Expense(Income) - Net Operating" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Interest_Expense__Income___less_Net_Operating = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 9
+                    if ( item == "Unusual Expense (Income)" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Unusual_Expense___Income__ = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 10
+                    if ( item == "Other Operating Expenses, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Revenue = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 11
+                    if ( item == "Total Operating Expense" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Operating_Expense = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 12
+                    if ( item == "Operating Income" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Operating_Income = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 13
+                    if ( item == "Interest Income(Expense), Net Non-Operating" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Interest_Income__Expense___Net_NonOperating = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 14
+                    if ( item == "Gain (Loss) on Sale of Assets" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Gain___Loss___on_Sale_of_Assets = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 15
+                    if ( item == "Other, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 16
+                    if ( item == "Income Before Tax" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Income_Before_Tax = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 17
+                    if ( item == "Income After Tax" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Income_After_Tax = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 18
+                    if ( item == "Minority Interest" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Minority_Interest = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 19
+                    if ( item == "Equity In Affiliates" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Minority_Interest = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 20
+                    if ( item == "Net Income Before Extra. Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Net_Income_Before_Extra_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 21
+                    if ( item == "Accounting Change" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Accounting_Change = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 22
+                    if ( item == "Discontinued Operations" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Discontinued_Operations = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 23
+                    if ( item == "Extraordinary Item" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Extraordinary_Item = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 24
+                    if ( item == "Net Income" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Net_Income = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 25
+                    if ( item == "Preferred Dividends" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Preferred_Dividends = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 26
+                    if ( item == "Income Available to Common Excl. Extra Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Income_Available_to_Common_Excl_Extra_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 27
+                    if ( item == "Income Available to Common Incl. Extra Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Income_Available_to_Common_Incl_Extra_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 28
+                    if ( item == "Basic Weighted Average Shares" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Basic_Weighted_Average_Shares = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 29
+                    if ( item == "Basic EPS Excluding Extraordinary Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Basic_EPS_Excluding_Extraordinary_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 30
+                    if ( item == "Basic EPS Including Extraordinary Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Basic_EPS_Including_Extraordinary_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 31
+                    if ( item == "Dilution Adjustment" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Dilution_Adjustment = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 32
+                    if ( item == "Diluted Weighted Average Shares" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Diluted_Weighted_Average_Shares = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 33
+                    if ( item == "Diluted EPS Excluding Extraordinary Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Diluted_EPS_Excluding_Extraordinary_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 34
+                    if ( item == "Diluted EPS Including Extraordinary Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Diluted_EPS_Including_Extraordinary_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 35
+                    if ( item == "Dividends per Share - Common Stock Primary Issue" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Dividends_per_Share__less__Common_Stock_Primary_Issue = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 36
+                    if ( item == "Gross Dividends - Common Stock" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Gross_Dividends__less__Common_Stock = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 37
+                    if ( item == "Net Income after Stock Based Comp. Expense" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Net_Income_after_Stock_Based_Comp_Expense = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 38
+                    if ( item == "Basic EPS after Stock Based Comp. Expense" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Basic_EPS_after_Stock_Based_Comp_Expense = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 39
+                    if ( item == "Diluted EPS after Stock Based Comp. Expense" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Diluted_EPS_after_Stock_Based_Comp_Expense = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 40
+                    if ( item == "Depreciation, Supplemental" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Depreciation_Supplemental = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 41
+                    if ( item == "Total Special Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Special_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 42
+                    if ( item == "Normalized Income Before Taxes" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Normalized_Income_Before_Taxes = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 43
+                    if ( item == "Effect of Special Items on Income Taxes" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Effect_of_Special_Items_on_Income_Taxes = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 44
+                    if ( item == "Income Taxes Ex. Impact of Special Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Income_Taxes_Ex_Impact_of_Special_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 45
+                    if ( item == "Normalized Income After Taxes" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Normalized_Income_After_Taxes = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 46
+                    if ( item == "Normalized Income Avail to Common" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Normalized_Income_Avail_to_Common = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 47
+                    if ( item == "Basic Normalized EPS" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Basic_Normalized_EPS = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 48
+                    if ( item == "Diluted Normalized EPS" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Diluted_Normalized_EPS = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                }
+
+                List<IncomeStatement> IncomeStatements = new List<IncomeStatement>( );
+                for ( int i = 0; i < tempMapping.Keys.Count; i++ )
+                {
+                    IncomeStatements.Add( tempMapping [ i ] );
+                }
+                return IncomeStatements;
+            }
+
+            static List<BalanceSheet> CreateBalanceSheets( List<string> ColumnHeaders, Dictionary<string, List<string>> Data )
+            {
+
+
+                decimal multipler = 1000000;
+                Dictionary<int, BalanceSheet> tempMapping = new Dictionary<int, BalanceSheet>( );
+
+                for ( int i = 0; i < ColumnHeaders.Count; i++ )
+                {
+                    Period p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    DateTime dt = ParseDateFromColumnHeader( ColumnHeaders [ i ] );
+                    tempMapping.Add( i, new BalanceSheet( p, dt ) );
+                }
+
+                foreach ( var item in Data.Keys )
+                {
+                    // 0
+                    if ( item == "Cash & Equivalents" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_and_Equivalents = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 1
+                    if ( item == "Short Term Investments" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Short_Term_Investments = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 2
+                    if ( item == "Cash and Short Term Investments" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_and_Short_Term_Investments = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 3
+                    if ( item == "Accounts Receivable - Trade, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Accounts_Receivable__Trade__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 4
+                    if ( item == "Receivables - Other" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Receivables__Other = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 5
+                    if ( item == "Total Receivables, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Receivables__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 6
+                    if ( item == "Total Inventory" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Inventory = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 7
+                    if ( item == "Prepaid Expenses" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Prepaid_Expenses = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 8
+                    if ( item == "Other Current Assets, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Current_Assets__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 9
+                    if ( item == "Total Current Assets" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Current_Assets = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 10
+                    if ( item == "Property/Plant/Equipment, Total - Gross" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Property_and_Plant_and_Equipment__Total__Gross = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 11
+                    if ( item == "Accumulated Depreciation, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Accumulated_Depreciation__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 12
+                    if ( item == "Goodwill, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Goodwill__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 13
+                    if ( item == "Intangibles, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Intangibles__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 14
+                    if ( item == "Long Term Investments" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Long_Term_Investments = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 15
+                    if ( item == "Other Long Term Assets, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Long_Term_Assets__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 16
+                    if ( item == "Total Assets" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Assets = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 17
+                    if ( item == "Accounts Payable" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Accounts_Payable = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 18
+                    if ( item == "Accrued Expenses" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Accrued_Expenses = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 19
+                    if ( item == "Notes Payable/Short Term Debt" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Notes_Payable_and_Short_Term_Debt = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 20
+                    if ( item == "Current Port. of LT Debt/Capital Leases" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Current_Port_of_LT_Debt_and_Capital_Leases = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 21
+                    if ( item == "Other Current liabilities, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Current_liabilities__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 22
+                    if ( item == "Total Current Liabilities" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Current_Liabilities = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 23
+                    if ( item == "Long Term Debt" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Long_Term_Debt = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 24
+                    if ( item == "Capital Lease Obligations" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Capital_Lease_Obligations = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 25
+                    if ( item == "Total Long Term Debt" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Long_Term_Debt = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 26
+                    if ( item == "Total Debt" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Debt = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 27
+                    if ( item == "Deferred Income Tax" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Deferred_Income_Tax = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 28
+                    if ( item == "Minority Interest" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Minority_Interest = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 29
+                    if ( item == "Other Liabilities, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Liabilities__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 30
+                    if ( item == "Total Liabilities" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Liabilities = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 31
+                    if ( item == "Redeemable Preferred Stock, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Redeemable_Preferred_Stock__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 32
+                    if ( item == "Preferred Stock - Non Redeemable, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Preferred_Stock__Non_Redeemable__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 33
+                    if ( item == "Common Stock, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Common_Stock__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 34
+                    if ( item == "Additional Paid-In Capital" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Additional_PaidIn_Capital = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 35
+                    if ( item == "Retained Earnings (Accumulated Deficit)" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Retained_Earnings__Accumulated_Deficit_ = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 36
+                    if ( item == "Treasury Stock - Common" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Treasury_Stock__Common = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 37
+                    if ( item == "Other Equity, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Equity__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 38
+                    if ( item == "Total Equity" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Equity = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 39
+                    if ( item == "Total Liabilities & Shareholders' Equity" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Liabilities_and_Shareholders_Equity = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 40
+                    if ( item == "Shares Outs - Common Stock Primary Issue" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Shares_Outs__Common_Stock_Primary_Issue = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 41
+                    if ( item == "Total Common Shares Outstanding" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Common_Shares_Outstanding = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+
+                }
+
+
+                List<BalanceSheet> BalanceSheets = new List<BalanceSheet>( );
+                for ( int i = 0; i < tempMapping.Keys.Count; i++ )
+                {
+                    BalanceSheets.Add( tempMapping [ i ] );
+                }
+                return BalanceSheets;
+            }
+
+            static List<CashFlowStatement> CreateCashFlowStatements( List<string> ColumnHeaders, Dictionary<string, List<string>> Data )
+            {
+
+
+                decimal multipler = 1000000;
+
+                Dictionary<int, CashFlowStatement> tempMapping = new Dictionary<int, CashFlowStatement>( );
+
+                for ( int i = 0; i < ColumnHeaders.Count; i++ )
+                {
+                    Period p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    DateTime dt = ParseDateFromColumnHeader( ColumnHeaders [ i ] );
+                    tempMapping.Add( i, new CashFlowStatement( p, dt ) );
+                }
+
+                foreach ( var item in Data.Keys )
+                {
+                    // 0
+                    if ( item == "Net Income/Starting Line" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Net_Income_and_Starting_Line = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 1
+                    if ( item == "Depreciation/Depletion" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Depreciation_and_Depletion = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 2
+                    if ( item == "Amortization" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Amortization = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 3
+                    if ( item == "Deferred Taxes" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Deferred_Taxes = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 4
+                    if ( item == "Non-Cash Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].NonCash_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 5
+                    if ( item == "Changes in Working Capital" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Changes_in_Working_Capital = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 6
+                    if ( item == "Cash from Operating Activities" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_from_Operating_Activities = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 7
+                    if ( item == "Capital Expenditures" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Capital_Expenditures = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 8
+                    if ( item == "Other Investing Cash Flow Items, Total" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Other_Investing_Cash_Flow_Items__Total = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 9
+                    if ( item == "Cash from Investing Activities" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_from_Investing_Activities = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 10
+                    if ( item == "Financing Cash Flow Items" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Financing_Cash_Flow_Items = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 11
+                    if ( item == "Total Cash Dividends Paid" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Total_Cash_Dividends_Paid = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 12
+                    if ( item == "Issuance (Retirement) of Stock, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Issuance__Retirement__of_Stock__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 13
+                    if ( item == "Issuance (Retirement) of Debt, Net" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Issuance__Retirement__of_Debt__Net = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 14
+                    if ( item == "Cash from Financing Activities" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_from_Financing_Activities = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 15
+                    if ( item == "Foreign Exchange Effects" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Foreign_Exchange_Effects = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 16
+                    if ( item == "Net Change in Cash" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Net_Change_in_Cash = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 17
+                    if ( item == "Cash Interest Paid, Supplemental" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_Interest_Paid__Supplemental = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+                    // 18
+                    if ( item == "Cash Taxes Paid, Supplemental" ) { for ( int i = 0; i < Data.FirstOrDefault( ).Value.Count; i++ ) { tempMapping [ i ].Cash_Taxes_Paid__Supplemental = Data [ item ] [ i ] != "-" ? Convert.ToDecimal( Data [ item ] [ i ] ) * multipler : (decimal?)null; } }
+
+                }
+
+                List<CashFlowStatement> CashFlowStatements = new List<CashFlowStatement>( );
+                for ( int i = 0; i < tempMapping.Keys.Count; i++ )
+                {
+                    CashFlowStatements.Add( tempMapping [ i ] );
+                }
+                return CashFlowStatements;
+            }
+
+            static List<Tuple<Tuple<string, List<string>>, Dictionary<string, List<string>>>> ParseFinancialData( string urlPath )
+            {
+                List<Tuple<Tuple<string, List<string>>, Dictionary<string, List<string>>>> Details = new List<Tuple<Tuple<string, List<string>>, Dictionary<string, List<string>>>>( );
+
+                // maybe remove these later
+                System.Net.WebClient wc = new System.Net.WebClient( );
+                System.IO.MemoryStream ms = new System.IO.MemoryStream( );
+
+                using ( var stream = wc.OpenRead( urlPath ) )
+                {
+                    stream.CopyTo( ms );
+                    ms.Position = 0;
+                }
+                HtmlDocument html = new HtmlDocument( );
+                html.Load( ms );
+                var nodes = html.DocumentNode;
+                var tables = nodes.SelectNodes( "//table[contains(@class, 'gf-table rgt')]" );
+                foreach ( var table in tables )
+                {
+                    string CurrencyDenomination = string.Empty;
+                    List<string> PeriodHeaders = new List<string>( );
+                    Dictionary<string, List<string>> Map = new Dictionary<string, List<string>>( );
+
+                    var header = table.ChildNodes.Where( i => i.Name == "thead" ).FirstOrDefault( ).ChildNodes.FirstOrDefault( ).ChildNodes.Where( j => j.Name == "th" );
+                    foreach ( var detail in header )
+                    {
+                        if ( detail.Attributes.FirstOrDefault( ).Value == "lm lft nwp" )
+                        {
+                            CurrencyDenomination = detail.InnerText.Replace( "\n", "" );
+                        }
+                        else
+                        {
+                            PeriodHeaders.Add( detail.InnerText.Replace( "\n", "" ) );
+                        }
+                    }
+
+                    var rows = table.ChildNodes.Where( i => i.Name == "tbody" ).FirstOrDefault( ).ChildNodes.Where( i => i.Name == "tr" );
+                    foreach ( var row in rows )
+                    {
+                        var td = row.ChildNodes.Where( i => i.Name == "td" );
+                        var rowHeader = td.Where( i => i.Attributes.FirstOrDefault( ).Value.Contains( "lft" ) ).FirstOrDefault( ).InnerText.Replace( "&quot;", "\"" ).Replace( "&amp;", "&" ).Replace( "&#39;", "'" ).Replace( "\n", "" );
+                        var trs = td.Where( i => i.Attributes.FirstOrDefault( ) != null && i.Attributes.FirstOrDefault( ).Value.Contains( "r" ) );
+                        List<string> rowData = new List<string>( );
+                        foreach ( var tr in trs )
+                        {
+                            rowData.Add( tr.InnerText );
+                        }
+                        Map.Add( rowHeader, rowData );
+                    }
+                    Details.Add( new Tuple<Tuple<string, List<string>>, Dictionary<string, List<string>>>( new Tuple<string, List<string>>( CurrencyDenomination, PeriodHeaders ), Map ) );
+                }
+                return Details;
+            }
+        }
+
+        public enum Period
+        {
+            Quarter = 0,
+            Annual = 1
+        }
+
+        public class BalanceSheet
+        {
+            public BalanceSheet() { }
+            public BalanceSheet( Period Period, DateTime date ) { this.Period = Period; this.PeriodEnd = date; }
+
+            public Period Period;
+            public DateTime PeriodEnd;
+
+            public Decimal? Cash_and_Equivalents;
+            public Decimal? Short_Term_Investments;
+            public Decimal? Cash_and_Short_Term_Investments;
+            public Decimal? Accounts_Receivable__Trade__Net;
+            public Decimal? Receivables__Other;
+            public Decimal? Total_Receivables__Net;
+            public Decimal? Total_Inventory;
+            public Decimal? Prepaid_Expenses;
+            public Decimal? Other_Current_Assets__Total;
+            public Decimal? Total_Current_Assets;
+            public Decimal? Property_and_Plant_and_Equipment__Total__Gross;
+            public Decimal? Accumulated_Depreciation__Total;
+            public Decimal? Goodwill__Net;
+            public Decimal? Intangibles__Net;
+            public Decimal? Long_Term_Investments;
+            public Decimal? Other_Long_Term_Assets__Total;
+            public Decimal? Total_Assets;
+            public Decimal? Accounts_Payable;
+            public Decimal? Accrued_Expenses;
+            public Decimal? Notes_Payable_and_Short_Term_Debt;
+            public Decimal? Current_Port_of_LT_Debt_and_Capital_Leases;
+            public Decimal? Other_Current_liabilities__Total;
+            public Decimal? Total_Current_Liabilities;
+            public Decimal? Long_Term_Debt;
+            public Decimal? Capital_Lease_Obligations;
+            public Decimal? Total_Long_Term_Debt;
+            public Decimal? Total_Debt;
+            public Decimal? Deferred_Income_Tax;
+            public Decimal? Minority_Interest;
+            public Decimal? Other_Liabilities__Total;
+            public Decimal? Total_Liabilities;
+            public Decimal? Redeemable_Preferred_Stock__Total;
+            public Decimal? Preferred_Stock__Non_Redeemable__Net;
+            public Decimal? Common_Stock__Total;
+            public Decimal? Additional_PaidIn_Capital;
+            public Decimal? Retained_Earnings__Accumulated_Deficit_;
+            public Decimal? Treasury_Stock__Common;
+            public Decimal? Other_Equity__Total;
+            public Decimal? Total_Equity;
+            public Decimal? Total_Liabilities_and_Shareholders_Equity;
+            public Decimal? Shares_Outs__Common_Stock_Primary_Issue;
+            public Decimal? Total_Common_Shares_Outstanding;
+
+        }
+
+        public class IncomeStatement
+        {
+            public IncomeStatement() { }
+            public IncomeStatement( Period Period, DateTime date ) { this.Period = Period; this.PeriodEnd = date; }
+            public Period Period;
+            public DateTime PeriodEnd;
+
+            public Decimal? Revenue;
+            public Decimal? Other_Revenue_Total;
+            public Decimal? Total_Revenue;
+            public Decimal? Cost_of_Revenue_Total;
+            public Decimal? Gross_Profit;
+            public Decimal? Selling_and_General_and_Admin_Expenses_Total;
+            public Decimal? Research_and_Development;
+            public Decimal? Depreciation_and_Amortization;
+            public Decimal? Interest_Expense__Income___less_Net_Operating;
+            public Decimal? Unusual_Expense___Income__;
+            public Decimal? Other_Operating_Expenses_Total;
+            public Decimal? Total_Operating_Expense;
+            public Decimal? Operating_Income;
+            public Decimal? Interest_Income__Expense___Net_NonOperating;
+            public Decimal? Gain___Loss___on_Sale_of_Assets;
+            public Decimal? Other_Net;
+            public Decimal? Income_Before_Tax;
+            public Decimal? Income_After_Tax;
+            public Decimal? Minority_Interest;
+            public Decimal? Equity_In_Affiliates;
+            public Decimal? Net_Income_Before_Extra_Items;
+            public Decimal? Accounting_Change;
+            public Decimal? Discontinued_Operations;
+            public Decimal? Extraordinary_Item;
+            public Decimal? Net_Income;
+            public Decimal? Preferred_Dividends;
+            public Decimal? Income_Available_to_Common_Excl_Extra_Items;
+            public Decimal? Income_Available_to_Common_Incl_Extra_Items;
+            public Decimal? Basic_Weighted_Average_Shares;
+            public Decimal? Basic_EPS_Excluding_Extraordinary_Items;
+            public Decimal? Basic_EPS_Including_Extraordinary_Items;
+            public Decimal? Dilution_Adjustment;
+            public Decimal? Diluted_Weighted_Average_Shares;
+            public Decimal? Diluted_EPS_Excluding_Extraordinary_Items;
+            public Decimal? Diluted_EPS_Including_Extraordinary_Items;
+            public Decimal? Dividends_per_Share__less__Common_Stock_Primary_Issue;
+            public Decimal? Gross_Dividends__less__Common_Stock;
+            public Decimal? Net_Income_after_Stock_Based_Comp_Expense;
+            public Decimal? Basic_EPS_after_Stock_Based_Comp_Expense;
+            public Decimal? Diluted_EPS_after_Stock_Based_Comp_Expense;
+            public Decimal? Depreciation_Supplemental;
+            public Decimal? Total_Special_Items;
+            public Decimal? Normalized_Income_Before_Taxes;
+            public Decimal? Effect_of_Special_Items_on_Income_Taxes;
+            public Decimal? Income_Taxes_Ex_Impact_of_Special_Items;
+            public Decimal? Normalized_Income_After_Taxes;
+            public Decimal? Normalized_Income_Avail_to_Common;
+            public Decimal? Basic_Normalized_EPS;
+            public Decimal? Diluted_Normalized_EPS;
+        }
+
+        public class CashFlowStatement
+        {
+            public CashFlowStatement() { }
+            public CashFlowStatement( Period Period, DateTime date ) { this.Period = Period; this.PeriodEnd = date; }
+
+            public Period Period;
+            public DateTime PeriodEnd;
+            public Decimal? Net_Income_and_Starting_Line;
+            public Decimal? Depreciation_and_Depletion;
+            public Decimal? Amortization;
+            public Decimal? Deferred_Taxes;
+            public Decimal? NonCash_Items;
+            public Decimal? Changes_in_Working_Capital;
+            public Decimal? Cash_from_Operating_Activities;
+            public Decimal? Capital_Expenditures;
+            public Decimal? Other_Investing_Cash_Flow_Items__Total;
+            public Decimal? Cash_from_Investing_Activities;
+            public Decimal? Financing_Cash_Flow_Items;
+            public Decimal? Total_Cash_Dividends_Paid;
+            public Decimal? Issuance__Retirement__of_Stock__Net;
+            public Decimal? Issuance__Retirement__of_Debt__Net;
+            public Decimal? Cash_from_Financing_Activities;
+            public Decimal? Foreign_Exchange_Effects;
+            public Decimal? Net_Change_in_Cash;
+            public Decimal? Cash_Interest_Paid__Supplemental;
+            public Decimal? Cash_Taxes_Paid__Supplemental;
+
+        }
+
     }
 
 
