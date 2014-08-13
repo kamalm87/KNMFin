@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 
-namespace KNMFin{
-    namespace Yahoo{
+namespace KNMFin
+{
+    namespace Yahoo
+    {
         enum Quote
         {
             Name = 1,
@@ -622,10 +624,14 @@ namespace KNMFin{
             {
                 StringBuilder sb = new StringBuilder( );
                 sb.Append( baseCompanyQuoteURL );
-                foreach ( string ticker in Tickers ){
-                    if ( ticker == Tickers [ 0 ] ){
+                foreach ( string ticker in Tickers )
+                {
+                    if ( ticker == Tickers [ 0 ] )
+                    {
                         sb.Append( ticker );
-                    } else {
+                    }
+                    else
+                    {
                         sb.Append( "," + ticker );
                     }
                 }
@@ -642,7 +648,8 @@ namespace KNMFin{
             }
 
 
-            public static List<CompanyResult> QueryIndustry( Industry IndustryOfCompanies, MarketQuoteProperties SortProperty, SortDirection SortDirection ){
+            public static List<CompanyResult> QueryIndustry( Industry IndustryOfCompanies, MarketQuoteProperties SortProperty, SortDirection SortDirection )
+            {
 
                 var res = client.DownloadString( baseURL + (int)IndustryOfCompanies + SortProperty.ToString( ) + (char)SortDirection + endUrl ).Split( '\n' );
                 var qURL = baseURL + (int)IndustryOfCompanies + SortProperty.ToString( ) + (char)SortDirection + endUrl;
@@ -718,7 +725,6 @@ namespace KNMFin{
             }
         }
     }
-
     namespace Google
     {
         public class CompanyInfo
@@ -828,7 +834,7 @@ namespace KNMFin{
                 {
                     ProcessResponseWithResults( nodes );
                 }
-                if ( FetchFinancials )
+                if ( FetchFinancials && Ticker != string.Empty && Ticker != null )
                 {
                     ProcessFinancialStatements( nodes );
                 }
@@ -1440,7 +1446,20 @@ namespace KNMFin{
 
                 for ( int i = 0; i < ColumnHeaders.Count; i++ )
                 {
-                    Period p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    Period p;
+                    if ( ColumnHeaders [ i ].Contains( "weeks" ) )
+                    {
+                        p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    }
+                    else if ( ColumnHeaders [ i ].Contains( "months" ) )
+                    {
+                        p = ColumnHeaders [ i ].Contains( "3 months" ) ? Period.Quarter : Period.Annual;
+                    }
+                    else
+                    {
+                        p = ComparePeriodDiff( ColumnHeaders [ 0 ], ColumnHeaders [ 1 ] );
+                    }
+
                     DateTime dt = ParseDateFromColumnHeader( ColumnHeaders [ i ] );
                     tempMapping.Add( i, new IncomeStatement( p, dt ) );
                 }
@@ -1556,6 +1575,23 @@ namespace KNMFin{
                 return IncomeStatements;
             }
 
+            static Period ComparePeriodDiff( string input1, string input2 )
+            {
+                var a = input1;
+                var b = input2;
+                int index1 = a.IndexOf( "of " );
+                var year = Convert.ToInt16( a.Substring( index1 + 3, 4 ) );
+                var month = Convert.ToInt16( a.Substring( index1 + 8, 2 ) );
+                var day = Convert.ToInt16( a.Substring( index1 + 11 ) );
+                DateTime dtA = new DateTime( year, month, day );
+                year = Convert.ToInt16( b.Substring( index1 + 3, 4 ) );
+                month = Convert.ToInt16( b.Substring( index1 + 8, 2 ) );
+                day = Convert.ToInt16( b.Substring( index1 + 11 ) );
+                DateTime dtB = new DateTime( year, month, day );
+
+                return ( dtA - dtB ).TotalDays < 300 ? Period.Quarter : Period.Annual;
+            }
+
             static List<BalanceSheet> CreateBalanceSheets( List<string> ColumnHeaders, Dictionary<string, List<string>> Data )
             {
 
@@ -1565,7 +1601,20 @@ namespace KNMFin{
 
                 for ( int i = 0; i < ColumnHeaders.Count; i++ )
                 {
-                    Period p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    Period p;
+                    if ( ColumnHeaders [ i ].Contains( "weeks" ) )
+                    {
+                        p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    }
+                    else if ( ColumnHeaders [ i ].Contains( "months" ) )
+                    {
+                        p = ColumnHeaders [ i ].Contains( "3 months" ) ? Period.Quarter : Period.Annual;
+                    }
+                    else
+                    {
+                        p = ComparePeriodDiff( ColumnHeaders [ 0 ], ColumnHeaders [ 1 ] );
+                    }
+
                     DateTime dt = ParseDateFromColumnHeader( ColumnHeaders [ i ] );
                     tempMapping.Add( i, new BalanceSheet( p, dt ) );
                 }
@@ -1678,7 +1727,20 @@ namespace KNMFin{
 
                 for ( int i = 0; i < ColumnHeaders.Count; i++ )
                 {
-                    Period p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    Period p;
+                    if ( ColumnHeaders [ i ].Contains( "weeks" ) )
+                    {
+                        p = ColumnHeaders [ i ].Contains( "13 weeks" ) ? Period.Quarter : Period.Annual;
+                    }
+                    else if ( ColumnHeaders [ i ].Contains( "months" ) )
+                    {
+                        p = ColumnHeaders [ i ].Contains( "3 months" ) ? Period.Quarter : Period.Annual;
+                    }
+                    else
+                    {
+                        p = ComparePeriodDiff( ColumnHeaders [ 0 ], ColumnHeaders [ 1 ] );
+                    }
+
                     DateTime dt = ParseDateFromColumnHeader( ColumnHeaders [ i ] );
                     tempMapping.Add( i, new CashFlowStatement( p, dt ) );
                 }
@@ -1936,6 +1998,4 @@ namespace KNMFin{
         }
 
     }
-
-
 }
