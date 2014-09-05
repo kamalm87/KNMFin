@@ -18,3 +18,6 @@ c:\users\knm\documents\visual studio 2013\Projects\Test_KNMFinance\Test_KNMFinan
 c:\users\knm\documents\visual studio 2013\Projects\Test_KNMFinance\Test_KNMFinance\bin\Debug\KNMFin.pdb
 c:\users\knm\documents\visual studio 2013\Projects\Test_KNMFinance\Test_KNMFinance\bin\Debug\HtmlAgilityPack.pdb
 c:\users\knm\documents\visual studio 2013\Projects\Test_KNMFinance\Test_KNMFinance\bin\Debug\HtmlAgilityPack.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\Test_KNMFinance\Test_KNMFinance\bin\Debug\Test_KNMFinance.exe.config
+C:\Users\KNM\Documents\GitHub\KNMFin\Test_KNMFinance\Test_KNMFinance\obj\Debug\Test_KNMFinance.exe
+C:\Users\KNM\Documents\GitHub\KNMFin\Test_KNMFinance\Test_KNMFinance\obj\Debug\Test_KNMFinance.pdb

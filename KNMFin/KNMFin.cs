@@ -417,7 +417,7 @@ namespace KNMFin
         // TODO: Consolidate into a single static class
         // Queries
 
-        static class HistoricalQuotes
+        public static class HistoricalQuotes
         {
 
             // http://real-chart.finance.yahoo.com/table.csv?s=MSFT&a=01&b=19&c=2010&d=09&e=19&f=2010&g=d&ignore=.csv
@@ -434,46 +434,130 @@ namespace KNMFin
                 sb.Append( "&d=" + ( End.Month - 1 ) + "&e=" + ( End.Day ) + "&f=" + ( End.Year ) );
                 sb.Append( "&g=" + (char)Frequency );
                 sb.Append( endURL );
-                var res = client.DownloadString( sb.ToString( ) );
 
-                if ( res == null || res == string.Empty ) return null;
-
-                var resLines = res.Split( '\n' );
-                var returns = new List<ReturnRow>( );
-
-                for ( int i = 1; i < resLines.Count( ); i++ )
+                
+                try
                 {
+                    var res = client.DownloadString( sb.ToString( ) );
+                    
+                    if ( res == null || res == string.Empty ) return null;
 
-                    var temp = resLines [ i ];
-                    if ( temp == string.Empty || temp == "\0" ) continue;
+                    var resLines = res.Split( '\n' );
+                    var returns = new List<ReturnRow>( );
 
-
-                    var row = temp.Split( ',' );
-                    var date = row [ 0 ].Split( '-' );
-
-                    returns.Add( new ReturnRow
+                    for ( int i = 1; i < resLines.Count( ); i++ )
                     {
-                        Date = new DateTime( Convert.ToInt16( date [ 0 ] ), Convert.ToInt16( date [ 1 ] ), Convert.ToInt16( date [ 2 ] ) ),
-                        Open = Convert.ToDecimal( row [ 1 ] ),
-                        High = Convert.ToDecimal( row [ 2 ] ),
-                        Low = Convert.ToDecimal( row [ 3 ] ),
-                        Close = Convert.ToDecimal( row [ 4 ] ),
-                        Volume = Convert.ToDecimal( row [ 5 ] ),
-                        AdjClose = Convert.ToDecimal( row [ 6 ] )
-                    } );
+
+                        var temp = resLines [ i ];
+                        if ( temp == string.Empty || temp == "\0" ) continue;
+
+
+                        var row = temp.Split( ',' );
+                        var date = row [ 0 ].Split( '-' );
+
+                        var rr = new ReturnRow( new DateTime( Convert.ToInt16( date [ 0 ] ), Convert.ToInt16( date [ 1 ] ), Convert.ToInt16( date [ 2 ] ) ) );
+                        rr.Date = new DateTime( Convert.ToInt16( date [ 0 ] ), Convert.ToInt16( date [ 1 ] ), Convert.ToInt16( date [ 2 ] ) ).ToShortDateString( );
+                        rr.Open = Convert.ToDecimal( row [ 1 ] );
+                        rr.High = Convert.ToDecimal( row [ 2 ] );
+                        rr.Low = Convert.ToDecimal( row [ 3 ] );
+                        rr.Close = Convert.ToDecimal( row [ 4 ] );
+                        rr.Volume = Convert.ToDecimal( row [ 5 ] );
+                        rr.AdjClose = Convert.ToDecimal( row [ 6 ] );
+                        returns.Add( rr );
+                    }
+                    return returns;
                 }
-                return returns;
+                catch ( Exception ex )
+                {
+                    return null;
+                }
+                
+                
+
+                
             }
 
-            public struct ReturnRow
+            public static Dictionary<string, List<ReturnRow>> QueryReturns( IList<string> Tickers, DateTime Start, DateTime End, Frequency Frequency )
             {
-                public DateTime Date;
-                public decimal Open;
-                public decimal High;
-                public decimal Low;
-                public decimal Close;
-                public decimal Volume;
-                public decimal AdjClose;
+                var results = new Dictionary<string, List<ReturnRow>>( );
+
+                foreach ( string s in Tickers )
+                {
+                    var sb = new StringBuilder( );
+                    sb.Append( baseURL );
+                    sb.Append( s );
+                    sb.Append( "&a=" + ( Start.Month - 1 ) + "&b=" + ( Start.Day ) + "&c=" + ( Start.Year ) );
+                    sb.Append( "&d=" + ( End.Month - 1 ) + "&e=" + ( End.Day ) + "&f=" + ( End.Year ) );
+                    sb.Append( "&g=" + (char)Frequency );
+                    sb.Append( endURL );
+                    var res = client.DownloadString( sb.ToString( ) );
+
+                    if ( res == null || res == string.Empty )
+                    {
+                        results.Add( s, new List<ReturnRow>( ) );
+                    }
+                    else
+                    {
+                        var resultLines = res.Split( '\n' );
+                        var returns = new List<ReturnRow>( );
+
+                        for ( int i = 1; i < resultLines.Count( ); i++ )
+                        {
+                            var temp = resultLines [ i ];
+                            if ( temp == string.Empty || temp == "\0" ) continue;
+
+                            var row = temp.Split( ',' );
+                            var date = row [ 0 ].Split( '-' );
+
+
+
+                            var rr = new ReturnRow( new DateTime( Convert.ToInt16( date [ 0 ] ), Convert.ToInt16( date [ 1 ] ), Convert.ToInt16( date [ 2 ] ) ) );
+                            rr.Date = new DateTime( Convert.ToInt16( date [ 0 ] ), Convert.ToInt16( date [ 1 ] ), Convert.ToInt16( date [ 2 ] ) ).ToShortDateString();
+                            rr.Open = Convert.ToDecimal( row [ 1 ] );
+                            rr.High = Convert.ToDecimal( row [ 2 ] );
+                            rr.Low = Convert.ToDecimal( row [ 3 ] );
+                            rr.Close = Convert.ToDecimal( row [ 4 ] );
+                            rr.Volume = Convert.ToDecimal( row [ 5 ] );
+                            rr.AdjClose = Convert.ToDecimal( row [ 6 ] );
+                            returns.Add( rr );
+                        }
+                        results.Add( s, returns );
+                    }
+                }
+
+                return results;
+            }
+
+            public class ReturnRow : IComparable<ReturnRow>
+            {
+
+                public ReturnRow() { }
+                public ReturnRow( DateTime dt )
+                {
+                    pDate = dt;
+                }
+                private DateTime pDate;
+                public string Date { get; set; }
+                public decimal Open { get; set; }
+                public decimal High { get; set; }
+                public decimal Low { get; set; }
+                public decimal Close { get; set; }
+                public decimal Volume { get; set; }
+                public decimal AdjClose { get; set; }
+
+                
+                public int CompareTo( ReturnRow other )
+                {
+                    if ( other == null ) return 1;
+
+                    if ( this.pDate.CompareTo(other.pDate) < 0 ) 
+                        return -1;
+                    else if ( this.pDate == other.pDate ) 
+                        return 0;
+                    else
+                        return 1;
+                }
+                
             }
         }
 
