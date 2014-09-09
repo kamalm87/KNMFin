@@ -1,0 +1,13 @@
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\DebugTest.exe.config
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\DebugTest.exe
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\DebugTest.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFinance.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFinance.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Debug\DebugTest.csprojResolveAssemblyReference.cache
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Debug\DebugTest.exe
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Debug\DebugTest.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFin.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\HtmlAgilityPack.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFin.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\HtmlAgilityPack.xml

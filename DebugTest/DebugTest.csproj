@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AC556036-674C-4FEC-B0C3-F1DBDD502AD7}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{58B6FAD3-D904-477F-BFAC-09549EF81430}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KNMFin</RootNamespace>
-    <AssemblyName>KNMFin</AssemblyName>
+    <RootNamespace>DebugTest</RootNamespace>
+    <AssemblyName>DebugTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,8 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\..\..\..\..\..\Dev\C#\HTMLAgilityPack1.4.6\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="KNMFin">
+      <HintPath>..\KNMFin\bin\Debug\KNMFin.dll</HintPath>
+    </Reference>
+    <Reference Include="KNMFinance">
+      <HintPath>..\..\..\Visual Studio 2013\Projects\KNMFinance\KNMFinance\bin\Debug\KNMFinance.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,13 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Google\Google.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Yahoo\Companies.cs" />
-    <Compile Include="Yahoo\HistoricalQuotes.cs" />
-    <Compile Include="Yahoo\Industries.cs" />
-    <Compile Include="Yahoo\Quotes.cs" />
-    <Compile Include="Yahoo\Sectors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
