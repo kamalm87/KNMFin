@@ -570,7 +570,7 @@ namespace KNMFin.Google
             private static Double? ParseShares( string input )
             {
                 int index1 = input.IndexOf( " ", 2 );
-                if ( index1 != -1 )
+                if ( index1 != -1 && !input.Contains( "&nbsp;"))
                 {
                     string input1 = input.Substring( index1 + 1 ).Replace( " ", "" );
                     double million = 1000000, billion = 1000000000;

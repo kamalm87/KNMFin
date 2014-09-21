@@ -37,7 +37,7 @@ namespace KNMFin.Yahoo
             public static readonly QuoteProperties ChangeFromFiftydayMovingAverage = new QuoteProperties( 13, "m7", "Change From Fiftyday Moving Average"  );
             public static readonly QuoteProperties ChangeFromTwoHundreddayMovingAverage = new QuoteProperties( 14, "m5", "Change From Two Hundredday Moving Average" );
             public static readonly QuoteProperties ChangeFromYearHigh = new QuoteProperties( 15, "k4", "Change From Year High" );
-            public static readonly QuoteProperties ChangeFromYearLow = new QuoteProperties( 16, "j5", "Change From Year High" );
+            public static readonly QuoteProperties ChangeFromYearLow = new QuoteProperties( 16, "j5", "Change From Year Low" );
             public static readonly QuoteProperties ChangeInPercent = new QuoteProperties( 17, "p2", "Change In Percent" );
             public static readonly QuoteProperties ChangeInPercentRealtime = new QuoteProperties( 18, "k2", "Change In Percent (Realtime)" );
             public static readonly QuoteProperties ChangeRealtime = new QuoteProperties( 19, "c6", "Change (Realtime)" );
@@ -127,9 +127,13 @@ namespace KNMFin.Yahoo
 
             private QuoteProperties( int value, string name, string desription )
             {
+                if ( GetValueFromName == null ) GetValueFromName = new Dictionary<string, string>( );
+                if ( GetNames == null ) GetNames = new HashSet<string>( );
                 this.value = value;
                 this.name = name;
                 this.description = desription;
+                GetValueFromName.Add( this.description, this.name );
+                GetNames.Add( this.description );
             }
 
             public override string ToString()
@@ -141,6 +145,22 @@ namespace KNMFin.Yahoo
             {
                 return description;
             }
+
+
+
+            public static string[] GetAllNames() {
+                string[] ret = GetNames.ToArray<string>();
+                Array.Sort(ret);
+                return ret;
+            }
+
+            public static Dictionary<string, string> GetAllNameValuePairs()
+            {
+                return GetValueFromName;
+            }
+            
+            static HashSet<string> GetNames { get; set; }
+            static Dictionary<string, string> GetValueFromName{ get; set; }
         }
 
         // MarketProperties are used for Sectors and Industries related requests

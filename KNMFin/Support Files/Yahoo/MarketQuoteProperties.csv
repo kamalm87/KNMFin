@@ -1,0 +1,88 @@
+1,AfterHoursChangeRealtime,After Hours Change (Realtime),c8
+2,AnnualizedGain,Annualized Gain,g3
+3,Ask,Ask,a0
+4,AskRealtime,Ask (Realtime),b2
+5,AskSize,Ask Size,a5
+6,AverageDailyVolume,Average Daily Volume,a2
+7,Bid,Bid,b0
+8,BidRealtime,Bid (Realtime),b3
+9,BidSize,Bid Size,b6
+10,BookValuePerShare,Book Value Per Share,b4
+11,Change,Change,c1
+12,Change_ChangeInPercent,ChangeÿChange In Percent,c0
+13,ChangeFromFiftydayMovingAverage,Change From Fiftyday Moving Average,m7
+14,ChangeFromTwoHundreddayMovingAverage,Change From Two Hundredday Moving Average,m5
+15,ChangeFromYearHigh,Change From Year High,k4
+16,ChangeFromYearLow,Change From Year Low,j5
+17,ChangeInPercent,Change In Percent,p2
+18,ChangeInPercentRealtime,Change In Percent (Realtime),k2
+19,ChangeRealtime,Change (Realtime),c6
+20,Commission,Commission,c3
+21,Currency,Currency,c4
+22,DaysHigh,Days High,h0
+23,DaysLow,Days Low,g0
+24,DaysRange,Days Range,m0
+25,DaysRangeRealtime,Days Range (Realtime),m2
+26,DaysValueChange,Days Value Change,w1
+27,DaysValueChangeRealtime,Days Value Change (Realtime),w4
+28,DividendPayDate,Dividend Pay Date,r1
+29,TrailingAnnualDividendYield,Trailing Annual Dividend Yield,d0
+30,TrailingAnnualDividendYieldInPercent,Trailing Annual Dividend Yield In Percent,y0
+31,DilutedEPS,Diluted E P S,e0
+32,EBITDA,E B I T D A,j4
+33,EPSEstimateCurrentYear,E P S Estimate Current Year,e7
+34,EPSEstimateNextQuarter,E P S Estimate Next Quarter,e9
+35,EPSEstimateNextYear,E P S Estimate Next Year,e8
+36,ExDividendDate,Ex Dividend Date,q0
+37,FiftydayMovingAverage,Fiftyday Moving Average,m3
+38,SharesFloat,Shares Float,f6
+39,HighLimit,High Limit,l2
+40,HoldingsGain,Holdings Gain,g4
+41,HoldingsGainPercent,Holdings Gain Percent,g1
+42,HoldingsGainPercentRealtime,Holdings Gain Percent (Realtime),g5
+43,HoldingsGainRealtime,Holdings Gain (Realtime),g6
+44,HoldingsValue,Holdings Value,v1
+45,HoldingsValueRealtime,Holdings Value (Realtime),v7
+46,LastTradeDate,Last Trade Date,d1
+47,LastTradePriceOnly,Last Trade Price Only,l1
+48,LastTradeRealtimeWithTime,Last Trade (Realtime) With Time,k1
+49,LastTradeSize,Last Trade Size,k3
+50,LastTradeTime,Last Trade Time,t1
+51,LastTradeWithTime,Last Trade With Time,l0
+52,LowLimit,Low Limit,l3
+53,MarketCapitalization,Market Capitalization,j1
+54,MarketCapRealtime,Market Cap (Realtime),j3
+55,MoreInfo,More Info,i0
+56,Name,Name,n0
+57,Notes,Notes,n4
+58,OneyrTargetPrice,Oneyr Target Price,t8
+59,Open,Open,o0
+60,OrderBookRealtime,Order Book (Realtime),i5
+61,PEGRatio,P E G Ratio,r5
+62,PERatio,P E Ratio,r0
+63,PERatioRealtime,P E Ratio (Realtime),r2
+64,PercentChangeFromFiftydayMovingAverage,Percent Change From Fiftyday Moving Average,m8
+65,PercentChangeFromTwoHundreddayMovingAverage,Percent Change From Two Hundredday Moving Average,m6
+66,ChangeInPercentFromYearHigh,Change In Percent From Year High,k5
+67,PercentChangeFromYearLow,Percent Change From Year Low,j6
+68,PreviousClose,Previous Close,p0
+69,PriceBook,Price Book,p6
+70,PriceEPSEstimateCurrentYear,Price E P S Estimate Current Year,r6
+71,PriceEPSEstimateNextYear,Price E P S Estimate Next Year,r7
+72,PricePaid,Price Paid,p1
+73,PriceSales,Price Sales,p5
+74,Revenue,Revenue,s6
+75,SharesOwned,Shares Owned,s1
+76,SharesOutstanding,Shares Outstanding,j2
+77,ShortRatio,Short Ratio,s7
+78,StockExchange,Stock Exchange,x0
+79,Symbol,Symbol,s0
+80,TickerTrend,Ticker Trend,t7
+81,TradeDate,Trade Date,d2
+82,TradeLinks,Trade Links,t6
+83,TradeLinksAdditional,Trade Links Additional,f0
+84,TwoHundreddayMovingAverage,Two Hundredday Moving Average,m4
+85,Volume,Volume,v0
+86,YearHigh,Year High,k0
+87,YearLow,Year Low,j0
+88,YearRange,Year Range,w0

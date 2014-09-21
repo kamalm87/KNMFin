@@ -66,17 +66,96 @@ namespace KNMFin.Yahoo
                 foreach ( string line in resultLines ){
                     Dictionary<string, string> subResults = new Dictionary<string, string>( );
                     var rows = line.Split( ',' );
+                    if ( rows.Length == QuoteProperties.Length ){
+                        foreach ( string row in rows )
+                            subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), row );
 
+                        result.Add( CompanyTickers [ iteration++ ], subResults );
+                        innerIteration = 0;
+                    }
+                    else
+                    {
+                        for ( int i = 1; i < rows.Length; i++ ){
+                            if ( i == 1 )
+                            {
+                                subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), rows[0] + rows[1] );
+                            }
+                            else
+                            {
+                                subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), rows [ i ] );
+                            }
+                        }
+                        
+                        result.Add( CompanyTickers [ iteration++ ], subResults );
+                        innerIteration = 0;
+                    }
+                    
+                }
+
+                return result;
+            }
+
+            public static Dictionary<string, Dictionary<string, string>> GetCompanyQuotes( List<string> CompanyTickers, Dictionary<string, string> NameValuePairs )
+            {
+                Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>( );
+                StringBuilder sb = new StringBuilder( baseURL );
+
+
+                // This block builds the request URL
+                foreach ( string companyTicker in CompanyTickers )
+                {
+
+                    if ( companyTicker == CompanyTickers [ 0 ] )
+                        sb.Append( companyTicker );
+                    else
+                        sb.Append( "," + companyTicker );
+                }
+                sb.Append( "&f=" );
+                foreach ( KeyValuePair<string, string> kvp in NameValuePairs )
+                    sb.Append( kvp.Value );
+                sb.Append( endURL );
+
+                var qResult = string.Empty;
+
+                // Attempt to receive a response string from the request URL
+                // If the request receives nothing, then function terminates, returning a null (in the catch block)
+                try
+                {
+
+                    qResult = client.DownloadString( sb.ToString( ) );
+                }
+                catch
+                {
+                    // Unsucessful response => function terminates with no results => empty container
+                    return new Dictionary<string, Dictionary<string, string>>( );
+                }
+
+
+                // Successful reponse => function processes response data:
+
+                // Split the response string into separate rows, which should be associated with a respective company ticker
+                // Given from the CompanyTickers parameter
+                string [] stringSeparator = new string [] { "\r\n" };
+                var resultLines = qResult.Split( stringSeparator, StringSplitOptions.RemoveEmptyEntries );
+
+                // Parse each row, associating the respective company ticker with a Dictionary of Quote Property Name -> Value pairs
+                int iteration = 0, innerIteration = 0;
+                foreach ( string line in resultLines )
+                {
+                    Dictionary<string, string> subResults = new Dictionary<string, string>( );
+                    var rows = line.Split( ',' );
+
+                    int blah = 1;
+                    /*
                     foreach ( string row in rows )
                         subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), row );
-
+                    */
                     result.Add( CompanyTickers [ iteration++ ], subResults );
                     innerIteration = 0;
                 }
 
                 return result;
             }
-
             // Internal request components
             private static readonly string baseURL = @"http://download.finance.yahoo.com/d/quotes.csv?s=";
             private static readonly string endURL = @"&e=.csv";

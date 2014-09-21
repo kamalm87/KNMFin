@@ -1,8 +1,533 @@
 ﻿<Window x:Class="DemoUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Query" Height="700" Width="1300">
+    <Window.Resources>
+        <CollectionViewSource x:Key="ItemCollectionViewSource" CollectionViewType="ListCollectionView"/>
+    </Window.Resources>
+
+
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
         
+<!-- canvasQuery                -->        
+        <Canvas 
+            Name="canvasQuery"
+            Background="CadetBlue"
+            Grid.Column="0" >
+
+            <Button 
+                Name="btnDEBUG"
+                Content="DEBUG"
+                Click="btnDEBUG_Click"
+                Canvas.Right="5"
+                />
+            
+            
+            <Label Name="lblTicker"
+                   Content="Add a Ticker"
+                   Canvas.Top="5" Canvas.Left="5"
+                   />
+            <TextBox Name="tbTickerCandidateToAdd"
+                     Canvas.Top="5" Canvas.Left="80"
+                     Width="45"
+                     />
+            <TextBox Name="tbCompanyName"
+                     Canvas.Top="5" Canvas.Left="180"
+                     Width="75"
+                     />
+            
+            <!-- Add a Ticker Button -->
+            <Button 
+                    Name="btnAddTicker"
+                    Content="Add"
+                    Click="btnAddTicker_Click"
+            />
+            <!-- Add a Ticker Button -->
+            <ListBox Name="lbGroups"
+                     Canvas.Top="75" Canvas.Left="5"
+                     Width="100" Height="100"
+                     />
+            <ListBox Name="lbGroupItems"
+                     Canvas.Top="75" Canvas.Left="150"
+                     Width="100" Height="100"
+                     />
+            <ListBox Name="lbSlatedQueries"
+                     Canvas.Top="200" Canvas.Left="5"
+                     Width="100" Height="100"
+                     />
+            
+            
+            <Label
+                Name="lblQueryOptions"
+                Content="Items to Query"
+                Canvas.Top="300" Canvas.Left="5"
+                />
+            <!-- Google CheckBox Options -->
+            <Label
+                Name="lblGoogleOptions"
+                Content="Google"
+                Canvas.Top="330" Canvas.Left="25"
+                />
+            <CheckBox
+                Name="cbGoogleQuery"
+                Canvas.Top="330" Canvas.Left="5"
+                />
+            <CheckBox
+                Name="cbSummaryInfo"
+                Content="Summary Info"
+                Canvas.Top="360" Canvas.Left="25"
+                />
+            <CheckBox
+                Name="cbFinancialStatements"
+                Content="Financial Statements"
+                Canvas.Top="380" Canvas.Left="25"
+                />
+            <!-- Google CheckBox Options -->
+
+
+            <!-- Yahoo CheckBox Options -->
+            <Label
+                Name="lblYahooOptions"
+                Content="Yahoo"
+                Canvas.Top="330" Canvas.Left="175"
+                />
+            <CheckBox
+                Name="cbYahoQuery"
+                Canvas.Top="330" Canvas.Left="150"
+                />
+            <CheckBox
+                Name="cbHistoricalPrice"
+                Content="Historical Prices"
+                Canvas.Top="360" Canvas.Left="165"
+                />
+            <CheckBox
+                Name="cbYahooCompanyInfo"
+                Content="Company Info"
+                Canvas.Top="380" Canvas.Left="165"
+                />
+            <!-- Yahoo CheckBox Options -->
+
+
+
+
+            <!-- Historical Price Date Range -->
+            <Label 
+                Name="lblBegDate"
+                Content="Beginning Date"
+                Canvas.Top="410" Canvas.Left="5"
+                />
+            <DatePicker
+                Name="dtpBegDate"
+                Canvas.Top="410" Canvas.Left="100"
+                />
+            <Label 
+                Name="lblEndDate"
+                Content="Ending Date"
+                Canvas.Top="440" Canvas.Left="5"
+                />
+            <DatePicker
+                Name="dtpEndDate"
+                Canvas.Top="440" Canvas.Left="100"
+                />
+            <!-- Historical Price Date Range -->
+
+            
+            <!-- Queried Result List -->
+            <ListBox 
+                Name="lbQueryResults"
+                Canvas.Top="200" Canvas.Left="150"
+                Width="100" Height="100"
+                SelectionChanged="lbQueryResults_SelectionChanged"
+                />
+            <!-- Queried Result List -->
+
+
+
+            <!-- Market Quote Properties -->
+            <ListBox
+                Name="lbMarketQuoteProperties"
+                Canvas.Top="480" Canvas.Left="5"
+                Width="150" Height="150"
+                
+                />
+            <ListBox
+                Name="lbMarketQuotePropertiesSlated"
+                Canvas.Top="480" Canvas.Left="180"
+                Width="150" Height="150"
+                
+                />
+            <!-- MArket Quote Properties -->
+
+
+
+            <!-- DO IT-->
+            <Button 
+                Name="btnQuery"
+                Content="Query"
+                Click="btnQuery_Click"
+                Canvas.Bottom="5"
+                />
+
+            <!-- DO IT-->
+        </Canvas>
+<!-- canvasQuery                -->
+
+        
+<!-- TabControl QueryResults -->
+        <TabControl 
+            Name="tcQueryResults"
+            Grid.Column="1" Background="Green"
+            >
+            <TabItem Header="Google">
+                <Grid
+                    Name="gridGoogle"
+                    Background="Red"
+                    >
+                    <TabControl
+                        Name="tcGoogleResults"
+                        >
+                        <TabItem
+                            Header="Company Info">
+                          
+                            <Grid
+                                Name="ciGrid"
+                                >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                
+                                
+                                <Canvas 
+                                    Name="canvasGSI"
+                                    Grid.Column="0">
+                                    
+                                    
+                                    <!-- Company Name Info -->
+                                    <Label
+                                        Name="lblGCompanyName"
+                                        Canvas.Left="5" Canvas.Top="5"
+                                        Content="Empty"
+                                        FontSize="14"
+                                        Width="100"
+                                        Background="Green"
+                                        />
+                                    <Label
+                                        Name="lblGTicker"
+                                        Canvas.Left="105" Canvas.Top="5"
+                                        Content="Ticker"
+                                        FontSize="14"
+                                        Width="50"
+                                        Background="Green"
+                                        />
+                                    <Label
+                                        Name="lblGExchange"
+                                        Canvas.Left="155" Canvas.Top="5"
+                                        Content="Exchange"
+                                        FontSize="14"
+                                        Width="75"
+                                        Background="Green"
+                                        />
+                                    <!-- Company Name Info -->
+
+
+
+                                    <Label
+                                        Content="Open / Close"
+                                        Canvas.Left="5" Canvas.Top="105"
+                                        
+                                        FontSize="14"
+                                        Width="100"
+                                        Background="Yellow"
+                                        />
+                                    
+                                    <Label
+                                        Name="lblGOpen"
+                                        Canvas.Left="105" Canvas.Top="105"
+                                        Content="*"
+                                        FontSize="14"
+                                        Width="50"
+                                        Background="Yellow"
+                                        />
+                                    <Label
+                                        Name="lblGClose"
+                                        Canvas.Left="155" Canvas.Top="105"
+                                        Content="*"
+                                        FontSize="14"
+                                        Width="75"
+                                        Background="Yellow"
+                                        />
+
+
+
+                                    <Label
+                                        Content="Daily Range:"
+                                        Canvas.Left="5" Canvas.Top="35"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Blue"
+                                        />
+                                    <Label
+                                        Name="lblGHL"
+                                        Content="L:"
+                                        Canvas.Left="95" Canvas.Top="35"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Blue"
+                                        />
+                                    <Label
+                                        Name="lblGHR"
+                                        Content="H"
+                                        Canvas.Left="180" Canvas.Top="35"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Blue"
+                                        />
+                                    
+                                    <Label
+                                        Content="Yearly Range:"
+                                        Canvas.Left="5" Canvas.Top="70"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGYHL"
+                                        Content="L:"
+                                        Canvas.Left="95" Canvas.Top="70"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGYHR"
+                                        Content="H"
+                                        Canvas.Left="180" Canvas.Top="70"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+                                    <Label
+                                        Content="P/E:"
+                                        Canvas.Left="5" Canvas.Top="140"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGPE"
+                                        Content="*"
+                                        Canvas.Left="95" Canvas.Top="140"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+                                    <Label
+                                        Content="EPS:"
+                                        Canvas.Left="5" Canvas.Top="175"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblEPS"
+                                        Content="*"
+                                        Canvas.Left="95" Canvas.Top="175"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+
+                                    <Label
+                                        Content="Market Cap:"
+                                        Canvas.Left="5" Canvas.Top="210"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGMC"
+                                        Content="*"
+                                        Canvas.Left="95" Canvas.Top="210"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+
+                                    <Label
+                                        Content="Beta:"
+                                        Canvas.Left="5" Canvas.Top="245"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGBeta"
+                                        Content="*"
+                                        Canvas.Left="95" Canvas.Top="245"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+                                    <Label
+                                        Content="Shares:"
+                                        Canvas.Left="200" Canvas.Top="245"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGShares"
+                                        Content="*"
+                                        Canvas.Left="295" Canvas.Top="245"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+
+                                    <Label
+                                        Content="Institutional Ownership:"
+                                        Canvas.Left="5" Canvas.Top="280"
+                                        FontSize="12"
+                                        Width="150"
+                                        Background="Red"
+                                        />
+                                    <Label
+                                        Name="lblGInstOwn"
+                                        Content="*"
+                                        Canvas.Left="170" Canvas.Top="280"
+                                        FontSize="12"
+                                        Width="75"
+                                        Background="Red"
+                                        />
+
+                                </Canvas>
+                                
+                                
+                            </Grid>
+                                
+                            
+                                
+                                
+                        </TabItem>
+                        <TabItem
+                            Header="Financial Statements"
+                            >
+                            <Grid
+                                Name="gridGFinancialStatements"
+                                >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Grid Name="gridgridGSubFS" 
+                                    >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TabControl Name="tcGFinancialStatements" Grid.Row="0" Background="Green" >
+                                        
+                                        <TabItem Header="B/S">
+                                            <Grid Name="gGBS">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <ListBox Grid.Column="0" Name="lbBSA"
+                                                         SelectionChanged="FocusedFinancialStatementChanged"
+                                                         />
+                                                <ListBox Grid.Column="1" Name="lbBSQ"
+                                                         SelectionChanged="FocusedFinancialStatementChanged"
+                                                         />
+                                            </Grid>
+                                            
+                                        </TabItem>
+                                        
+                                        
+                                        <TabItem Header="I/S">
+                                            <Grid Name="gIS">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <ListBox Grid.Column="0" Name="lbISA"
+                                                         SelectionChanged="FocusedFinancialStatementChanged"
+                                                         />
+                                                <ListBox Grid.Column="1" Name="lbISQ"
+                                                         SelectionChanged="FocusedFinancialStatementChanged"
+                                                         />
+                                            </Grid>                                            
+                                            
+                                        </TabItem>
+                                        
+                                        
+                                        <TabItem Header="SoCF">
+                                            <Grid Name="gGSoCF">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <ListBox Grid.Column="0" Name="lbSoCFA"
+                                                         SelectionChanged="FocusedFinancialStatementChanged"
+                                                         />
+                                                <ListBox Grid.Column="1" Name="lbSoCFQ"
+                                                         SelectionChanged="FocusedFinancialStatementChanged"
+                                                         />
+                                            </Grid>
+
+                                        </TabItem>
+                                    </TabControl>
+                                    <Canvas Name="canvasCurrentFocusedFS" Grid.Row="1"/>
+                                </Grid>
+
+                                <Grid Grid.Column="1" Name="gridFinancialStatement" Background="Pink"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+                    
+            </TabItem>
+            
+            <TabItem Header="Yahoo">
+                <Grid
+                    Name="gridYahoo"
+                    Background="Yellow"
+                    >
+                    <TabControl
+                        Name="tcYahooResults"
+                        >
+                        <TabItem 
+                            Name="tiHistoricalPrices"
+                            Header="Historical Prices">
+                            <Grid 
+                                Name="PriceInfo"
+                                Background="DarkTurquoise"
+                                />
+                        </TabItem>
+                        <TabItem 
+                            Header="Company Quotation">
+
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <!-- TabControl QueryResults -->
+
     </Grid>
 </Window>

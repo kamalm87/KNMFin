@@ -70,11 +70,16 @@ namespace DebugTest
     {
         static void Main( string [] args )
         {
+            Console.WriteLine( "Begining: Yahoo Industry Test" );
             var yahooIndustryQuery = TestYahoo.testIndustry( );
+            Console.WriteLine( "Begining: Yahoo Hisotrical Price Test" );
             var yahooHistoricalPriceQuery = TestYahoo.testHistoricalPrices( );
+            Console.WriteLine( "Begining: Yahoo Company Test" );
             var yahooCompaniesQuery = TestYahoo.testCompanies( );
+            Console.WriteLine( "Begining: Yahoo Sector Test" );
             var yahooSectorsQuery = TestYahoo.testSectors( );
 
+            Console.WriteLine( "Begining: Google Test" );
             var googleCompanyInfoQuery = TestGoogle.testCompanyInfo( );
         }
     }

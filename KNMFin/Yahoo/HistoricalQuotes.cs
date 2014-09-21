@@ -60,7 +60,10 @@ namespace KNMFin.Yahoo
             }
 
             // Internal base components of a stock price request
-            private static string baseURL = @"http://ichart.yahoo.com/table.csv?s=";
+            // known base URLS
+            // (Worked from 08/2014 -> 9/20/2014 ) http://ichart.yahoo.com/table.csv?s=
+            // http://real-chart.finance.yahoo.com/table.csv?s=
+            private static string baseURL = @"http://real-chart.finance.yahoo.com/table.csv?s=";
             private static string endURL = @"&ignore=.csv";
             private static System.Net.WebClient client = new System.Net.WebClient( );
             
@@ -142,10 +145,21 @@ namespace KNMFin.Yahoo
                 }
                 else{
                     var results = ProcessReturns( rawRows );
-                    StockPriceInformation = results.Item1;
-                    BegDate = results.Item2;
-                    EndDate = results.Item3;
-                    HasReturns = true;
+                    if ( results != null )
+                    {
+                        StockPriceInformation = results.Item1;
+                        BegDate = results.Item2;
+                        EndDate = results.Item3;
+                        HasReturns = true;
+                    }
+                    else
+                    {
+                        BegDate = null;
+                        EndDate = null;
+                        StockPriceInformation = new List<StockPriceRow>( );
+                        HasReturns = false;
+                    }
+                    
                 }
             }
 
@@ -164,10 +178,16 @@ namespace KNMFin.Yahoo
             //   , so the process assumes that first row of stock price data is the last date, while the last row
             //   is the first date in regards to the date range
             private static Tuple<List<StockPriceRow>, DateTime?, DateTime?> ProcessReturns( string [] RawRows ){
+
+                // Check if the RawRows contain data
+                // If not, then prematurely return empty values
+                if ( RawRows [ 1 ] == string.Empty ) return null;
+                
                 var returns = new List<StockPriceRow>( );
                 DateTime? b = null, e = null;
                 string temp = string.Empty;
-                
+
+
                 for ( int i = 1; i < RawRows.Length; i++ ){
 
                     temp = RawRows [ i ];
