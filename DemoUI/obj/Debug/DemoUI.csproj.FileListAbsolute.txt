@@ -18,3 +18,7 @@ C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.Properties.Resource
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.csproj.GenerateResource.Cache
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.exe
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinExcel.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\EPPlus.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinExcel.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\EPPlus.xml

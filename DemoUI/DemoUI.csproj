@@ -38,6 +38,9 @@
     <Reference Include="KNMFin">
       <HintPath>..\KNMFin\bin\Debug\KNMFin.dll</HintPath>
     </Reference>
+    <Reference Include="KNMFinExcel">
+      <HintPath>..\KNMFinExcel\bin\Debug\KNMFinExcel.dll</HintPath>
+    </Reference>
     <Reference Include="KNMFinUI">
       <HintPath>..\KNMFinUI\bin\Debug\KNMFinUI.dll</HintPath>
     </Reference>
@@ -60,7 +63,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="YahooFinanceUI.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

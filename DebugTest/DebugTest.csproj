@@ -36,8 +36,9 @@
     <Reference Include="KNMFin">
       <HintPath>..\KNMFin\bin\Debug\KNMFin.dll</HintPath>
     </Reference>
-    <Reference Include="KNMFinance">
-      <HintPath>..\..\..\Visual Studio 2013\Projects\KNMFinance\KNMFinance\bin\Debug\KNMFinance.dll</HintPath>
+    <Reference Include="KNMFinExcel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\KNMFinExcel\bin\Debug\KNMFinExcel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

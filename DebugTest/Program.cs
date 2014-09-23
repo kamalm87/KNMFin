@@ -12,6 +12,11 @@ using KNMFin.Yahoo.Sectors;
 using KNMFin.Yahoo.HistoricalQuotes;
 using KNMFin.Yahoo.CompanyQuote;
 
+
+
+using KNMFinExcel.Yahoo;
+
+
 using KNMFin.Google;
 
 namespace DebugTest
@@ -74,6 +79,13 @@ namespace DebugTest
             var yahooIndustryQuery = TestYahoo.testIndustry( );
             Console.WriteLine( "Begining: Yahoo Hisotrical Price Test" );
             var yahooHistoricalPriceQuery = TestYahoo.testHistoricalPrices( );
+            var list = new List<KNMFin.Yahoo.HistoricalQuotes.StockPriceResult>();
+            foreach(var item in yahooHistoricalPriceQuery)
+                list.Add(item);
+
+            // HARD-CODED DIRECTORY -- CHANGE THIS IF TESTING SOMEWHERE ELSE
+            ExcelYahoo.SaveToExcel( @"C:\users\knm\desktop\bigsean", list );            
+
             Console.WriteLine( "Begining: Yahoo Company Test" );
             var yahooCompaniesQuery = TestYahoo.testCompanies( );
             Console.WriteLine( "Begining: Yahoo Sector Test" );

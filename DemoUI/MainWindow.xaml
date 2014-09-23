@@ -14,8 +14,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        
-<!-- canvasQuery                -->        
+
+        <!-- canvasQuery                -->
         <Canvas 
             Name="canvasQuery"
             Background="CadetBlue"
@@ -27,8 +27,8 @@
                 Click="btnDEBUG_Click"
                 Canvas.Right="5"
                 />
-            
-            
+
+
             <Label Name="lblTicker"
                    Content="Add a Ticker"
                    Canvas.Top="5" Canvas.Left="5"
@@ -36,17 +36,19 @@
             <TextBox Name="tbTickerCandidateToAdd"
                      Canvas.Top="5" Canvas.Left="80"
                      Width="45"
+                     KeyDown="tbTickerCandidateToAdd_KeyDown"
                      />
             <TextBox Name="tbCompanyName"
                      Canvas.Top="5" Canvas.Left="180"
                      Width="75"
+                     
                      />
-            
+
             <!-- Add a Ticker Button -->
             <Button 
                     Name="btnAddTicker"
                     Content="Add"
-                    Click="btnAddTicker_Click"
+                    Click="btnAddTicker_Click" Canvas.Left="135" Canvas.Top="5"
             />
             <!-- Add a Ticker Button -->
             <ListBox Name="lbGroups"
@@ -57,12 +59,15 @@
                      Canvas.Top="75" Canvas.Left="150"
                      Width="100" Height="100"
                      />
+
+
+            <Label Content="Tickers to Query" Canvas.Top="175" Canvas.Left="5"/>
             <ListBox Name="lbSlatedQueries"
                      Canvas.Top="200" Canvas.Left="5"
                      Width="100" Height="100"
                      />
-            
-            
+
+
             <Label
                 Name="lblQueryOptions"
                 Content="Items to Query"
@@ -137,8 +142,9 @@
                 />
             <!-- Historical Price Date Range -->
 
-            
+
             <!-- Queried Result List -->
+            <Label Content="Queried Tickers" Canvas.Top="175" Canvas.Left="150"/>
             <ListBox 
                 Name="lbQueryResults"
                 Canvas.Top="200" Canvas.Left="150"
@@ -154,12 +160,14 @@
                 Name="lbMarketQuoteProperties"
                 Canvas.Top="480" Canvas.Left="5"
                 Width="150" Height="150"
+                KeyDown="lbMarketQuoteProperties_KeyDown"
                 
                 />
             <ListBox
                 Name="lbMarketQuotePropertiesSlated"
                 Canvas.Top="480" Canvas.Left="180"
                 Width="150" Height="150"
+                KeyDown="lbMarketQuotePropertiesSlated_KeyDown"
                 
                 />
             <!-- MArket Quote Properties -->
@@ -175,11 +183,27 @@
                 />
 
             <!-- DO IT-->
-        </Canvas>
-<!-- canvasQuery                -->
 
-        
-<!-- TabControl QueryResults -->
+            <!-- CREW LOVE: EXCEL -->
+
+            <Button Name="btnExcelHistoricalPrices"
+                    Content="EXCEL"
+                    Click="btnExcelHistoricalPrices_Click"
+                    Canvas.Right="50" Canvas.Top="200"/>
+
+            <Button Name="btnGoogleFinancialStatements_BS"
+                    Content="EXCEL_BS"
+                    Canvas.Right="50" Canvas.Top="230"
+                    Click="btnGoogleFinancialStatements_BS_Click"
+                    />
+
+            <!-- CREW LOVE: EXCEL -->
+
+        </Canvas>
+        <!-- canvasQuery                -->
+
+
+        <!-- TabControl QueryResults -->
         <TabControl 
             Name="tcQueryResults"
             Grid.Column="1" Background="Green"
@@ -189,12 +213,16 @@
                     Name="gridGoogle"
                     Background="Red"
                     >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="23*"/>
+                        <ColumnDefinition Width="288*"/>
+                    </Grid.ColumnDefinitions>
                     <TabControl
-                        Name="tcGoogleResults"
+                        Name="tcGoogleResults" Grid.ColumnSpan="2"
                         >
                         <TabItem
                             Header="Company Info">
-                          
+
                             <Grid
                                 Name="ciGrid"
                                 >
@@ -202,13 +230,13 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                
-                                
+
+
                                 <Canvas 
                                     Name="canvasGSI"
                                     Grid.Column="0">
-                                    
-                                    
+
+
                                     <!-- Company Name Info -->
                                     <Label
                                         Name="lblGCompanyName"
@@ -246,7 +274,7 @@
                                         Width="100"
                                         Background="Yellow"
                                         />
-                                    
+
                                     <Label
                                         Name="lblGOpen"
                                         Canvas.Left="105" Canvas.Top="105"
@@ -289,7 +317,7 @@
                                         Width="75"
                                         Background="Blue"
                                         />
-                                    
+
                                     <Label
                                         Content="Yearly Range:"
                                         Canvas.Left="5" Canvas.Top="70"
@@ -414,13 +442,13 @@
                                         />
 
                                 </Canvas>
-                                
-                                
+
+
                             </Grid>
-                                
-                            
-                                
-                                
+
+
+
+
                         </TabItem>
                         <TabItem
                             Header="Financial Statements"
@@ -429,19 +457,19 @@
                                 Name="gridGFinancialStatements"
                                 >
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="200"/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <Grid Name="gridgridGSubFS" 
                                     >
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="190"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
                                     <TabControl Name="tcGFinancialStatements" Grid.Row="0" Background="Green" >
-                                        
+
                                         <TabItem Header="B/S">
                                             <Grid Name="gGBS">
                                                 <Grid.ColumnDefinitions>
@@ -455,10 +483,10 @@
                                                          SelectionChanged="FocusedFinancialStatementChanged"
                                                          />
                                             </Grid>
-                                            
+
                                         </TabItem>
-                                        
-                                        
+
+
                                         <TabItem Header="I/S">
                                             <Grid Name="gIS">
                                                 <Grid.ColumnDefinitions>
@@ -471,11 +499,11 @@
                                                 <ListBox Grid.Column="1" Name="lbISQ"
                                                          SelectionChanged="FocusedFinancialStatementChanged"
                                                          />
-                                            </Grid>                                            
-                                            
+                                            </Grid>
+
                                         </TabItem>
-                                        
-                                        
+
+
                                         <TabItem Header="SoCF">
                                             <Grid Name="gGSoCF">
                                                 <Grid.ColumnDefinitions>
@@ -492,7 +520,30 @@
 
                                         </TabItem>
                                     </TabControl>
-                                    <Canvas Name="canvasCurrentFocusedFS" Grid.Row="1"/>
+                                    <Canvas Name="canvasCurrentFocusedFS" Grid.Row="1">
+                                        <Button
+                                            Name="btnExcelBS"
+                                            Content="Excel: BS"
+                                            Click="btnExcelBS_Click"
+                                            Canvas.Left="5" Canvas.Top="5"
+                                            />
+                                        <Button
+                                            Name="btnExcelIS"
+                                            Content="Excel: IS"
+                                            Click="btnExcelIS_Click"
+                                            Canvas.Left="80" Canvas.Top="5"
+                                            />
+                                        <Button
+                                            Name="btnExcelSoCF"
+                                            Content="Excel: SoCF"
+                                            Click="btnExcelSoCF_Click"
+                                            Canvas.Left="5" Canvas.Top="40"/>
+                                        <Button
+                                            Name="btnExcelALL"
+                                            Content="Excel: All Statements"
+                                            Click="btnExcelALL_Click"
+                                            Canvas.Left="5" Canvas.Top="70"/>
+                                    </Canvas>
                                 </Grid>
 
                                 <Grid Grid.Column="1" Name="gridFinancialStatement" Background="Pink"/>
@@ -500,9 +551,9 @@
                         </TabItem>
                     </TabControl>
                 </Grid>
-                    
+
             </TabItem>
-            
+
             <TabItem Header="Yahoo">
                 <Grid
                     Name="gridYahoo"

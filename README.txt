@@ -1,88 +1,14 @@
-QuoteProperties.AfterHoursChangeRealtime
-QuoteProperties.AnnualizedGain
-QuoteProperties.Ask
-QuoteProperties.AskRealtime
-QuoteProperties.AskSize
-QuoteProperties.AverageDailyVolume
-QuoteProperties.Bid
-QuoteProperties.BidRealtime
-QuoteProperties.BidSize
-QuoteProperties.BookValuePerShare
-QuoteProperties.Change
-QuoteProperties.Change_ChangeInPercent
-QuoteProperties.ChangeFromFiftydayMovingAverage
-QuoteProperties.ChangeFromTwoHundreddayMovingAverage
-QuoteProperties.ChangeFromYearHigh
-QuoteProperties.ChangeFromYearLow
-QuoteProperties.ChangeInPercent
-QuoteProperties.ChangeInPercentRealtime
-QuoteProperties.ChangeRealtime
-QuoteProperties.Commission
-QuoteProperties.Currency
-QuoteProperties.DaysHigh
-QuoteProperties.DaysLow
-QuoteProperties.DaysRange
-QuoteProperties.DaysRangeRealtime
-QuoteProperties.DaysValueChange
-QuoteProperties.DaysValueChangeRealtime
-QuoteProperties.DividendPayDate
-QuoteProperties.TrailingAnnualDividendYield
-QuoteProperties.TrailingAnnualDividendYieldInPercent
-QuoteProperties.DilutedEPS
-QuoteProperties.EBITDA
-QuoteProperties.EPSEstimateCurrentYear
-QuoteProperties.EPSEstimateNextQuarter
-QuoteProperties.EPSEstimateNextYear
-QuoteProperties.ExDividendDate
-QuoteProperties.FiftydayMovingAverage
-QuoteProperties.SharesFloat
-QuoteProperties.HighLimit
-QuoteProperties.HoldingsGain
-QuoteProperties.HoldingsGainPercent
-QuoteProperties.HoldingsGainPercentRealtime
-QuoteProperties.HoldingsGainRealtime
-QuoteProperties.HoldingsValue
-QuoteProperties.HoldingsValueRealtime
-QuoteProperties.LastTradeDate
-QuoteProperties.LastTradePriceOnly
-QuoteProperties.LastTradeRealtimeWithTime
-QuoteProperties.LastTradeSize
-QuoteProperties.LastTradeTime
-QuoteProperties.LastTradeWithTime
-QuoteProperties.LowLimit
-QuoteProperties.MarketCapitalization
-QuoteProperties.MarketCapRealtime
-QuoteProperties.MoreInfo
-QuoteProperties.Name
-QuoteProperties.Notes
-QuoteProperties.OneyrTargetPrice
-QuoteProperties.Open
-QuoteProperties.OrderBookRealtime
-QuoteProperties.PEGRatio
-QuoteProperties.PERatio
-QuoteProperties.PERatioRealtime
-QuoteProperties.PercentChangeFromFiftydayMovingAverage
-QuoteProperties.PercentChangeFromTwoHundreddayMovingAverage
-QuoteProperties.ChangeInPercentFromYearHigh
-QuoteProperties.PercentChangeFromYearLow
-QuoteProperties.PreviousClose
-QuoteProperties.PriceBook
-QuoteProperties.PriceEPSEstimateCurrentYear
-QuoteProperties.PriceEPSEstimateNextYear
-QuoteProperties.PricePaid
-QuoteProperties.PriceSales
-QuoteProperties.Revenue
-QuoteProperties.SharesOwned
-QuoteProperties.SharesOutstanding
-QuoteProperties.ShortRatio
-QuoteProperties.StockExchange
-QuoteProperties.Symbol
-QuoteProperties.TickerTrend
-QuoteProperties.TradeDate
-QuoteProperties.TradeLinks
-QuoteProperties.TradeLinksAdditional
-QuoteProperties.TwoHundreddayMovingAverage
-QuoteProperties.Volume
-QuoteProperties.YearHigh
-QuoteProperties.YearLow
-QuoteProperties.YearRange
+These projects are intended to facilitate the access of publically accessible finanicial information from two primary sources:
+	* http://finance.google.com
+	* http://finance.yahoo.com
+
+General projects overview:
+	* KNMFin: DLL to scrape Google Finance data and query the Yahoo Finance API, using .NET Framework and the HTML Agility Pack Library for HTML parsing
+	* KNFINUI: DLL providing some functions to display retrieved data using the Windows Presentation Framework
+	* KNFinExcel: DLL providing functions to save queried data to the .xlsx format.
+	* DebugTest: Some basic hard-coded tests of the KNMFin's queries. (No queried data is displayed on visually)
+	* DemoUI: WPF GUI to demo the DLLs' functionality 
+
+To test: DemoUI\DemoUI\bin\Debug\DemoUI.exe (Refer to the README in that project's folder for detailed functionality)
+
+	
