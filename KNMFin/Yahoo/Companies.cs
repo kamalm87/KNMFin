@@ -35,7 +35,12 @@ namespace KNMFin.Yahoo
                         sb.Append( "," + companyTicker );
                 }
                 sb.Append("&f=");
-                foreach ( Quotes.QuoteProperties qp in QuoteProperties )
+
+
+                var sanitizedQP = DistinctQuotePropertyList( QuoteProperties );
+
+
+                foreach ( Quotes.QuoteProperties qp in sanitizedQP )
                     sb.Append( qp.ToString( ) );
                 sb.Append( endURL );
 
@@ -60,39 +65,61 @@ namespace KNMFin.Yahoo
                 // Given from the CompanyTickers parameter
                 string [] stringSeparator = new string [] { "\r\n" };   
                 var resultLines = qResult.Split( stringSeparator, StringSplitOptions.RemoveEmptyEntries );
-
+                
                 // Parse each row, associating the respective company ticker with a Dictionary of Quote Property Name -> Value pairs
                 int iteration = 0, innerIteration = 0;
-                foreach ( string line in resultLines ){
+
+
+                foreach ( string line in resultLines )
+                {
                     Dictionary<string, string> subResults = new Dictionary<string, string>( );
                     var rows = line.Split( ',' );
-                    if ( rows.Length == QuoteProperties.Length ){
+                    if ( rows.Length == sanitizedQP.Count )
+                    {
                         foreach ( string row in rows )
-                            subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), row );
+                        {
+                            if ( !subResults.ContainsKey( sanitizedQP [ innerIteration ].GetDesription( ) ) )
+                                subResults.Add( sanitizedQP [ innerIteration++ ].GetDesription( ), row );
+                        }
+
 
                         result.Add( CompanyTickers [ iteration++ ], subResults );
                         innerIteration = 0;
                     }
                     else
                     {
-                        for ( int i = 1; i < rows.Length; i++ ){
+                        for ( int i = 1; i < rows.Length; i++ )
+                        {
+
+                            if ( innerIteration > sanitizedQP.Count - 1 )
+                                break;
+
                             if ( i == 1 )
                             {
-                                subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), rows[0] + rows[1] );
+                                subResults.Add( sanitizedQP [ innerIteration++ ].GetDesription( ), rows [ 0 ] + rows [ 1 ] );
                             }
                             else
                             {
-                                subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), rows [ i ] );
+                                    subResults.Add( sanitizedQP [ innerIteration++ ].GetDesription( ), rows [ i ] );
                             }
                         }
-                        
+
                         result.Add( CompanyTickers [ iteration++ ], subResults );
                         innerIteration = 0;
                     }
-                    
                 }
+                    
+                
 
                 return result;
+            }
+
+            // Added to prevent duplicates to prevent key insertion errors/redundancy
+            static private List<Quotes.QuoteProperties> DistinctQuotePropertyList( Quotes.QuoteProperties[] qps )
+            {
+                var lQP = qps.ToList<Quotes.QuoteProperties>( );
+                var lQPDistinct = lQP.Distinct( ).ToList<Quotes.QuoteProperties>();
+                return lQPDistinct;
             }
 
             public static Dictionary<string, Dictionary<string, string>> GetCompanyQuotes( List<string> CompanyTickers, Dictionary<string, string> NameValuePairs )

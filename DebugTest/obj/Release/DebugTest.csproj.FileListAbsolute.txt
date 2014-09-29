@@ -1,0 +1,15 @@
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\DebugTest.exe.config
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\DebugTest.exe
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\DebugTest.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\KNMFin.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\KNMFinExcel.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\HtmlAgilityPack.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\EPPlus.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\KNMFin.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\KNMFinExcel.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\HtmlAgilityPack.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\HtmlAgilityPack.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Release\EPPlus.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Release\DebugTest.csprojResolveAssemblyReference.cache
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Release\DebugTest.exe
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Release\DebugTest.pdb

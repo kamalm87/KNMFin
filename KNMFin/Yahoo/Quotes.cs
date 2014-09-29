@@ -61,7 +61,7 @@ namespace KNMFin.Yahoo
             public static readonly QuoteProperties EPSEstimateNextYear = new QuoteProperties( 35, "e8", "E P S Estimate Next Year" );
             public static readonly QuoteProperties ExDividendDate = new QuoteProperties( 36, "q0", "Ex Dividend Date" );
             public static readonly QuoteProperties FiftydayMovingAverage = new QuoteProperties( 37, "m3", "Fiftyday Moving Average" );
-            public static readonly QuoteProperties SharesFloat = new QuoteProperties( 38, "f6", "Shares Float" );
+            
             public static readonly QuoteProperties HighLimit = new QuoteProperties( 39, "l2", "High Limit" );
             public static readonly QuoteProperties HoldingsGain = new QuoteProperties( 40, "g4", "Holdings Gain" );
 
@@ -102,22 +102,38 @@ namespace KNMFin.Yahoo
             public static readonly QuoteProperties PricePaid = new QuoteProperties( 72, "p1", "Price Paid" );
             public static readonly QuoteProperties PriceSales = new QuoteProperties( 73, "p5", "Price Sales" );
             public static readonly QuoteProperties Revenue = new QuoteProperties( 74, "s6", "Revenue" );
-            public static readonly QuoteProperties SharesOwned = new QuoteProperties( 75, "s1", "Shares Owned" );
-            public static readonly QuoteProperties SharesOutstanding = new QuoteProperties( 76, "j2", "Shares Outstanding" );
+            
             public static readonly QuoteProperties ShortRatio = new QuoteProperties( 77, "s7", "Short Ratio" );
             public static readonly QuoteProperties StockExchange = new QuoteProperties( 78, "x0", "Stock Exchange" );
             public static readonly QuoteProperties Symbol = new QuoteProperties( 79, "s0", "Symbol" );
             public static readonly QuoteProperties TickerTrend = new QuoteProperties( 80, "t7", "Ticker Trend" );
 
             public static readonly QuoteProperties TradeDate = new QuoteProperties( 81, "d2", "Trade Date" );
-            public static readonly QuoteProperties TradeLinks = new QuoteProperties( 82, "t6", "Trade Links" );
-            public static readonly QuoteProperties TradeLinksAdditional = new QuoteProperties( 83, "f0", "Trade Links Additional" );
+            
             public static readonly QuoteProperties TwoHundreddayMovingAverage = new QuoteProperties( 84, "m4", "Two Hundredday Moving Average" );
             public static readonly QuoteProperties Volume = new QuoteProperties( 85, "v0", "Volume" );
             public static readonly QuoteProperties YearHigh = new QuoteProperties( 86, "k0", "Year High"  );
             public static readonly QuoteProperties YearLow = new QuoteProperties( 87, "j0", "Year Low" );
             public static readonly QuoteProperties YearRange = new QuoteProperties( 88, "w0", "Year Range" );
 
+
+            // TODO: Implement parsing/special cases
+            // Inactive QuoteProperties: 
+            // 38 - Shares Float
+              public static readonly QuoteProperties SharesFloat = new QuoteProperties( 38, "f6", "Shares Float" ); 
+             // 49 - Last Trade Size
+             
+             // 75 - Shares Owned
+             public static readonly QuoteProperties SharesOwned = new QuoteProperties( 75, "s1", "Shares Owned" );
+             // 76 - Shares Outstanding
+             public static readonly QuoteProperties SharesOutstanding = new QuoteProperties( 76, "j2", "Shares Outstanding" );
+             // 82 - Trade Links
+             public static readonly QuoteProperties TradeLinks = new QuoteProperties( 82, "t6", "Trade Links" );
+             // 83 - Trade Links Additional
+             public static readonly QuoteProperties TradeLinksAdditional = new QuoteProperties( 83, "f0", "Trade Links Additional" );
+
+            // These will be skipped
+            public static HashSet<QuoteProperties> _SpecialCases = new HashSet<QuoteProperties> { SharesFloat, LastTradeSize, SharesOwned, SharesOutstanding, TradeLinks, TradeLinksAdditional };
 
             private QuoteProperties( int value, string name )
             {
@@ -129,11 +145,13 @@ namespace KNMFin.Yahoo
             {
                 if ( GetValueFromName == null ) GetValueFromName = new Dictionary<string, string>( );
                 if ( GetNames == null ) GetNames = new HashSet<string>( );
+                if ( SetOfAll == null ) SetOfAll = new HashSet<QuoteProperties>( );
                 this.value = value;
                 this.name = name;
                 this.description = desription;
                 GetValueFromName.Add( this.description, this.name );
                 GetNames.Add( this.description );
+                SetOfAll.Add( this );
             }
 
             public override string ToString()
@@ -158,11 +176,14 @@ namespace KNMFin.Yahoo
             {
                 return GetValueFromName;
             }
-            
+
+            public static HashSet<QuoteProperties> SetOfAll { get; set; }
             static HashSet<string> GetNames { get; set; }
             static Dictionary<string, string> GetValueFromName{ get; set; }
+
         }
 
+        
         // MarketProperties are used for Sectors and Industries related requests
         // - Neither of these requests offer granulated queries using theese,
         //   they're only for selecting a parameter to sort the response by.

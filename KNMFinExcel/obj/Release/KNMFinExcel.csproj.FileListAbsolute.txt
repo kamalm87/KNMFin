@@ -1,0 +1,12 @@
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\KNMFinExcel.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\KNMFinExcel.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\EPPlus.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\KNMFin.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\HtmlAgilityPack.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\EPPlus.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\KNMFin.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\HtmlAgilityPack.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Release\HtmlAgilityPack.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\obj\Release\KNMFinExcel.csprojResolveAssemblyReference.cache
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\obj\Release\KNMFinExcel.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\obj\Release\KNMFinExcel.pdb
