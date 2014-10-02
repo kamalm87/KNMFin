@@ -11,6 +11,7 @@ namespace DemoUI
     {
         public DemoUI_Data()
         {
+            NameToQuoteProperty = InitQuotePropertyMap( );
             QuotePropertyNames = KNMFin.Yahoo.Quotes.QuoteProperties.GetAllNames( );
             QuoteProperties = KNMFin.Yahoo.Quotes.QuoteProperties.GetAllNameValuePairs( );
             Tickers = new HashSet<string>( );
@@ -25,10 +26,21 @@ namespace DemoUI
         Dictionary<string, List<string>> TickerGroups { get; set; }
         Dictionary<string, string> NameToTicker { get; set; }
         Dictionary<string, string> TickerToName { get; set; }
+        public Dictionary<string, KNMFin.Yahoo.Quotes.QuoteProperties> NameToQuoteProperty { get; set; }
         public Dictionary<string, string> QuoteProperties { get; set; }
         public string [] QuotePropertyNames { get; set; }
         public Dictionary<string, CompanyQuery> Queries { get; set; }
         public CompanyQuery FocusedQuery { get; set; }
+
+        Dictionary<string, KNMFin.Yahoo.Quotes.QuoteProperties> InitQuotePropertyMap()
+        {
+            var qps = new Dictionary<string, KNMFin.Yahoo.Quotes.QuoteProperties>( );
+            foreach ( var qp in KNMFin.Yahoo.Quotes.QuoteProperties.SetOfAll )
+            {
+                qps.Add( qp.GetDesription( ), qp );
+            }
+            return qps;
+        }
     }
 
     public class CompanyQuery

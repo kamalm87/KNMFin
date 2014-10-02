@@ -38,7 +38,26 @@ namespace KNMFin.Yahoo
 
 
                 var sanitizedQP = DistinctQuotePropertyList( QuoteProperties );
+                List<Quotes.QuoteProperties> specialCases = new List<Quotes.QuoteProperties>( );
+                List<Quotes.QuoteProperties> itemsToRemove = new List<Quotes.QuoteProperties>( );
 
+                foreach ( Quotes.QuoteProperties qp in sanitizedQP )
+                {
+                    if ( Quotes.QuoteProperties._SpecialCases.Contains( qp ) )
+                    {
+                        specialCases.Add( qp );
+                        itemsToRemove.Add( qp );
+                    }
+                }
+                if(itemsToRemove.Count > 0)
+                {
+                    foreach ( var qp in itemsToRemove )
+                        sanitizedQP.Remove( qp );
+                }
+                string baseQuery = null;
+
+                if ( specialCases.Count != 0 )
+                    baseQuery = sb.ToString();
 
                 foreach ( Quotes.QuoteProperties qp in sanitizedQP )
                     sb.Append( qp.ToString( ) );
@@ -108,12 +127,48 @@ namespace KNMFin.Yahoo
                         innerIteration = 0;
                     }
                 }
-                    
-                
+
+                // Perform an individual request for each special case
+                // If the query is successful, adds the first and only key, value pair into the inner result dictionary, 
+                // for each associated company in the outter dictionary
+                if ( baseQuery != null )
+                {
+                    foreach(var qp in specialCases){
+                        var query = SpecialCaseQuoteQuery(baseQuery,CompanyTickers,  qp);
+                        if ( query != null )
+                        {
+                            for ( int i = 0; i < CompanyTickers.Count; i++ )
+                                result [ CompanyTickers [ i ] ].Add( query [ CompanyTickers [ i ] ].Keys.FirstOrDefault( ), query [ CompanyTickers [ i ] ].Values.FirstOrDefault( ) ); 
+                        }
+                    }
+                }
 
                 return result;
             }
 
+            // For each company, the outter dictionary key, makes a single item query for the special case quote property
+            // The inner dictionary is expected to be the quote property name, value pair
+            // If request is unsuccessful, returns null 
+            static private Dictionary<string, Dictionary<string, string>> SpecialCaseQuoteQuery( string baseQuery, List<string> tickers, Quotes.QuoteProperties qp )
+            {
+                baseQuery += qp.ToString( );
+                baseQuery +=  endURL;
+
+                var qResult = string.Empty;
+                try{ qResult = client.DownloadString( baseQuery ); }
+                catch{ return null; }
+
+                string [] stringSeparator = new string [] { "\r\n" };
+                var resultLines = qResult.Split( stringSeparator, StringSplitOptions.RemoveEmptyEntries );
+                var result = new Dictionary<string, Dictionary<string, string>>( );
+                for(int i = 0; i < tickers.Count; i++)                {
+                    var valuePair = new Dictionary<string, string>( );
+                    valuePair.Add( qp.GetDesription( ), resultLines [ i ] );
+                    result.Add( tickers [ i ], valuePair );
+                }
+
+                return result;
+            }
             // Added to prevent duplicates to prevent key insertion errors/redundancy
             static private List<Quotes.QuoteProperties> DistinctQuotePropertyList( Quotes.QuoteProperties[] qps )
             {
@@ -166,19 +221,12 @@ namespace KNMFin.Yahoo
                 var resultLines = qResult.Split( stringSeparator, StringSplitOptions.RemoveEmptyEntries );
 
                 // Parse each row, associating the respective company ticker with a Dictionary of Quote Property Name -> Value pairs
-                int iteration = 0, innerIteration = 0;
+                int iteration = 0;
                 foreach ( string line in resultLines )
                 {
                     Dictionary<string, string> subResults = new Dictionary<string, string>( );
                     var rows = line.Split( ',' );
-
-                    int blah = 1;
-                    /*
-                    foreach ( string row in rows )
-                        subResults.Add( QuoteProperties [ innerIteration++ ].GetDesription( ), row );
-                    */
                     result.Add( CompanyTickers [ iteration++ ], subResults );
-                    innerIteration = 0;
                 }
 
                 return result;

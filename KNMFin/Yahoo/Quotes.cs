@@ -134,7 +134,6 @@ namespace KNMFin.Yahoo
 
             // These will be skipped
             public static HashSet<QuoteProperties> _SpecialCases = new HashSet<QuoteProperties> { SharesFloat, LastTradeSize, SharesOwned, SharesOutstanding, TradeLinks, TradeLinksAdditional };
-
             private QuoteProperties( int value, string name )
             {
                 this.name = name;

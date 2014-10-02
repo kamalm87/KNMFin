@@ -29,6 +29,7 @@ namespace DemoUI
         {
             InitializeComponent( );
             this.Data = new DemoUI_Data( );
+            lbMarketQuoteProperties.Items.Add( "All" );
             foreach ( string s in this.Data.QuotePropertyNames )
                 lbMarketQuoteProperties.Items.Add( s );
         }
@@ -47,25 +48,43 @@ namespace DemoUI
 
             DateTime dtBeg = dtpBegDate.SelectedDate != null ? dtpBegDate.SelectedDate.Value : DateTime.Now;
             DateTime dtEnd = dtpEndDate.SelectedDate != null ? dtpEndDate.SelectedDate.Value : DateTime.Now;
+            KNMFin.Yahoo.Quotes.QuoteProperties[] QPs = null;
+            if ( lbMarketQuoteProperties.Items.Count > 0 )
+            {
+                if ( lbMarketQuotePropertiesSlated.Items.Contains( "All" ) )
+                {
+                    QPs = KNMFin.Yahoo.Quotes.QuoteProperties.SetOfAll.ToArray<KNMFin.Yahoo.Quotes.QuoteProperties>( );
+                }
+                else
+                {
+                    List<KNMFin.Yahoo.Quotes.QuoteProperties> tempQPS = new List<KNMFin.Yahoo.Quotes.QuoteProperties>();
+                    foreach ( string item in lbMarketQuotePropertiesSlated.Items )
+                    {
+                        tempQPS.Add( this.Data.NameToQuoteProperty[item] );
+                    }
+                    QPs = tempQPS.ToArray<KNMFin.Yahoo.Quotes.QuoteProperties>( );
+                }
 
-            KNMFin.Yahoo.Quotes.QuoteProperties[] testQps = new KNMFin.Yahoo.Quotes.QuoteProperties[]{ KNMFin.Yahoo.Quotes.QuoteProperties.Name, KNMFin.Yahoo.Quotes.QuoteProperties.MarketCapitalization, KNMFin.Yahoo.Quotes.QuoteProperties.Revenue };
-
+            }
+             // = new KNMFin.Yahoo.Quotes.QuoteProperties[]{ KNMFin.Yahoo.Quotes.QuoteProperties.Name, KNMFin.Yahoo.Quotes.QuoteProperties.MarketCapitalization, KNMFin.Yahoo.Quotes.QuoteProperties.Revenue };
+            int kendrickL = 1;
 
             Task.Factory.StartNew( () =>
             {
                 foreach ( string s in tickersToQuery )
                 {
                     if ( !Data.Queries.ContainsKey( s ) ){
-                        Data.Queries.Add( s, new CompanyQuery( s, true, true, true, new Tuple<DateTime, DateTime>( dtBeg, dtEnd ), testQps ) );
+                        Data.Queries.Add( s, new CompanyQuery( s, true, true, true, new Tuple<DateTime, DateTime>( dtBeg, dtEnd ), QPs )  );
                         Dispatcher.Invoke( ()=>{lbQueryResults.Items.Add( s );});
                         
                     }
                     else
                     {
-                        Data.Queries [ s ] = new CompanyQuery( s, true, true, true, new Tuple<DateTime, DateTime>( dtBeg, dtEnd ), testQps );
+                        Data.Queries [ s ] = new CompanyQuery( s, true, true, true, new Tuple<DateTime, DateTime>( dtBeg, dtEnd ), QPs );
                         Dispatcher.Invoke( () => { lbQueryResults.Items.Add( s ); } );
                     }
                 }
+                
             } );
             
             

@@ -38,43 +38,7 @@ namespace DebugTest
         public static Dictionary<string, Dictionary<string, string>> testCompanies()
         {
             var tickersToQuery = new string [] { "aapl", "bac", "gs", "mcd", "sbux", "mmm", "t", "v", "flws" };
-      /*    var quoteProprties = new QuoteProperties []{
-                    QuoteProperties.AfterHoursChangeRealtime,
-                    QuoteProperties.AnnualizedGain,
-                    QuoteProperties.Ask,
-                    QuoteProperties.AskRealtime,
-                QuoteProperties.AskSize,
-                QuoteProperties.AverageDailyVolume, QuoteProperties.Bid, QuoteProperties.BidRealtime, QuoteProperties.BidSize, QuoteProperties.BookValuePerShare, QuoteProperties.Change, QuoteProperties.Change_ChangeInPercent, QuoteProperties.ChangeFromFiftydayMovingAverage, QuoteProperties.ChangeFromTwoHundreddayMovingAverage, QuoteProperties.ChangeFromYearHigh, QuoteProperties.ChangeFromYearLow, QuoteProperties.ChangeInPercent, QuoteProperties.ChangeInPercentFromYearHigh, QuoteProperties.ChangeInPercentRealtime, QuoteProperties.Change_ChangeInPercent, QuoteProperties.Commission, QuoteProperties.Currency, QuoteProperties.DaysHigh, QuoteProperties.DaysLow, QuoteProperties.DaysRange, QuoteProperties.DaysRangeRealtime, QuoteProperties.DaysValueChange, QuoteProperties.DaysValueChangeRealtime, QuoteProperties.DilutedEPS, QuoteProperties.DividendPayDate, QuoteProperties.EBITDA, QuoteProperties.EPSEstimateCurrentYear, QuoteProperties.EPSEstimateNextQuarter, QuoteProperties.EPSEstimateNextYear, QuoteProperties.ExDividendDate, QuoteProperties.FiftydayMovingAverage, QuoteProperties.HighLimit, QuoteProperties.HoldingsGain, QuoteProperties.HoldingsGainPercent, QuoteProperties.HoldingsGainPercentRealtime, QuoteProperties.HoldingsGainRealtime, QuoteProperties.HoldingsValue, QuoteProperties.HoldingsValueRealtime, QuoteProperties.LastTradeDate, QuoteProperties.LastTradePriceOnly, QuoteProperties.LastTradeRealtimeWithTime, QuoteProperties.LastTradeSize, QuoteProperties.LastTradeTime, QuoteProperties.LastTradeWithTime, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.MarketCapitalization, QuoteProperties.MarketCapRealtime, 
-                QuoteProperties.MoreInfo, QuoteProperties.Name, QuoteProperties.Notes
-            };
-
-            */
-            var limQP = new QuoteProperties[]{
-                
-             QuoteProperties.AfterHoursChangeRealtime,
-                    QuoteProperties.AnnualizedGain,
-                    QuoteProperties.Ask,
-                    QuoteProperties.AskRealtime,
-                QuoteProperties.AskSize,
-                QuoteProperties.AverageDailyVolume, QuoteProperties.Bid, QuoteProperties.BidRealtime, QuoteProperties.BidSize, QuoteProperties.BookValuePerShare, QuoteProperties.Change, QuoteProperties.Change_ChangeInPercent, QuoteProperties.ChangeFromFiftydayMovingAverage, QuoteProperties.ChangeFromTwoHundreddayMovingAverage, QuoteProperties.ChangeFromYearHigh, QuoteProperties.ChangeFromYearLow, QuoteProperties.ChangeInPercent, QuoteProperties.ChangeInPercentFromYearHigh, QuoteProperties.ChangeInPercentRealtime, QuoteProperties.Change_ChangeInPercent, QuoteProperties.Commission, QuoteProperties.Currency, QuoteProperties.DaysHigh, QuoteProperties.DaysLow, QuoteProperties.DaysRange, QuoteProperties.DaysRangeRealtime, QuoteProperties.DaysValueChange, QuoteProperties.DaysValueChangeRealtime, QuoteProperties.DilutedEPS, QuoteProperties.DividendPayDate, QuoteProperties.EBITDA, QuoteProperties.EPSEstimateCurrentYear, QuoteProperties.EPSEstimateNextQuarter, QuoteProperties.EPSEstimateNextYear, QuoteProperties.ExDividendDate, QuoteProperties.FiftydayMovingAverage, QuoteProperties.HighLimit, QuoteProperties.HoldingsGain, QuoteProperties.HoldingsGainPercent, QuoteProperties.HoldingsGainPercentRealtime, QuoteProperties.HoldingsGainRealtime, QuoteProperties.HoldingsValue, QuoteProperties.HoldingsValueRealtime, QuoteProperties.LastTradeDate, QuoteProperties.LastTradePriceOnly, QuoteProperties.LastTradeRealtimeWithTime, QuoteProperties.LastTradeTime, QuoteProperties.LastTradeWithTime, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.LowLimit, QuoteProperties.MarketCapitalization, QuoteProperties.MarketCapRealtime, 
-                QuoteProperties.OneyrTargetPrice, QuoteProperties.Open, QuoteProperties.OrderBookRealtime, QuoteProperties.PEGRatio, QuoteProperties.PERatio, QuoteProperties.PERatioRealtime,
-                QuoteProperties.PercentChangeFromFiftydayMovingAverage, QuoteProperties.PercentChangeFromTwoHundreddayMovingAverage, QuoteProperties.PercentChangeFromYearLow, QuoteProperties.PreviousClose, QuoteProperties.PriceBook, QuoteProperties.PriceEPSEstimateCurrentYear, QuoteProperties.PriceEPSEstimateNextYear, QuoteProperties.PricePaid, QuoteProperties.PriceSales, QuoteProperties.Revenue, // QuoteProperties.SharesFloat, QuoteProperties.SharesOutstanding, QuoteProperties.SharesOwned, 
-                QuoteProperties.ShortRatio,
-                QuoteProperties.StockExchange, QuoteProperties.Symbol, QuoteProperties.TickerTrend, QuoteProperties.TradeDate, QuoteProperties.TrailingAnnualDividendYield, QuoteProperties.TrailingAnnualDividendYieldInPercent, QuoteProperties.TwoHundreddayMovingAverage, QuoteProperties.Volume, QuoteProperties.YearHigh, QuoteProperties.YearLow, QuoteProperties.YearRange,
-                QuoteProperties.MoreInfo, QuoteProperties.Name, QuoteProperties.Notes
-            };
-
-
-            
-            List<QuoteProperties> qps = new List<QuoteProperties>( );
-            var a = QuoteProperties.GetAllNameValuePairs( );
-            foreach ( var qp in QuoteProperties.SetOfAll )
-            {
-                if ( !QuoteProperties._SpecialCases.Contains( qp ) )
-                    qps.Add( qp );
-            }
-
-            return KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( tickersToQuery.ToList<string>( ), qps.ToArray<QuoteProperties>() );
+            return KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( tickersToQuery.ToList<string>( ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
         }
 
         public static Dictionary<string, Dictionary<string, double>> testSectors()
