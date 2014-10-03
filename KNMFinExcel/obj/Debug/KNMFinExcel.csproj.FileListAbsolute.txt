@@ -1,4 +1,3 @@
-C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\obj\Debug\KNMFinExcel.csprojResolveAssemblyReference.cache
 C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Debug\KNMFinExcel.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Debug\KNMFinExcel.pdb
 C:\Users\KNM\Documents\GitHub\KNMFin\KNMFinExcel\bin\Debug\EPPlus.dll

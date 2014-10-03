@@ -23,6 +23,28 @@ namespace DebugTest
 {
     static class TestYahoo
     {
+
+        public static List<string> CreateTickerListFromCSV( string fileName )
+        {
+            List<string> list = new List<string>( );
+            using ( System.IO.StreamReader sr = new System.IO.StreamReader( fileName ) )
+            {
+                string [] separator = new string [] { "\r\n" };
+
+                String [] lines = sr.ReadToEnd( ).Split( separator, StringSplitOptions.None );
+                return lines.ToList<string>( );
+            }
+        }
+
+
+
+        public static string [] GetDJIATickers()
+        {
+            return new string []{ "MMM", "AXP", "T", "BA", "CAT", "CVX", "CSCO", "KO", "DD", "XOM","GE", "GS", "HD", "INTC", "IBM", "JBJ", "JPM", "MCD", "MRK",
+                                   "MSFT", "NKE", "PFE",  "PG", "TRV", "UNH", "UTX", "VZ", "V", "WMT", "DIS" 
+                                };
+        }
+
         public static Dictionary<string, Dictionary<string, Dictionary<string, double?>> > testIndustry()
         {
             var industriesToQuery = new Industry[]{Industry.Accident_and_Health_Insurance_, Industry.Basic_Materials_Wholesale_, Industry.Diversified_Investments_, Industry.Toy_and_Hobby_Stores_};
@@ -38,7 +60,9 @@ namespace DebugTest
         public static Dictionary<string, Dictionary<string, string>> testCompanies()
         {
             var tickersToQuery = new string [] { "aapl", "bac", "gs", "mcd", "sbux", "mmm", "t", "v", "flws" };
-            return KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( tickersToQuery.ToList<string>( ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
+            
+            // HARDCODED FILE PATH
+            return KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
         }
 
         public static Dictionary<string, Dictionary<string, double>> testSectors()
@@ -69,10 +93,15 @@ namespace DebugTest
     //
     // - set the breakpoint to the final bracket in the main function and each var should contain relevant data
     //   , provided that there are no internet connectivity issues
+
+    // TODO: Fix below note!
+    // Note: Ctrl+F: HARDCODED FILE PATH to find the hardcoded file paths. Should change them to get working examples
     class Program
     {
         static void Main( string [] args )
         {
+
+            
             Console.WriteLine( "Begining: Yahoo Industry Test" );
             var yahooIndustryQuery = TestYahoo.testIndustry( );
             Console.WriteLine( "Begining: Yahoo Hisotrical Price Test" );
@@ -84,15 +113,19 @@ namespace DebugTest
             // HARD-CODED DIRECTORY -- CHANGE THIS IF TESTING SOMEWHERE ELSE
             // ExcelYahoo.SaveToExcel( @"C:\users\knm\desktop\bigsean", list );            
 
-            Console.WriteLine( "Begining: Yahoo Company Test" );
+            Console.WriteLine( "Beginning: Yahoo Company Test" );
             var yahooCompaniesQuery = TestYahoo.testCompanies( );
+            // HARDCODED FILE PATH
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\marketquotes.xlsx", yahooCompaniesQuery ); 
+            // TODO: Large number of companies presented issue -- new special cases for presence of commas in response csv
             var wut = yahooCompaniesQuery;
             int DEBUG_POINT = 1;
-            Console.WriteLine( "Begining: Yahoo Sector Test" );
+            Console.WriteLine( "Beginning: Yahoo Sector Test" );
             var yahooSectorsQuery = TestYahoo.testSectors( );
 
-            Console.WriteLine( "Begining: Google Test" );
+            Console.WriteLine( "Beginning: Google Test" );
             var googleCompanyInfoQuery = TestGoogle.testCompanyInfo( );
+            DEBUG_POINT = 2;
         
         }
     }

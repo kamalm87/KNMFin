@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
+
+
 namespace KNMFin.Yahoo
 {
     namespace CompanyQuote
@@ -14,18 +18,32 @@ namespace KNMFin.Yahoo
             // quote properties must explicitly be assigned into this array
             // The tickers must be valid for a successful response, or else the function will return null
 
-            /// <summary>
-            /// Query Quote Properties from a list of company tickers.  
-            /// </summary>
-            /// <param name="CompanyTickers"></param>
-            /// <param name="QuoteProperties">Desired</param>
-            /// <returns>A dictionary of company ticker names with an associated dictionary of Quote Property Names and associated values</returns>
+            // TODO: Large number of companies presented issue -- new special cases for presence of commas in response csv
             public static Dictionary<string, Dictionary<string, string>> GetCompanyQuotes(List<string> CompanyTickers, params Quotes.QuoteProperties[] QuoteProperties )
             {
+                // Sanitize the CompanyTicker list of null/empty strings and duplicate tickers
+                CompanyTickers = CompanyTickers.Where( i => i != string.Empty && i != null ).Distinct( ).ToList<string>( );
+                
                 Dictionary<string, Dictionary<string, string>> result = new Dictionary<string, Dictionary<string, string>>( );
                 StringBuilder sb = new StringBuilder( baseURL );
 
-                
+                // * SPECIAL CASE IF LOGIC * 
+                // Public Yahoo URL requests are limited to 200 tickers, so if the amount of tickers exceeds that amount
+                // The CompanyTicker's list will be iteratively 'spliced', with the spliced tickers being called recursively
+                // and added to the base function's results.
+                if ( CompanyTickers.Count > 200 )
+                {
+                    int numberOfSplices = (int)Math.Floor(CompanyTickers.Count / 200.0);
+                    for ( int i = 0; i < numberOfSplices; i++ )
+                    {
+                        var tempList = CompanyTickers.Skip( ( i + 1 ) * 200 ).Take( 200 ).ToList<string>( );
+                        var recursiveResults = GetCompanyQuotes( tempList, QuoteProperties );
+                        foreach ( KeyValuePair<string, Dictionary<string, string>> vals in recursiveResults )
+                            result.Add( vals.Key, vals.Value );
+                    }
+                    CompanyTickers = CompanyTickers.Take( 200 ).ToList<string>();
+                }
+
                 // This block builds the request URL
                 foreach(string companyTicker in CompanyTickers ){
                 
@@ -143,6 +161,11 @@ namespace KNMFin.Yahoo
                     }
                 }
 
+                foreach(KeyValuePair<string, Dictionary<string, string>> vals in result){
+                    var mq = new MarketQuotation( vals.Value );
+                }
+                
+                
                 return result;
             }
 
@@ -235,6 +258,43 @@ namespace KNMFin.Yahoo
             private static readonly string baseURL = @"http://download.finance.yahoo.com/d/quotes.csv?s=";
             private static readonly string endURL = @"&e=.csv";
             private static System.Net.WebClient client = new System.Net.WebClient( );
-        }        
+        }
+
+        public class MarketQuotation
+        {
+            public MarketQuotation( Dictionary<string, string> ParsedQuotes )
+            {
+                Data = new Dictionary<MarketQuotation, MarketData>( );
+                foreach ( KeyValuePair<string, string> values in ParsedQuotes )
+                {
+                    var wut = Quotes.QuoteProperties.SetOfAll.Where( i => i.GetDesription( ) == values.Key ).FirstOrDefault();
+                    if ( wut != null )
+                    {
+                        // Data.Add(wut, values.Value)
+                    }
+                    var db = 1;
+                }
+            }
+
+            Dictionary<MarketQuotation, MarketData> Data;
+        }
+
+
+        struct MarketData{
+            bool Numeric;
+            
+            object GetData(){
+                if(Numeric)
+                    return decData;
+                else
+                    return strData;
+            }
+
+            string GetString(){
+                return strData;
+            }
+            decimal decData;
+            string strData;
+        }
     }
 }

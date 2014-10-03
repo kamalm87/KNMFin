@@ -24,6 +24,35 @@ namespace KNMFinExcel.Yahoo
             pck = null;
         }
 
+        public static void SaveMarketQuotes(string fileName, Dictionary<string, Dictionary<string, string>> RawParsedData) {
+            var fi = new System.IO.FileInfo(fileName);
+            pck = new ExcelPackage(fi);
+            var ws = pck.Workbook.Worksheets.Add("Results");
+            
+            var headers = RawParsedData.Values.FirstOrDefault().Keys;
+            int i = 2, j = 2;
+            foreach(string s in headers){
+                ws.Cells[1, i++ ].Value = s;
+            }
+            
+            i = 2;
+            foreach ( KeyValuePair<string, Dictionary<string, string>> vals in RawParsedData ) {
+                
+                ws.Cells[j,1].Value = vals.Key;
+                var data = vals.Value;
+                foreach ( KeyValuePair<string, string> innerVals in data )
+                {
+                    ws.Cells [ j, i].Value = innerVals.Value;
+                    i++;
+                }
+                i = 2;
+                j++;
+            }
+
+            pck.Save( );
+            pck = null;
+        }
+
 
         static void CreateCompanyStockPriceResultsTab( StockPriceResult spr )
         {
