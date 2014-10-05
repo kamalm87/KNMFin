@@ -101,10 +101,16 @@ namespace DebugTest
         static void Main( string [] args )
         {
 
+            var iamagod = QuoteProperties.SetOfAll.ToArray<QuoteProperties>( );
             
-            Console.WriteLine( "Begining: Yahoo Industry Test" );
+
+            var wut = KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyMarketQuotations( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
+            
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveToExcel( @"C:\users\knm\desktop\wut.xlsx", wut );
+            
+            Console.WriteLine( "Beginning: Yahoo Industry Test" );
             var yahooIndustryQuery = TestYahoo.testIndustry( );
-            Console.WriteLine( "Begining: Yahoo Hisotrical Price Test" );
+            Console.WriteLine( "Beginning: Yahoo Historical Price Test" );
             var yahooHistoricalPriceQuery = TestYahoo.testHistoricalPrices( );
             var list = new List<KNMFin.Yahoo.HistoricalQuotes.StockPriceResult>();
             foreach(var item in yahooHistoricalPriceQuery)
@@ -114,11 +120,15 @@ namespace DebugTest
             // ExcelYahoo.SaveToExcel( @"C:\users\knm\desktop\bigsean", list );            
 
             Console.WriteLine( "Beginning: Yahoo Company Test" );
-            var yahooCompaniesQuery = TestYahoo.testCompanies( );
+       //     var yahooCompaniesQuery = TestYahoo.testCompanies( );
             // HARDCODED FILE PATH
-            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\marketquotes.xlsx", yahooCompaniesQuery ); 
+         //   KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\marketquotes1.xlsx", yahooCompaniesQuery, true ); 
+
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\restricted_quer.xlsx", KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>()), true );
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\restricted_query1.xlsx", KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ),
+                new QuoteProperties [] { QuoteProperties.Name, QuoteProperties.Revenue, QuoteProperties.MarketCapitalization, QuoteProperties.EBITDA, QuoteProperties.BookValuePerShare, QuoteProperties.PriceBook } ), true );
             // TODO: Large number of companies presented issue -- new special cases for presence of commas in response csv
-            var wut = yahooCompaniesQuery;
+           // var wut = yahooCompaniesQuery;
             int DEBUG_POINT = 1;
             Console.WriteLine( "Beginning: Yahoo Sector Test" );
             var yahooSectorsQuery = TestYahoo.testSectors( );

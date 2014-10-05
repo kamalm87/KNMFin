@@ -1,0 +1,665 @@
+Market Quotations Special Cases
+* Ask
+	- N/A
+	- Number
+* Ask (Realtime
+	- N/A
+	- 0
+	- Number
+* Average Daily Volume
+	- N/A
+	- 0
+	- Number
+* Bid
+	- N/A
+	- 0
+	- Number
+* Bid (Realtime)
+	- N/A
+	- 0
+	- Number
+* Book Value Per Share
+	- N/A
+	- 0
+	- Number
+* Change
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* Change From Fiftyday Moving Average
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* Change From Two Hundredday Moving Average
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* Change From Year Highhttp://www.okcupid.com/profile/phapha02?cf=messages
+	** PERCENTAGE
+	- N/A
+	- 0http://www.okcupid.com/profile/phapha02?cf=messages
+	- Number
+* Change From Year Low]
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* Change In Percent
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* Change In Percent (Realtime)
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* Change (Realtime)
+	** PERCENTAGE
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+
+* []
+	- N/A
+	- 0
+	- Number
+* []* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+* []
+	- N/A
+	- 0
+	- Number
+

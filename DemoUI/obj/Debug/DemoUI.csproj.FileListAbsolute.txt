@@ -2,12 +2,16 @@ C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\DemoUI.exe.config
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\DemoUI.exe
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\DemoUI.pdb
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFin.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinExcel.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinUI.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\HtmlAgilityPack.dll
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\EPPlus.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFin.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinExcel.pdb
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinUI.pdb
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\HtmlAgilityPack.xml
+C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\EPPlus.xml
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.csprojResolveAssemblyReference.cache
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\MainWindow.baml
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\MainWindow.g.cs
@@ -18,7 +22,3 @@ C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.Properties.Resource
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.csproj.GenerateResource.Cache
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.exe
 C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\obj\Debug\DemoUI.pdb
-C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinExcel.dll
-C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\EPPlus.dll
-C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\KNMFinExcel.pdb
-C:\Users\KNM\Documents\GitHub\KNMFin\DemoUI\bin\Debug\EPPlus.xml
