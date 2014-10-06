@@ -3,7 +3,6 @@ C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\DebugTest.exe
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\DebugTest.pdb
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\EPPlus.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFin.dll
-C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFinExcel.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\HtmlAgilityPack.dll
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\EPPlus.xml
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFin.pdb
@@ -13,3 +12,4 @@ C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\HtmlAgilityPack.xml
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Debug\DebugTest.csprojResolveAssemblyReference.cache
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Debug\DebugTest.exe
 C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\obj\Debug\DebugTest.pdb
+C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\bin\Debug\KNMFinExcel.dll

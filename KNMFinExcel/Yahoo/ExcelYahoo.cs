@@ -83,7 +83,7 @@ namespace KNMFinExcel.Yahoo
         {
             if ( System.IO.File.Exists( fileName ) ){
                 fileName.Remove(fileName.Length-5);
-                fileName = fileName + DateTime.Now.Millisecond.ToString() + ".xslx";
+                fileName = "dupe_" + fileName;
             }
 
             System.IO.FileInfo fi = new System.IO.FileInfo( fileName );
@@ -105,6 +105,17 @@ namespace KNMFinExcel.Yahoo
                     var md = vals.Value;
                     foreach ( KNMFin.Yahoo.CompanyQuote.MarketDataItem mdi in md.Items)
                     {
+
+
+                        if ( mdi.Type == KNMFin.Yahoo.Quotes.ResultType.Date )
+                        {
+                            ws.Cells [ j, i ].Style.Numberformat.Format = "mm-dd-yy";
+                        }
+                        if ( mdi.Type == KNMFin.Yahoo.Quotes.ResultType.TruncuatedCurrency )
+                        {
+                            ws.Cells [ j, i ].Style.Numberformat.Format = "\"$\"#,##0;";
+                        }
+
                         ws.Cells [ j, i ].Value = mdi.ActualData( ) != null ? mdi.ActualData( ) : "-";
                         i++;
                     }
@@ -120,6 +131,9 @@ namespace KNMFinExcel.Yahoo
 
         static void CreateCompanyStockPriceResultsTab( StockPriceResult spr )
         {
+            // checks for results, terminating if none
+            if ( spr.Results == false ) return;
+
             string ticker = spr.Ticker.ToUpper( );
             
             var ws = pck.Workbook.Worksheets.Add( ticker );

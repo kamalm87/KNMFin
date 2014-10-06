@@ -169,7 +169,7 @@ namespace KNMFin.Yahoo
                 }
 
                 
-                return result;
+                    return result;
             }
 
 
@@ -467,23 +467,21 @@ namespace KNMFin.Yahoo
                 _data = null;
                 this.Property = Quote;
                 this.Type = Quote.Type;
-                try
-                {
-                    if ( Property.Type == Quotes.ResultType.Date ) ParseDate( input );
-                    if ( Property.Type == Quotes.ResultType.Number ) ParseNumber( input );
-                    if ( Property.Type == Quotes.ResultType.Pair ) ParsePair( input );
-                    if ( Property.Type == Quotes.ResultType.Percentage ) ParsePercentage( input );
-                    if ( Property.Type == Quotes.ResultType.Range ) ParseRange( input );
-                    if ( Property.Type == Quotes.ResultType.RangePercentage ) ParsePercentageRange( input );
-                    if ( Property.Type == Quotes.ResultType.Text ) ParseText( input );
-                    if ( Property.Type == Quotes.ResultType.TruncuatedCurrency ) ParseTruncateCurrency( input );
-                }
-                catch(Exception ex){}
+                
+                if ( Property.Type == Quotes.ResultType.Date ) ParseDate( input );
+                if ( Property.Type == Quotes.ResultType.Number ) ParseNumber( input );
+                if ( Property.Type == Quotes.ResultType.Pair ) ParsePair( input );
+                if ( Property.Type == Quotes.ResultType.Percentage ) ParsePercentage( input );
+                if ( Property.Type == Quotes.ResultType.Range ) ParseRange( input );
+                if ( Property.Type == Quotes.ResultType.RangePercentage ) ParsePercentageRange( input );
+                if ( Property.Type == Quotes.ResultType.Text ) ParseText( input );
+                if ( Property.Type == Quotes.ResultType.TruncuatedCurrency ) ParseTruncateCurrency( input );
+                
                 
             }
 
             Quotes.QuoteProperties Property;
-            Quotes.ResultType Type;
+            public Quotes.ResultType Type;
 
             public string StringData()
             {

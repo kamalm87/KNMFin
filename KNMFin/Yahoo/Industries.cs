@@ -293,15 +293,15 @@ namespace KNMFin.Yahoo
                     Dictionary<string, double?> industryData = new Dictionary<string, double?>( );
 
                     // % formatted cases: (1) 1-Day Price Chg % (2) ROE % (3) Div. Yield % (4) Net Profit Margin (mrq)
-                    industryData.Add( cols [ 0 ], rows [ 1 + offset ] != "NA" ? Convert.ToDouble( rows [ 1 + offset ] ) / 100 : default( double? ) );
-                    industryData.Add( cols [ 3 ], rows [ 4 + offset ] != "NA" ? Convert.ToDouble( rows [ 4 + offset ] ) / 100 : default( double? ) );
-                    industryData.Add( cols [ 4 ], rows [ 5 + offset ] != "NA" ? Convert.ToDouble( rows [ 5 + offset ] ) / 100 : default( double? ) );
-                    industryData.Add( cols [ 7 ], rows [ 8 + offset ] != "NA" ? Convert.ToDouble( rows [ 8 + offset ] ) / 100 : default( double? ) );
+                    industryData.Add( cols [ 0 ].Replace("\"","").Replace("\\", ""), rows [ 1 + offset ] != "NA" ? Convert.ToDouble( rows [ 1 + offset ] ) / 100 : default( double? ) );
+                    industryData.Add( cols [ 3 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 4 + offset ] != "NA" ? Convert.ToDouble( rows [ 4 + offset ] ) / 100 : default( double? ) );
+                    industryData.Add( cols [ 4 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 5 + offset ] != "NA" ? Convert.ToDouble( rows [ 5 + offset ] ) / 100 : default( double? ) );
+                    industryData.Add( cols [ 7 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 8 + offset ] != "NA" ? Convert.ToDouble( rows [ 8 + offset ] ) / 100 : default( double? ) );
                     // standard numeric cases: (1) P/E (2) Debt to Equity (3) Price to Book (4) Price To Free Cash Flow (mrq)
-                    industryData.Add( cols [ 2 ], rows [ 3 + offset ] != "NA" ? Convert.ToDouble( rows [ 3 + offset ] ): default( double? ) );
-                    industryData.Add( cols [ 5 ], rows [ 6 + offset ] != "NA" ? Convert.ToDouble( rows [ 6 + offset ] ) : default( double? ) );
-                    industryData.Add( cols [ 6 ], rows [ 7 + offset ] != "NA" ? Convert.ToDouble( rows [ 7 + offset ] ) : default( double? ) );
-                    industryData.Add( cols [ 8 ], rows [ 9 + offset ] != "NA" ? Convert.ToDouble( rows [ 9 + offset ] ) : default( double? ) );
+                    industryData.Add( cols [ 2 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 3 + offset ] != "NA" ? Convert.ToDouble( rows [ 3 + offset ] ) : default( double? ) );
+                    industryData.Add( cols [ 5 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 6 + offset ] != "NA" ? Convert.ToDouble( rows [ 6 + offset ] ) : default( double? ) );
+                    industryData.Add( cols [ 6 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 7 + offset ] != "NA" ? Convert.ToDouble( rows [ 7 + offset ] ) : default( double? ) );
+                    industryData.Add( cols [ 8 ].Replace( "\"", "" ).Replace( "\\", "" ), rows [ 9 + offset ] != "NA" ? Convert.ToDouble( rows [ 9 + offset ] ) : default( double? ) );
                     // special numeric case: * Market Cap -- contains 'B" to represent a billion
                     if ( rows [ 2 ] != "NA" ){
                         string tempValue = rows [ 2 + offset ].Substring( 0, rows [ 2 + offset ].Length - 1 );

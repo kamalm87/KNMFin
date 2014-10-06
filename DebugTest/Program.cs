@@ -85,7 +85,7 @@ namespace DebugTest
     }
 
 
-
+ 
 
     // Intention: to ad-hoc test procedures -- nothing permanent is expected to be contained here
 
@@ -94,47 +94,75 @@ namespace DebugTest
     // - set the breakpoint to the final bracket in the main function and each var should contain relevant data
     //   , provided that there are no internet connectivity issues
 
-    // TODO: Fix below note!
-    // Note: Ctrl+F: HARDCODED FILE PATH to find the hardcoded file paths. Should change them to get working examples
     class Program
     {
+        static string AppDataFolder()
+        {
+            string dataPath = Environment.CurrentDirectory;
+            int indexOfBaseDirectory = dataPath.IndexOf( "\\bin" );
+            string baseDir = dataPath.Substring( 0, indexOfBaseDirectory );
+            string dataFilePath = baseDir + "\\DATA\\";
+            return dataFilePath;
+        }
+
+        static string BaseOutputDir(){
+            return Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\";
+        }
+
+        static string CreateNamedOutputFile( string testName, string extensionName )
+        {
+            return testName + "__" + DateTime.Now.Hour.ToString( ) + "_" + DateTime.Now.Minute.ToString() + "_" + DateTime.Now.Millisecond.ToString( ) + extensionName;
+        }
+
+        static string AppDataDir = AppDataFolder();
+        static string OutputDir = BaseOutputDir();
+
+
+
+        static List<KNMFin.Yahoo.HistoricalQuotes.StockPriceResult> StockReturns( List<String> Tickers, DateTime beg, DateTime end, Frequency freq = Frequency.Daily )
+        {
+            var yahooHistoricalPriceQuery = KNMFin.Yahoo.HistoricalQuotes.Quote.QueryStockPriceInformation( Tickers, beg, end, freq);
+            var list = new List<KNMFin.Yahoo.HistoricalQuotes.StockPriceResult>( );
+            foreach ( var item in yahooHistoricalPriceQuery )
+                list.Add( item );
+            return list;
+        }
+
+        // - Note: The ExcelYahoo functions are expected to save the files to the Desktop
         static void Main( string [] args )
         {
+            // Creates lists of tickers, represented by stocks representing the sp500 and dow jones industrial (as of 10/6/14)
+            // (Note: there are some extra tickers for the sp500 list)
+            var sp500TickerList = TestYahoo.CreateTickerListFromCSV( AppDataDir + "sp500tickers.csv" );
+            var djiaTickerList = TestYahoo.GetDJIATickers( ).ToList<string>( );
 
-            var iamagod = QuoteProperties.SetOfAll.ToArray<QuoteProperties>( );
-            
-
-            var wut = KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyMarketQuotations( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
-            
-            KNMFinExcel.Yahoo.ExcelYahoo.SaveToExcel( @"C:\users\knm\desktop\wut.xlsx", wut );
-            
-            Console.WriteLine( "Beginning: Yahoo Industry Test" );
+            // Queries Sector/Industries
             var yahooIndustryQuery = TestYahoo.testIndustry( );
-            Console.WriteLine( "Beginning: Yahoo Historical Price Test" );
-            var yahooHistoricalPriceQuery = TestYahoo.testHistoricalPrices( );
-            var list = new List<KNMFin.Yahoo.HistoricalQuotes.StockPriceResult>();
-            foreach(var item in yahooHistoricalPriceQuery)
-                list.Add(item);
-
-            // HARD-CODED DIRECTORY -- CHANGE THIS IF TESTING SOMEWHERE ELSE
-            // ExcelYahoo.SaveToExcel( @"C:\users\knm\desktop\bigsean", list );            
-
-            Console.WriteLine( "Beginning: Yahoo Company Test" );
-       //     var yahooCompaniesQuery = TestYahoo.testCompanies( );
-            // HARDCODED FILE PATH
-         //   KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\marketquotes1.xlsx", yahooCompaniesQuery, true ); 
-
-            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\restricted_quer.xlsx", KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>()), true );
-            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( @"C:\users\knm\desktop\restricted_query1.xlsx", KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ),
-                new QuoteProperties [] { QuoteProperties.Name, QuoteProperties.Revenue, QuoteProperties.MarketCapitalization, QuoteProperties.EBITDA, QuoteProperties.BookValuePerShare, QuoteProperties.PriceBook } ), true );
-            // TODO: Large number of companies presented issue -- new special cases for presence of commas in response csv
-           // var wut = yahooCompaniesQuery;
-            int DEBUG_POINT = 1;
-            Console.WriteLine( "Beginning: Yahoo Sector Test" );
             var yahooSectorsQuery = TestYahoo.testSectors( );
 
-            Console.WriteLine( "Beginning: Google Test" );
+            // Queries all the possibile market quotations (88: Including Market Cap, Revenue, etc.) for every company in the SP500 index
+            var sp500quotes = KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyMarketQuotations( sp500TickerList, QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveToExcel( OutputDir + CreateNamedOutputFile( "quotations", ".xlsx" ), sp500quotes );
+
+            // Queries the daily historical prices of every company in SP500 index from the first available return in 2014 to the current date
+            // - Each company's returns will be in a worksheet with company's ticker name as the worksheet's name
+            // - Will take some time. Will generate a 3MB spreadsheet containg 500+ worksheets
+            var sp500_2014Returns = StockReturns( sp500TickerList, new DateTime( 2014, 1, 1 ), DateTime.Now );
+            ExcelYahoo.SaveToExcel( OutputDir + CreateNamedOutputFile( "SP500returns_2014", ".xlsx" ), sp500_2014Returns );
+
+            // Queries the daily historical prices of every company in the Dow Jones Industrial Average from the first available date to the current date
+            // - Each company's returns will be in a worksheet with company's ticker name as the worksheet's name
+            // - Will take a significant amount of time. Will generate ~10MB spreadsheet.
+            var djia_AllReturns = StockReturns( djiaTickerList, new DateTime( 1900, 1, 1 ), DateTime.Now );
+            ExcelYahoo.SaveToExcel( OutputDir + CreateNamedOutputFile( "DJIAreturns_2014", ".xlsx" ), djia_AllReturns);
+
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveMarketQuotes( OutputDir + CreateNamedOutputFile("restricted_quotes", ".xlsx"), KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( sp500TickerList,
+                new QuoteProperties [] { QuoteProperties.Name, QuoteProperties.Revenue, QuoteProperties.MarketCapitalization, QuoteProperties.EBITDA, QuoteProperties.BookValuePerShare, QuoteProperties.PriceBook } ), true );
+            // End of all Yahoo queries
+            int DEBUG_POINT = 1;
+
             var googleCompanyInfoQuery = TestGoogle.testCompanyInfo( );
+            // End of all Google queries
             DEBUG_POINT = 2;
         
         }
