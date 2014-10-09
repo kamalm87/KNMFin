@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 
 
-using KNMFin.Yahoo.Industries;
+using KNMFin.Yahoo.Aggregates;
 using KNMFin.Yahoo.Quotes;
-using KNMFin.Yahoo.Sectors;
 using KNMFin.Yahoo.HistoricalQuotes;
 using KNMFin.Yahoo.CompanyQuote;
 
@@ -45,36 +44,15 @@ namespace DebugTest
                                 };
         }
 
-        public static Dictionary<string, Dictionary<string, Dictionary<string, double?>> > testIndustry()
-        {
-            var industriesToQuery = new Industry[]{Industry.Accident_and_Health_Insurance_, Industry.Basic_Materials_Wholesale_, Industry.Diversified_Investments_, Industry.Toy_and_Hobby_Stores_};
-            return KNMFin.Yahoo.Industries.Quote.IndustryQuery( industriesToQuery );
-        }
+      
 
-        public static List<KNMFin.Yahoo.HistoricalQuotes.StockPriceResult> testHistoricalPrices()
-        {
-            var tickersToQuery = new string [] { "aapl", "bac", "gs", "mcd", "sbux", "mmm", "t", "v", "flws" };
-            return KNMFin.Yahoo.HistoricalQuotes.Quote.QueryStockPriceInformation( tickersToQuery, new DateTime( 1900, 1, 1 ), DateTime.Now, Frequency.Daily );
-        }
-
-        public static Dictionary<string, Dictionary<string, string>> testCompanies()
-        {
-            var tickersToQuery = new string [] { "aapl", "bac", "gs", "mcd", "sbux", "mmm", "t", "v", "flws" };
-            
-            // HARDCODED FILE PATH
-            return KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyQuotes( TestYahoo.CreateTickerListFromCSV( @"C:\Users\KNM\Documents\GitHub\KNMFin\DebugTest\DATA\sp500tickers.csv" ), QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );
-        }
-
-        public static Dictionary<string, Dictionary<string, double>> testSectors()
-        {
-            return KNMFin.Yahoo.Sectors.Quote.SectorQuery( );
-        }
     }
 
     static class TestGoogle
     {
         public static List<KNMFin.Google.CompanyInfo> testCompanyInfo()
         {
+            // Companies: Apple Computer, Bank of America, Goldman-Sachs, McDonald's, Starbucks, MMM, AT&T, Visa, 1-800-Flowers.com
             var tickersToQuery = new string [] { "aapl", "bac", "gs", "mcd", "sbux", "mmm", "t", "v", "flws" };
             var results = new List<KNMFin.Google.CompanyInfo>();
             foreach ( string ticker in tickersToQuery )
@@ -84,18 +62,10 @@ namespace DebugTest
         }
     }
 
-
- 
-
     // Intention: to ad-hoc test procedures -- nothing permanent is expected to be contained here
-
-    // Currently: 
-    //
-    // - set the breakpoint to the final bracket in the main function and each var should contain relevant data
-    //   , provided that there are no internet connectivity issues
-
     class Program
     {
+        // Gets user specific folder for some csv files containing stock tickers, assuming the project's folder structure has not been altered
         static string AppDataFolder()
         {
             string dataPath = Environment.CurrentDirectory;
@@ -105,10 +75,12 @@ namespace DebugTest
             return dataFilePath;
         }
 
+        // Creates a base output directory, corresponding to the location of the current user's desktop folder
         static string BaseOutputDir(){
             return Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\";
         }
 
+        // creates a pseudo-unique time stamped filename for testing purposes
         static string CreateNamedOutputFile( string testName, string extensionName )
         {
             return testName + "__" + DateTime.Now.Hour.ToString( ) + "_" + DateTime.Now.Minute.ToString() + "_" + DateTime.Now.Millisecond.ToString( ) + extensionName;
@@ -131,14 +103,18 @@ namespace DebugTest
         // - Note: The ExcelYahoo functions are expected to save the files to the Desktop
         static void Main( string [] args )
         {
+
+            var yahooIndustryQuery = Aggregates.Sectors( );
+            
+            // Queries all of the Industries in the Technology sector
+            var industryQ = Aggregates.Industries( Industry.Technology.ToList<Industry>());
+            // Creates an excel spreadsheet, containing a worksheet for each queried industry in the technology sector
+            KNMFinExcel.Yahoo.ExcelYahoo.SaveToExcel( OutputDir + CreateNamedOutputFile( "industries", ".xlsx" ), industryQ );
+
             // Creates lists of tickers, represented by stocks representing the sp500 and dow jones industrial (as of 10/6/14)
             // (Note: there are some extra tickers for the sp500 list)
             var sp500TickerList = TestYahoo.CreateTickerListFromCSV( AppDataDir + "sp500tickers.csv" );
             var djiaTickerList = TestYahoo.GetDJIATickers( ).ToList<string>( );
-
-            // Queries Sector/Industries
-            var yahooIndustryQuery = TestYahoo.testIndustry( );
-            var yahooSectorsQuery = TestYahoo.testSectors( );
 
             // Queries all the possibile market quotations (88: Including Market Cap, Revenue, etc.) for every company in the SP500 index
             var sp500quotes = KNMFin.Yahoo.CompanyQuote.Quote.GetCompanyMarketQuotations( sp500TickerList, QuoteProperties.SetOfAll.ToArray<QuoteProperties>( ) );

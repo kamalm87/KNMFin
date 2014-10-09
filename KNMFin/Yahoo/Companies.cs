@@ -506,15 +506,33 @@ namespace KNMFin.Yahoo
                 string s1 = input.Substring( 0, dashIndex ), s2 = input.Substring( dashIndex + 1 );
                 if ( s1.Length > 3 && !s1.Contains( "N/A" ) )
                 {
-                    int spaceIndex = s1.IndexOf( " " );
-                    string sub1 = s1.Substring( 0, spaceIndex ).Replace(" ", ""), sub2 = s1.Substring( spaceIndex + 1 ).Replace(" ", "");
-                    int month = MonthMap [ sub1 ], day = Int16.Parse( sub2 ), year = DateTime.Now.Year;
-                    DateTime dt = new DateTime( year, month, day );
-                    decimal? i2 = Decimal.Parse(s2.Replace( "<b>", "" ).Replace( "</b>" , "").Replace(" ", ""));
-                    _data = new Tuple<DateTime?, decimal?>( dt, i2 );
-                    _str = dt.ToShortDateString( ) + ": " + i2.ToString( );
-                    var xgonGive = 1;
-                    return;
+                    if ( input.Contains( "pm" ) || input.Contains( "am" ) )
+                    {
+                        int endIndex = input.Contains( "pm" ) ? input.IndexOf( "pm" ) : input.IndexOf( "am" );
+                        string tempSubstring = input.Substring( 0, endIndex );
+                        int colonIndex = tempSubstring.IndexOf( ":" );
+                        int hour = Int32.Parse( tempSubstring.Substring( 0, colonIndex ).Replace( "-", "" ) ), minutes = Int32.Parse( tempSubstring.Substring( colonIndex + 1 ).Replace( "-", "" ) );
+                        // Add time of day
+                        DateTime dt = new DateTime( DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hour, minutes, 0 );
+                        _data = dt;
+                        _str = dt.Hour.ToString( ) + ":" + ( dt.Minute.ToString( ).Length == 2 ? dt.Minute.ToString( ) : "0" + dt.Minute.ToString( ) );
+
+                        return;
+                    }
+                    else
+                    {
+                        int spaceIndex = s1.IndexOf( " " );
+                        string sub1 = s1.Substring( 0, spaceIndex ).Replace( " ", "" ), sub2 = s1.Substring( spaceIndex + 1 ).Replace( " ", "" );
+                        int month = MonthMap [ sub1 ], day = Int16.Parse( sub2 ), year = DateTime.Now.Year;
+                        DateTime dt = new DateTime( year, month, day );
+                        decimal? i2 = Decimal.Parse( s2.Replace( "<b>", "" ).Replace( "</b>", "" ).Replace( " ", "" ) );
+                        _data = new Tuple<DateTime?, decimal?>( dt, i2 );
+                        _str = dt.ToShortDateString( ) + ": " + i2.ToString( );
+                        var xgonGive = 1;
+                        return;
+                    }
+
+                   
                 }
                 else
                 {

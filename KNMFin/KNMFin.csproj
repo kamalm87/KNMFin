@@ -46,9 +46,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Yahoo\Companies.cs" />
     <Compile Include="Yahoo\HistoricalQuotes.cs" />
-    <Compile Include="Yahoo\Industries.cs" />
+    <Compile Include="Yahoo\Aggregates.cs" />
     <Compile Include="Yahoo\Quotes.cs" />
-    <Compile Include="Yahoo\Sectors.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

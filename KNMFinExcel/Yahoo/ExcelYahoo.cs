@@ -5,12 +5,129 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using KNMFin.Yahoo.HistoricalQuotes;
-
+using KNMFin.Yahoo.Aggregates;
 namespace KNMFinExcel.Yahoo
 {
     
     public static class ExcelYahoo
     {
+
+        public static void SaveToExcel( string fileName, IList<AggregateResult> agrs )
+        {
+            System.IO.FileInfo fi = new System.IO.FileInfo( fileName );
+            pck = new ExcelPackage( fi );
+
+            foreach ( AggregateResult ag in agrs )
+            {
+                CreateIndustryResultTab( ag );
+            }
+            pck.Save( );
+            pck = null;
+        }
+
+        static void CreateIndustryResultTab( AggregateResult agr )
+        {
+            var ws = pck.Workbook.Worksheets.Add( agr.Industry.Name );
+            ws.Cells [ "A1" ].Value = "Description";
+            ws.Cells [ "B1" ].Value = "1-Day Price Chg %";
+            ws.Cells [ "C1" ].Value = "Market Cap";
+            ws.Cells [ "D1" ].Value = "P/E";
+            ws.Cells [ "E1" ].Value = "ROE %";
+            ws.Cells [ "F1" ].Value = "Div. Yield %";
+            ws.Cells [ "G1" ].Value = "Debt to Equity";
+            ws.Cells [ "H1" ].Value = "Price to Book";
+            ws.Cells [ "I1" ].Value = "Net Profit Margin (mrq)";
+            ws.Cells [ "J1" ].Value = "Price To Free Cash Flow (mrq)";
+
+            int j = 2;
+            foreach ( Result r in agr.Companies )
+            {
+                ws.Cells [ j, 1 ].Value = r.Name;
+                foreach ( KeyValuePair<AggregateProperty, double?> kvp in r.Values )
+                {
+                    
+                    if ( kvp.Key == AggregateProperty.OneDayPriceChange)
+                    {
+                        ws.Cells [ j, 3 ].Value = kvp.Value;
+
+                    }
+                    if ( kvp.Key == AggregateProperty.MarketCap )
+                    {
+                        if ( kvp.Value != null )
+                        {
+                            ws.Cells [ j, 3 ].Style.Numberformat.Format = "\"$\"#,##0;";
+                            ws.Cells [ j, 3 ].Value = kvp.Value;
+                        }
+                        else
+                        {
+                            ws.Cells [ j, 3 ].Value = "-";
+                        }
+                        
+
+                    }
+                    if ( kvp.Key == AggregateProperty.PriceOverEarnings )
+                    {
+                        if ( kvp.Value != null )
+                            ws.Cells [ j, 4 ].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 4 ].Value = "-";
+
+                    }
+                    if ( kvp.Key == AggregateProperty.ReturnOnEquity )
+                    {
+                        if(kvp.Value != null)
+                            ws.Cells [ j, 5].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 5 ].Value = "-";
+                    }
+                    if ( kvp.Key == AggregateProperty.DividendYield )
+                    {
+                        if ( kvp.Value != null )
+                            ws.Cells [ j, 6 ].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 6 ].Value = "-";
+
+                    }
+                    if ( kvp.Key == AggregateProperty.DebtToEquity)
+                    {
+                        if(kvp.Value != null)
+                            ws.Cells [j, 7 ].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 7 ].Value = "-";
+
+                    }
+                    if ( kvp.Key == AggregateProperty.PriceToBook )
+                    {
+                        if(kvp.Value != null)
+                            ws.Cells [ j, 8].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 8 ].Value = "-";
+
+                    }
+                    if ( kvp.Key == AggregateProperty.NetProfit )
+                    {
+                        if(kvp.Value != null)
+                            ws.Cells [j, 9 ].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 9 ].Value = "-";
+
+                    }
+
+                    if ( kvp.Key == AggregateProperty.PriceToFreeCashFlow)
+                    {
+                        if(kvp.Value != null)
+                            ws.Cells [ j, 10 ].Value = kvp.Value;
+                        else
+                            ws.Cells [ j, 10 ].Value = "-";
+
+                    }
+
+                }
+                j++;
+            }
+        }
+
+
         public static void SaveToExcel( string fileName, IList<StockPriceResult> sprs )
         {
             System.IO.FileInfo fi = new System.IO.FileInfo( fileName );

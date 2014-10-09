@@ -10,16 +10,16 @@ namespace KNMFin.Yahoo
     {
         public enum ResultType
         {
-            Text,  
+            Text,
             Number,
             Percentage,
             Range,
             RangePercentage,
             TruncuatedCurrency,
             Date,
-            Pair
+            Pair,
+            Currency
         }
-
 
         // QuoteProperties are used for Companies Quotations requests
         // For an arbitrary QuoteProperties object:
