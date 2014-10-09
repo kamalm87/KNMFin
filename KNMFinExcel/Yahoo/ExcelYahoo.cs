@@ -49,6 +49,8 @@ namespace KNMFinExcel.Yahoo
                     if ( kvp.Key == AggregateProperty.OneDayPriceChange)
                     {
                         ws.Cells [ j, 3 ].Value = kvp.Value;
+                        ws.Cells [ j, 3 ].Style.Numberformat.Format = "#0\\.00%";
+                        // .Style.Numberformat.Format ="#0\\.00%";
 
                     }
                     if ( kvp.Key == AggregateProperty.MarketCap )
@@ -75,15 +77,20 @@ namespace KNMFinExcel.Yahoo
                     }
                     if ( kvp.Key == AggregateProperty.ReturnOnEquity )
                     {
-                        if(kvp.Value != null)
-                            ws.Cells [ j, 5].Value = kvp.Value;
+                        if(kvp.Value != null){
+                            ws.Cells [ j, 5 ].Value = kvp.Value;
+                            ws.Cells [ j, 5 ].Style.Numberformat.Format = "#0\\.00%";
+                        }
                         else
                             ws.Cells [ j, 5 ].Value = "-";
                     }
                     if ( kvp.Key == AggregateProperty.DividendYield )
                     {
                         if ( kvp.Value != null )
+                        {
                             ws.Cells [ j, 6 ].Value = kvp.Value;
+                            ws.Cells [ j, 6 ].Style.Numberformat.Format = "#0\\.00%";
+                        }
                         else
                             ws.Cells [ j, 6 ].Value = "-";
 
@@ -106,9 +113,11 @@ namespace KNMFinExcel.Yahoo
                     }
                     if ( kvp.Key == AggregateProperty.NetProfit )
                     {
-                        if(kvp.Value != null)
-                            ws.Cells [j, 9 ].Value = kvp.Value;
-                        else
+                        if ( kvp.Value != null )
+                        {
+                            ws.Cells [ j, 9 ].Value = kvp.Value;
+                            ws.Cells [ j, 9 ].Style.Numberformat.Format = "#0\\.00%";
+                        }
                             ws.Cells [ j, 9 ].Value = "-";
 
                     }
