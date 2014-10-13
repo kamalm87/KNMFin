@@ -1,0 +1,1269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="StockPortfolioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="StreetName" Type="nvarchar" MaxLength="40" />
+          <Property Name="ZipCode" Type="varchar" MaxLength="15" />
+          <Property Name="City" Type="nvarchar" MaxLength="40" />
+          <Property Name="State" Type="nvarchar" MaxLength="5" />
+          <Property Name="Country" Type="nvarchar" MaxLength="40" />
+          <Property Name="Phone" Type="varchar" MaxLength="15" />
+          <Property Name="Fax" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="FinancialSnapshot">
+          <Key>
+            <PropertyRef Name="QueryDate" />
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="QueryDate" Type="date" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="Beta" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="ClosePrice" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="OpenPrice" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="Dividend" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="DividendYield" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="EarningsPerShare" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="FiftyTwoWeekLow" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="FiftyTwoWeekHigh" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="InstitutionalOwnership" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="MarketCap" Type="decimal" Precision="23" Scale="6" />
+          <Property Name="PriceEarnings" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="RangeLow" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="RangeHigh" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="Shares" Type="decimal" Precision="23" Scale="6" />
+          <Property Name="VolumeAverage" Type="decimal" Precision="14" Scale="6" />
+          <Property Name="VolumeDaily" Type="decimal" Precision="14" Scale="6" />
+        </EntityType>
+        <EntityType Name="InfoCompany">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Ticker" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KeyAccountingStats">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="Period" />
+            <PropertyRef Name="Annual" />
+          </Key>
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="Period" Type="date" Nullable="false" />
+          <Property Name="Annual" Type="bit" Nullable="false" />
+          <Property Name="NetProfitMargin" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="OperatingMargin" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="EBITDMargin" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="ReturnOnAverageAssets" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="ReturnOnAverageEquity" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="Employees" Type="int" />
+          <Property Name="CDPScoreN" Type="int" />
+          <Property Name="CDPScoreL" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="InfoExchange">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LinksExchange">
+          <Key>
+            <PropertyRef Name="ExchangeID" />
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="ExchangeID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BalanceSheet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Annual" Type="bit" Nullable="false" />
+          <Property Name="PeriodEnd" Type="date" Nullable="false" />
+          <Property Name="Cash_and_Equivalents" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Short_Term_Investments" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Cash_and_Short_Term_Investments" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Accounts_Receivable__Trade__Net" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Receivables__Other" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Receivables__Net" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Inventory" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Prepaid_Expenses" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Current_Assets__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Current_Assets" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Property_and_Plant_and_Equipment__Total__Gross" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Accumulated_Depreciation__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Goodwill__Net" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Intangibles__Net" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Long_Term_Investments" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Long_Term_Assets__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Assets" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Accounts_Payable" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Accrued_Expenses" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Notes_Payable_and_Short_Term_Debt" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Current_Port_of_LT_Debt_and_Capital_Leases" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Current_liabilities__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Current_Liabilities" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Long_Term_Debt" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Capital_Lease_Obligations" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Long_Term_Debt" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Debt" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Deferred_Income_Tax" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Minority_Interest" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Liabilities__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Liabilities" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Redeemable_Preferred_Stock__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Preferred_Stock__Non_Redeemable__Net" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Common_Stock__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Additional_PaidIn_Capital" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Retained_Earnings__Accumulated_Deficit_" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Treasury_Stock__Common" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Equity__Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Equity" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Liabilities_and_Shareholders_Equity" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Shares_Outs__Common_Stock_Primary_Issue" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Common_Shares_Outstanding" Type="decimal" Precision="20" Scale="4" />
+        </EntityType>
+        <EntityType Name="CompanyBalanceSheet">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="StatementID" />
+          </Key>
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="StatementID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompanyCashFlowStatement">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="StatementID" />
+          </Key>
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="StatementID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompanyIncomeStatement">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="StatementID" />
+          </Key>
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="StatementID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IncomeStatement">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Annual" Type="bit" Nullable="false" />
+          <Property Name="PeriodEnd" Type="date" Nullable="false" />
+          <Property Name="Cash_and_Equivalents" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Revenue" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Revenue_Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Revenue" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Cost_of_Revenue_Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Gross_Profit" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Selling_and_General_and_Admin_Expenses_Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Research_and_Development" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Depreciation_and_Amortization" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Interest_Expense__Income___less_Net_Operating" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Unusual_Expense___Income__" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Operating_Expenses_Total" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Operating_Expense" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Operating_Income" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Interest_Income__Expense___Net_NonOperating" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Gain___Loss___on_Sale_of_Assets" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Net" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Before_Tax" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Income_After_Tax" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Minority_Interest" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Equity_In_Affiliates" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Net_Income_Before_Extra_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Accounting_Change" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Discontinued_Operations" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Extraordinary_Item" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Net_Income" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Preferred_Dividends" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Available_to_Common_Excl_Extra_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Available_to_Common_Incl_Extra_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_Weighted_Average_Shares" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_EPS_Excluding_Extraordinary_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_EPS_Including_Extraordinary_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Dilution_Adjustment" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_Weighted_Average_Shares" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_EPS_Excluding_Extraordinary_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_EPS_Including_Extraordinary_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Dividends_per_Share__less__Common_Stock_Primary_Issue" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Gross_Dividends__less__Common_Stock" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Net_Income_after_Stock_Based_Comp_Expense" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_EPS_after_Stock_Based_Comp_Expense" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_EPS_after_Stock_Based_Comp_Expense" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Depreciation_Supplemental" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Special_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Normalized_Income_Before_Taxes" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Effect_of_Special_Items_on_Income_Taxes" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Taxes_Ex_Impact_of_Special_Items" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Normalized_Income_After_Taxes" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Normalized_Income_Avail_to_Common" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_Normalized_EPS" Type="decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_Normalized_EPS" Type="decimal" Precision="20" Scale="4" />
+        </EntityType>
+        <EntityType Name="StatementOfCashFlow">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Annual" Type="bit" Nullable="false" />
+          <Property Name="PeriodEnd" Type="date" Nullable="false" />
+          <Property Name="Net_Income_and_Starting_Line" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Depreciation_and_Depletion" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Amortization" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Deferred_Taxes" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="NonCash_Items" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Changes_in_Working_Capital" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_from_Operating_Activities" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Capital_Expenditures" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Other_Investing_Cash_Flow_Items__Total" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_from_Investing_Activities" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Financing_Cash_Flow_Items" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Total_Cash_Dividends_Paid" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Issuance__Retirement__of_Stock__Net" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Issuance__Retirement__of_Debt__Net" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_from_Financing_Activities" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Foreign_Exchange_Effects" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Net_Change_in_Cash" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_Interest_Paid__Supplemental" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_Taxes_Paid__Supplemental" Type="decimal" Precision="20" Scale="2" />
+        </EntityType>
+        <EntityType Name="InfoIndustry">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Links">
+          <Key>
+            <PropertyRef Name="IndustryID" />
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="IndustryID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InfoList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LinksList">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="ListID" />
+          </Key>
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+          <Property Name="ListID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InfoSector">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LinksSector">
+          <Key>
+            <PropertyRef Name="SectorID" />
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="SectorID" Type="int" Nullable="false" />
+          <Property Name="CompanyID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Address__Company__58D1301D">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CompanyBa__Compa__6BAEFA67">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="CompanyBalanceSheet" Type="Self.CompanyBalanceSheet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyBalanceSheet">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CompanyBa__State__6CA31EA0">
+          <End Role="BalanceSheet" Type="Self.BalanceSheet" Multiplicity="1" />
+          <End Role="CompanyBalanceSheet" Type="Self.CompanyBalanceSheet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BalanceSheet">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyBalanceSheet">
+              <PropertyRef Name="StatementID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CompanyCa__Compa__7167D3BD">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="CompanyCashFlowStatement" Type="Self.CompanyCashFlowStatement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyCashFlowStatement">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CompanyCa__State__725BF7F6">
+          <End Role="StatementOfCashFlow" Type="Self.StatementOfCashFlow" Multiplicity="1" />
+          <End Role="CompanyCashFlowStatement" Type="Self.CompanyCashFlowStatement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatementOfCashFlow">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyCashFlowStatement">
+              <PropertyRef Name="StatementID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CompanyIn__Compa__7720AD13">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="CompanyIncomeStatement" Type="Self.CompanyIncomeStatement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyIncomeStatement">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CompanyIn__State__7814D14C">
+          <End Role="IncomeStatement" Type="Self.IncomeStatement" Multiplicity="1" />
+          <End Role="CompanyIncomeStatement" Type="Self.CompanyIncomeStatement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IncomeStatement">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CompanyIncomeStatement">
+              <PropertyRef Name="StatementID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Financial__Compa__5BAD9CC8">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="FinancialSnapshot" Type="Self.FinancialSnapshot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FinancialSnapshot">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__KeyAccoun__Compa__0E04126B">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="KeyAccountingStats" Type="Self.KeyAccountingStats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="KeyAccountingStats">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__CompanyID__634EBE90">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="LinksList" Type="Self.LinksList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LinksList">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__CompanyID__6FB49575">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="LinksSector" Type="Self.LinksSector" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LinksSector">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__CompanyID__756D6ECB">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="Links" Type="Self.Links" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Links">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__CompanyID__7B264821">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="LinksExchange" Type="Self.LinksExchange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LinksExchange">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__ExchangeI__7A3223E8">
+          <End Role="InfoExchange" Type="Self.InfoExchange" Multiplicity="1" />
+          <End Role="LinksExchange" Type="Self.LinksExchange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoExchange">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LinksExchange">
+              <PropertyRef Name="ExchangeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__IndustryI__74794A92">
+          <End Role="InfoIndustry" Type="Self.InfoIndustry" Multiplicity="1" />
+          <End Role="Links" Type="Self.Links" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoIndustry">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Links">
+              <PropertyRef Name="IndustryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__ListID__6442E2C9">
+          <End Role="InfoList" Type="Self.InfoList" Multiplicity="1" />
+          <End Role="LinksList" Type="Self.LinksList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoList">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LinksList">
+              <PropertyRef Name="ListID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Links__SectorID__6EC0713C">
+          <End Role="InfoSector" Type="Self.InfoSector" Multiplicity="1" />
+          <End Role="LinksSector" Type="Self.LinksSector" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoSector">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LinksSector">
+              <PropertyRef Name="SectorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StockPortfolioModelStoreContainer">
+          <EntitySet Name="Address" EntityType="Self.Address" Schema="Company" store:Type="Tables" />
+          <EntitySet Name="FinancialSnapshot" EntityType="Self.FinancialSnapshot" Schema="Company" store:Type="Tables" />
+          <EntitySet Name="InfoCompany" EntityType="Self.InfoCompany" Schema="Company" store:Type="Tables" />
+          <EntitySet Name="KeyAccountingStats" EntityType="Self.KeyAccountingStats" Schema="Company" store:Type="Tables" />
+          <EntitySet Name="InfoExchange" EntityType="Self.InfoExchange" Schema="Exchanges" store:Type="Tables" />
+          <EntitySet Name="LinksExchange" EntityType="Self.LinksExchange" Schema="Exchanges" store:Type="Tables" />
+          <EntitySet Name="BalanceSheet" EntityType="Self.BalanceSheet" Schema="FS" store:Type="Tables" />
+          <EntitySet Name="CompanyBalanceSheet" EntityType="Self.CompanyBalanceSheet" Schema="FS" store:Type="Tables" />
+          <EntitySet Name="CompanyCashFlowStatement" EntityType="Self.CompanyCashFlowStatement" Schema="FS" store:Type="Tables" />
+          <EntitySet Name="CompanyIncomeStatement" EntityType="Self.CompanyIncomeStatement" Schema="FS" store:Type="Tables" />
+          <EntitySet Name="IncomeStatement" EntityType="Self.IncomeStatement" Schema="FS" store:Type="Tables" />
+          <EntitySet Name="StatementOfCashFlow" EntityType="Self.StatementOfCashFlow" Schema="FS" store:Type="Tables" />
+          <EntitySet Name="InfoIndustry" EntityType="Self.InfoIndustry" Schema="Industries" store:Type="Tables" />
+          <EntitySet Name="Links" EntityType="Self.Links" Schema="Industries" store:Type="Tables" />
+          <EntitySet Name="InfoList" EntityType="Self.InfoList" Schema="Lists" store:Type="Tables" />
+          <EntitySet Name="LinksList" EntityType="Self.LinksList" Schema="Lists" store:Type="Tables" />
+          <EntitySet Name="InfoSector" EntityType="Self.InfoSector" Schema="Sectors" store:Type="Tables" />
+          <EntitySet Name="LinksSector" EntityType="Self.LinksSector" Schema="Sectors" store:Type="Tables" />
+          <AssociationSet Name="FK__Address__Company__58D1301D" Association="Self.FK__Address__Company__58D1301D">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="Address" EntitySet="Address" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CompanyBa__Compa__6BAEFA67" Association="Self.FK__CompanyBa__Compa__6BAEFA67">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="CompanyBalanceSheet" EntitySet="CompanyBalanceSheet" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CompanyBa__State__6CA31EA0" Association="Self.FK__CompanyBa__State__6CA31EA0">
+            <End Role="BalanceSheet" EntitySet="BalanceSheet" />
+            <End Role="CompanyBalanceSheet" EntitySet="CompanyBalanceSheet" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CompanyCa__Compa__7167D3BD" Association="Self.FK__CompanyCa__Compa__7167D3BD">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="CompanyCashFlowStatement" EntitySet="CompanyCashFlowStatement" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CompanyCa__State__725BF7F6" Association="Self.FK__CompanyCa__State__725BF7F6">
+            <End Role="StatementOfCashFlow" EntitySet="StatementOfCashFlow" />
+            <End Role="CompanyCashFlowStatement" EntitySet="CompanyCashFlowStatement" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CompanyIn__Compa__7720AD13" Association="Self.FK__CompanyIn__Compa__7720AD13">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="CompanyIncomeStatement" EntitySet="CompanyIncomeStatement" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CompanyIn__State__7814D14C" Association="Self.FK__CompanyIn__State__7814D14C">
+            <End Role="IncomeStatement" EntitySet="IncomeStatement" />
+            <End Role="CompanyIncomeStatement" EntitySet="CompanyIncomeStatement" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Financial__Compa__5BAD9CC8" Association="Self.FK__Financial__Compa__5BAD9CC8">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="FinancialSnapshot" EntitySet="FinancialSnapshot" />
+          </AssociationSet>
+          <AssociationSet Name="FK__KeyAccoun__Compa__0E04126B" Association="Self.FK__KeyAccoun__Compa__0E04126B">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="KeyAccountingStats" EntitySet="KeyAccountingStats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__CompanyID__634EBE90" Association="Self.FK__Links__CompanyID__634EBE90">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="LinksList" EntitySet="LinksList" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__CompanyID__6FB49575" Association="Self.FK__Links__CompanyID__6FB49575">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="LinksSector" EntitySet="LinksSector" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__CompanyID__756D6ECB" Association="Self.FK__Links__CompanyID__756D6ECB">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="Links" EntitySet="Links" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__CompanyID__7B264821" Association="Self.FK__Links__CompanyID__7B264821">
+            <End Role="InfoCompany" EntitySet="InfoCompany" />
+            <End Role="LinksExchange" EntitySet="LinksExchange" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__ExchangeI__7A3223E8" Association="Self.FK__Links__ExchangeI__7A3223E8">
+            <End Role="InfoExchange" EntitySet="InfoExchange" />
+            <End Role="LinksExchange" EntitySet="LinksExchange" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__IndustryI__74794A92" Association="Self.FK__Links__IndustryI__74794A92">
+            <End Role="InfoIndustry" EntitySet="InfoIndustry" />
+            <End Role="Links" EntitySet="Links" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__ListID__6442E2C9" Association="Self.FK__Links__ListID__6442E2C9">
+            <End Role="InfoList" EntitySet="InfoList" />
+            <End Role="LinksList" EntitySet="LinksList" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Links__SectorID__6EC0713C" Association="Self.FK__Links__SectorID__6EC0713C">
+            <End Role="InfoSector" EntitySet="InfoSector" />
+            <End Role="LinksSector" EntitySet="LinksSector" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StockPortfolioModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="StreetName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="ZipCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Fax" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="InfoCompany" Relationship="Self.FK__Address__Company__58D1301D" FromRole="Address" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="FinancialSnapshot">
+          <Key>
+            <PropertyRef Name="QueryDate" />
+            <PropertyRef Name="CompanyID" />
+          </Key>
+          <Property Name="QueryDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="Beta" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="ClosePrice" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="OpenPrice" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="Dividend" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="DividendYield" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="EarningsPerShare" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="FiftyTwoWeekLow" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="FiftyTwoWeekHigh" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="InstitutionalOwnership" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="MarketCap" Type="Decimal" Precision="23" Scale="6" />
+          <Property Name="PriceEarnings" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="RangeLow" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="RangeHigh" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="Shares" Type="Decimal" Precision="23" Scale="6" />
+          <Property Name="VolumeAverage" Type="Decimal" Precision="14" Scale="6" />
+          <Property Name="VolumeDaily" Type="Decimal" Precision="14" Scale="6" />
+          <NavigationProperty Name="InfoCompany" Relationship="Self.FK__Financial__Compa__5BAD9CC8" FromRole="FinancialSnapshot" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="InfoCompany">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Ticker" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="Self.FK__Address__Company__58D1301D" FromRole="InfoCompany" ToRole="Address" />
+          <NavigationProperty Name="FinancialSnapshots" Relationship="Self.FK__Financial__Compa__5BAD9CC8" FromRole="InfoCompany" ToRole="FinancialSnapshot" />
+          <NavigationProperty Name="KeyAccountingStats" Relationship="Self.FK__KeyAccoun__Compa__0E04126B" FromRole="InfoCompany" ToRole="KeyAccountingStats" />
+          <NavigationProperty Name="InfoExchanges" Relationship="Self.LinksExchange" FromRole="InfoCompany" ToRole="InfoExchange" />
+          <NavigationProperty Name="BalanceSheets" Relationship="Self.CompanyBalanceSheet" FromRole="InfoCompany" ToRole="BalanceSheet" />
+          <NavigationProperty Name="StatementOfCashFlows" Relationship="Self.CompanyCashFlowStatement" FromRole="InfoCompany" ToRole="StatementOfCashFlow" />
+          <NavigationProperty Name="IncomeStatements" Relationship="Self.CompanyIncomeStatement" FromRole="InfoCompany" ToRole="IncomeStatement" />
+          <NavigationProperty Name="InfoIndustries" Relationship="Self.Links" FromRole="InfoCompany" ToRole="InfoIndustry" />
+          <NavigationProperty Name="InfoLists" Relationship="Self.LinksList" FromRole="InfoCompany" ToRole="InfoList" />
+          <NavigationProperty Name="InfoSectors" Relationship="Self.LinksSector" FromRole="InfoCompany" ToRole="InfoSector" />
+        </EntityType>
+        <EntityType Name="KeyAccountingStat">
+          <Key>
+            <PropertyRef Name="CompanyID" />
+            <PropertyRef Name="Period" />
+            <PropertyRef Name="Annual" />
+          </Key>
+          <Property Name="CompanyID" Type="Int32" Nullable="false" />
+          <Property Name="Period" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Annual" Type="Boolean" Nullable="false" />
+          <Property Name="NetProfitMargin" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="OperatingMargin" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="EBITDMargin" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="ReturnOnAverageAssets" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="ReturnOnAverageEquity" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="Employees" Type="Int32" />
+          <Property Name="CDPScoreN" Type="Int32" />
+          <Property Name="CDPScoreL" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="InfoCompany" Relationship="Self.FK__KeyAccoun__Compa__0E04126B" FromRole="KeyAccountingStats" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="InfoExchange">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.LinksExchange" FromRole="InfoExchange" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="BalanceSheet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Annual" Type="Boolean" Nullable="false" />
+          <Property Name="PeriodEnd" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Cash_and_Equivalents" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Short_Term_Investments" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Cash_and_Short_Term_Investments" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Accounts_Receivable__Trade__Net" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Receivables__Other" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Receivables__Net" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Inventory" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Prepaid_Expenses" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Current_Assets__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Current_Assets" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Property_and_Plant_and_Equipment__Total__Gross" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Accumulated_Depreciation__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Goodwill__Net" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Intangibles__Net" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Long_Term_Investments" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Long_Term_Assets__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Assets" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Accounts_Payable" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Accrued_Expenses" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Notes_Payable_and_Short_Term_Debt" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Current_Port_of_LT_Debt_and_Capital_Leases" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Current_liabilities__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Current_Liabilities" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Long_Term_Debt" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Capital_Lease_Obligations" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Long_Term_Debt" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Debt" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Deferred_Income_Tax" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Minority_Interest" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Liabilities__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Liabilities" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Redeemable_Preferred_Stock__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Preferred_Stock__Non_Redeemable__Net" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Common_Stock__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Additional_PaidIn_Capital" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Retained_Earnings__Accumulated_Deficit_" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Treasury_Stock__Common" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Equity__Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Equity" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Liabilities_and_Shareholders_Equity" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Shares_Outs__Common_Stock_Primary_Issue" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Common_Shares_Outstanding" Type="Decimal" Precision="20" Scale="4" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.CompanyBalanceSheet" FromRole="BalanceSheet" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="IncomeStatement">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Annual" Type="Boolean" Nullable="false" />
+          <Property Name="PeriodEnd" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Cash_and_Equivalents" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Revenue" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Revenue_Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Revenue" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Cost_of_Revenue_Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Gross_Profit" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Selling_and_General_and_Admin_Expenses_Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Research_and_Development" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Depreciation_and_Amortization" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Interest_Expense__Income___less_Net_Operating" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Unusual_Expense___Income__" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Operating_Expenses_Total" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Operating_Expense" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Operating_Income" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Interest_Income__Expense___Net_NonOperating" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Gain___Loss___on_Sale_of_Assets" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Other_Net" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Before_Tax" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Income_After_Tax" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Minority_Interest" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Equity_In_Affiliates" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Net_Income_Before_Extra_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Accounting_Change" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Discontinued_Operations" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Extraordinary_Item" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Net_Income" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Preferred_Dividends" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Available_to_Common_Excl_Extra_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Available_to_Common_Incl_Extra_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_Weighted_Average_Shares" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_EPS_Excluding_Extraordinary_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_EPS_Including_Extraordinary_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Dilution_Adjustment" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_Weighted_Average_Shares" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_EPS_Excluding_Extraordinary_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_EPS_Including_Extraordinary_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Dividends_per_Share__less__Common_Stock_Primary_Issue" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Gross_Dividends__less__Common_Stock" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Net_Income_after_Stock_Based_Comp_Expense" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_EPS_after_Stock_Based_Comp_Expense" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_EPS_after_Stock_Based_Comp_Expense" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Depreciation_Supplemental" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Total_Special_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Normalized_Income_Before_Taxes" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Effect_of_Special_Items_on_Income_Taxes" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Income_Taxes_Ex_Impact_of_Special_Items" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Normalized_Income_After_Taxes" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Normalized_Income_Avail_to_Common" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Basic_Normalized_EPS" Type="Decimal" Precision="20" Scale="4" />
+          <Property Name="Diluted_Normalized_EPS" Type="Decimal" Precision="20" Scale="4" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.CompanyIncomeStatement" FromRole="IncomeStatement" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="StatementOfCashFlow">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Annual" Type="Boolean" Nullable="false" />
+          <Property Name="PeriodEnd" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Net_Income_and_Starting_Line" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Depreciation_and_Depletion" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Amortization" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Deferred_Taxes" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="NonCash_Items" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Changes_in_Working_Capital" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_from_Operating_Activities" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Capital_Expenditures" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Other_Investing_Cash_Flow_Items__Total" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_from_Investing_Activities" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Financing_Cash_Flow_Items" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Total_Cash_Dividends_Paid" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Issuance__Retirement__of_Stock__Net" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Issuance__Retirement__of_Debt__Net" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_from_Financing_Activities" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Foreign_Exchange_Effects" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Net_Change_in_Cash" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_Interest_Paid__Supplemental" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="Cash_Taxes_Paid__Supplemental" Type="Decimal" Precision="20" Scale="2" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.CompanyCashFlowStatement" FromRole="StatementOfCashFlow" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="InfoIndustry">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.Links" FromRole="InfoIndustry" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="InfoList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.LinksList" FromRole="InfoList" ToRole="InfoCompany" />
+        </EntityType>
+        <EntityType Name="InfoSector">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="InfoCompanies" Relationship="Self.LinksSector" FromRole="InfoSector" ToRole="InfoCompany" />
+        </EntityType>
+        <Association Name="FK__Address__Company__58D1301D">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Address">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Financial__Compa__5BAD9CC8">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="FinancialSnapshot" Type="Self.FinancialSnapshot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FinancialSnapshot">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__KeyAccoun__Compa__0E04126B">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="1" />
+          <End Role="KeyAccountingStats" Type="Self.KeyAccountingStat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InfoCompany">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="KeyAccountingStats">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LinksExchange">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="InfoExchange" Type="Self.InfoExchange" Multiplicity="*" />
+        </Association>
+        <Association Name="CompanyBalanceSheet">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="BalanceSheet" Type="Self.BalanceSheet" Multiplicity="*" />
+        </Association>
+        <Association Name="CompanyCashFlowStatement">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="StatementOfCashFlow" Type="Self.StatementOfCashFlow" Multiplicity="*" />
+        </Association>
+        <Association Name="CompanyIncomeStatement">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="IncomeStatement" Type="Self.IncomeStatement" Multiplicity="*" />
+        </Association>
+        <Association Name="Links">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="InfoIndustry" Type="Self.InfoIndustry" Multiplicity="*" />
+        </Association>
+        <Association Name="LinksList">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="InfoList" Type="Self.InfoList" Multiplicity="*" />
+        </Association>
+        <Association Name="LinksSector">
+          <End Role="InfoCompany" Type="Self.InfoCompany" Multiplicity="*" />
+          <End Role="InfoSector" Type="Self.InfoSector" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="StockPortfolioEntities7" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Addresses" EntityType="Self.Address" />
+          <EntitySet Name="FinancialSnapshots" EntityType="Self.FinancialSnapshot" />
+          <EntitySet Name="InfoCompanies" EntityType="Self.InfoCompany" />
+          <EntitySet Name="KeyAccountingStats" EntityType="Self.KeyAccountingStat" />
+          <EntitySet Name="InfoExchanges" EntityType="Self.InfoExchange" />
+          <EntitySet Name="BalanceSheets" EntityType="Self.BalanceSheet" />
+          <EntitySet Name="IncomeStatements" EntityType="Self.IncomeStatement" />
+          <EntitySet Name="StatementOfCashFlows" EntityType="Self.StatementOfCashFlow" />
+          <EntitySet Name="InfoIndustries" EntityType="Self.InfoIndustry" />
+          <EntitySet Name="InfoLists" EntityType="Self.InfoList" />
+          <EntitySet Name="InfoSectors" EntityType="Self.InfoSector" />
+          <AssociationSet Name="FK__Address__Company__58D1301D" Association="Self.FK__Address__Company__58D1301D">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="Address" EntitySet="Addresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Financial__Compa__5BAD9CC8" Association="Self.FK__Financial__Compa__5BAD9CC8">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="FinancialSnapshot" EntitySet="FinancialSnapshots" />
+          </AssociationSet>
+          <AssociationSet Name="FK__KeyAccoun__Compa__0E04126B" Association="Self.FK__KeyAccoun__Compa__0E04126B">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="KeyAccountingStats" EntitySet="KeyAccountingStats" />
+          </AssociationSet>
+          <AssociationSet Name="LinksExchange" Association="Self.LinksExchange">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="InfoExchange" EntitySet="InfoExchanges" />
+          </AssociationSet>
+          <AssociationSet Name="CompanyBalanceSheet" Association="Self.CompanyBalanceSheet">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="BalanceSheet" EntitySet="BalanceSheets" />
+          </AssociationSet>
+          <AssociationSet Name="CompanyCashFlowStatement" Association="Self.CompanyCashFlowStatement">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="StatementOfCashFlow" EntitySet="StatementOfCashFlows" />
+          </AssociationSet>
+          <AssociationSet Name="CompanyIncomeStatement" Association="Self.CompanyIncomeStatement">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="IncomeStatement" EntitySet="IncomeStatements" />
+          </AssociationSet>
+          <AssociationSet Name="Links" Association="Self.Links">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="InfoIndustry" EntitySet="InfoIndustries" />
+          </AssociationSet>
+          <AssociationSet Name="LinksList" Association="Self.LinksList">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="InfoList" EntitySet="InfoLists" />
+          </AssociationSet>
+          <AssociationSet Name="LinksSector" Association="Self.LinksSector">
+            <End Role="InfoCompany" EntitySet="InfoCompanies" />
+            <End Role="InfoSector" EntitySet="InfoSectors" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StockPortfolioModelStoreContainer" CdmEntityContainer="StockPortfolioEntities7">
+          <EntitySetMapping Name="Addresses">
+            <EntityTypeMapping TypeName="StockPortfolioModel.Address">
+              <MappingFragment StoreEntitySet="Address">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="StreetName" ColumnName="StreetName" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FinancialSnapshots">
+            <EntityTypeMapping TypeName="StockPortfolioModel.FinancialSnapshot">
+              <MappingFragment StoreEntitySet="FinancialSnapshot">
+                <ScalarProperty Name="QueryDate" ColumnName="QueryDate" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="Beta" ColumnName="Beta" />
+                <ScalarProperty Name="ClosePrice" ColumnName="ClosePrice" />
+                <ScalarProperty Name="OpenPrice" ColumnName="OpenPrice" />
+                <ScalarProperty Name="Dividend" ColumnName="Dividend" />
+                <ScalarProperty Name="DividendYield" ColumnName="DividendYield" />
+                <ScalarProperty Name="EarningsPerShare" ColumnName="EarningsPerShare" />
+                <ScalarProperty Name="FiftyTwoWeekLow" ColumnName="FiftyTwoWeekLow" />
+                <ScalarProperty Name="FiftyTwoWeekHigh" ColumnName="FiftyTwoWeekHigh" />
+                <ScalarProperty Name="InstitutionalOwnership" ColumnName="InstitutionalOwnership" />
+                <ScalarProperty Name="MarketCap" ColumnName="MarketCap" />
+                <ScalarProperty Name="PriceEarnings" ColumnName="PriceEarnings" />
+                <ScalarProperty Name="RangeLow" ColumnName="RangeLow" />
+                <ScalarProperty Name="RangeHigh" ColumnName="RangeHigh" />
+                <ScalarProperty Name="Shares" ColumnName="Shares" />
+                <ScalarProperty Name="VolumeAverage" ColumnName="VolumeAverage" />
+                <ScalarProperty Name="VolumeDaily" ColumnName="VolumeDaily" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InfoCompanies">
+            <EntityTypeMapping TypeName="StockPortfolioModel.InfoCompany">
+              <MappingFragment StoreEntitySet="InfoCompany">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Ticker" ColumnName="Ticker" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KeyAccountingStats">
+            <EntityTypeMapping TypeName="StockPortfolioModel.KeyAccountingStat">
+              <MappingFragment StoreEntitySet="KeyAccountingStats">
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="Annual" ColumnName="Annual" />
+                <ScalarProperty Name="NetProfitMargin" ColumnName="NetProfitMargin" />
+                <ScalarProperty Name="OperatingMargin" ColumnName="OperatingMargin" />
+                <ScalarProperty Name="EBITDMargin" ColumnName="EBITDMargin" />
+                <ScalarProperty Name="ReturnOnAverageAssets" ColumnName="ReturnOnAverageAssets" />
+                <ScalarProperty Name="ReturnOnAverageEquity" ColumnName="ReturnOnAverageEquity" />
+                <ScalarProperty Name="Employees" ColumnName="Employees" />
+                <ScalarProperty Name="CDPScoreN" ColumnName="CDPScoreN" />
+                <ScalarProperty Name="CDPScoreL" ColumnName="CDPScoreL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InfoExchanges">
+            <EntityTypeMapping TypeName="StockPortfolioModel.InfoExchange">
+              <MappingFragment StoreEntitySet="InfoExchange">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BalanceSheets">
+            <EntityTypeMapping TypeName="StockPortfolioModel.BalanceSheet">
+              <MappingFragment StoreEntitySet="BalanceSheet">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Annual" ColumnName="Annual" />
+                <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+                <ScalarProperty Name="Cash_and_Equivalents" ColumnName="Cash_and_Equivalents" />
+                <ScalarProperty Name="Short_Term_Investments" ColumnName="Short_Term_Investments" />
+                <ScalarProperty Name="Cash_and_Short_Term_Investments" ColumnName="Cash_and_Short_Term_Investments" />
+                <ScalarProperty Name="Accounts_Receivable__Trade__Net" ColumnName="Accounts_Receivable__Trade__Net" />
+                <ScalarProperty Name="Receivables__Other" ColumnName="Receivables__Other" />
+                <ScalarProperty Name="Total_Receivables__Net" ColumnName="Total_Receivables__Net" />
+                <ScalarProperty Name="Total_Inventory" ColumnName="Total_Inventory" />
+                <ScalarProperty Name="Prepaid_Expenses" ColumnName="Prepaid_Expenses" />
+                <ScalarProperty Name="Other_Current_Assets__Total" ColumnName="Other_Current_Assets__Total" />
+                <ScalarProperty Name="Total_Current_Assets" ColumnName="Total_Current_Assets" />
+                <ScalarProperty Name="Property_and_Plant_and_Equipment__Total__Gross" ColumnName="Property_and_Plant_and_Equipment__Total__Gross" />
+                <ScalarProperty Name="Accumulated_Depreciation__Total" ColumnName="Accumulated_Depreciation__Total" />
+                <ScalarProperty Name="Goodwill__Net" ColumnName="Goodwill__Net" />
+                <ScalarProperty Name="Intangibles__Net" ColumnName="Intangibles__Net" />
+                <ScalarProperty Name="Long_Term_Investments" ColumnName="Long_Term_Investments" />
+                <ScalarProperty Name="Other_Long_Term_Assets__Total" ColumnName="Other_Long_Term_Assets__Total" />
+                <ScalarProperty Name="Total_Assets" ColumnName="Total_Assets" />
+                <ScalarProperty Name="Accounts_Payable" ColumnName="Accounts_Payable" />
+                <ScalarProperty Name="Accrued_Expenses" ColumnName="Accrued_Expenses" />
+                <ScalarProperty Name="Notes_Payable_and_Short_Term_Debt" ColumnName="Notes_Payable_and_Short_Term_Debt" />
+                <ScalarProperty Name="Current_Port_of_LT_Debt_and_Capital_Leases" ColumnName="Current_Port_of_LT_Debt_and_Capital_Leases" />
+                <ScalarProperty Name="Other_Current_liabilities__Total" ColumnName="Other_Current_liabilities__Total" />
+                <ScalarProperty Name="Total_Current_Liabilities" ColumnName="Total_Current_Liabilities" />
+                <ScalarProperty Name="Long_Term_Debt" ColumnName="Long_Term_Debt" />
+                <ScalarProperty Name="Capital_Lease_Obligations" ColumnName="Capital_Lease_Obligations" />
+                <ScalarProperty Name="Total_Long_Term_Debt" ColumnName="Total_Long_Term_Debt" />
+                <ScalarProperty Name="Total_Debt" ColumnName="Total_Debt" />
+                <ScalarProperty Name="Deferred_Income_Tax" ColumnName="Deferred_Income_Tax" />
+                <ScalarProperty Name="Minority_Interest" ColumnName="Minority_Interest" />
+                <ScalarProperty Name="Other_Liabilities__Total" ColumnName="Other_Liabilities__Total" />
+                <ScalarProperty Name="Total_Liabilities" ColumnName="Total_Liabilities" />
+                <ScalarProperty Name="Redeemable_Preferred_Stock__Total" ColumnName="Redeemable_Preferred_Stock__Total" />
+                <ScalarProperty Name="Preferred_Stock__Non_Redeemable__Net" ColumnName="Preferred_Stock__Non_Redeemable__Net" />
+                <ScalarProperty Name="Common_Stock__Total" ColumnName="Common_Stock__Total" />
+                <ScalarProperty Name="Additional_PaidIn_Capital" ColumnName="Additional_PaidIn_Capital" />
+                <ScalarProperty Name="Retained_Earnings__Accumulated_Deficit_" ColumnName="Retained_Earnings__Accumulated_Deficit_" />
+                <ScalarProperty Name="Treasury_Stock__Common" ColumnName="Treasury_Stock__Common" />
+                <ScalarProperty Name="Other_Equity__Total" ColumnName="Other_Equity__Total" />
+                <ScalarProperty Name="Total_Equity" ColumnName="Total_Equity" />
+                <ScalarProperty Name="Total_Liabilities_and_Shareholders_Equity" ColumnName="Total_Liabilities_and_Shareholders_Equity" />
+                <ScalarProperty Name="Shares_Outs__Common_Stock_Primary_Issue" ColumnName="Shares_Outs__Common_Stock_Primary_Issue" />
+                <ScalarProperty Name="Total_Common_Shares_Outstanding" ColumnName="Total_Common_Shares_Outstanding" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IncomeStatements">
+            <EntityTypeMapping TypeName="StockPortfolioModel.IncomeStatement">
+              <MappingFragment StoreEntitySet="IncomeStatement">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Annual" ColumnName="Annual" />
+                <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+                <ScalarProperty Name="Cash_and_Equivalents" ColumnName="Cash_and_Equivalents" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Other_Revenue_Total" ColumnName="Other_Revenue_Total" />
+                <ScalarProperty Name="Total_Revenue" ColumnName="Total_Revenue" />
+                <ScalarProperty Name="Cost_of_Revenue_Total" ColumnName="Cost_of_Revenue_Total" />
+                <ScalarProperty Name="Gross_Profit" ColumnName="Gross_Profit" />
+                <ScalarProperty Name="Selling_and_General_and_Admin_Expenses_Total" ColumnName="Selling_and_General_and_Admin_Expenses_Total" />
+                <ScalarProperty Name="Research_and_Development" ColumnName="Research_and_Development" />
+                <ScalarProperty Name="Depreciation_and_Amortization" ColumnName="Depreciation_and_Amortization" />
+                <ScalarProperty Name="Interest_Expense__Income___less_Net_Operating" ColumnName="Interest_Expense__Income___less_Net_Operating" />
+                <ScalarProperty Name="Unusual_Expense___Income__" ColumnName="Unusual_Expense___Income__" />
+                <ScalarProperty Name="Other_Operating_Expenses_Total" ColumnName="Other_Operating_Expenses_Total" />
+                <ScalarProperty Name="Total_Operating_Expense" ColumnName="Total_Operating_Expense" />
+                <ScalarProperty Name="Operating_Income" ColumnName="Operating_Income" />
+                <ScalarProperty Name="Interest_Income__Expense___Net_NonOperating" ColumnName="Interest_Income__Expense___Net_NonOperating" />
+                <ScalarProperty Name="Gain___Loss___on_Sale_of_Assets" ColumnName="Gain___Loss___on_Sale_of_Assets" />
+                <ScalarProperty Name="Other_Net" ColumnName="Other_Net" />
+                <ScalarProperty Name="Income_Before_Tax" ColumnName="Income_Before_Tax" />
+                <ScalarProperty Name="Income_After_Tax" ColumnName="Income_After_Tax" />
+                <ScalarProperty Name="Minority_Interest" ColumnName="Minority_Interest" />
+                <ScalarProperty Name="Equity_In_Affiliates" ColumnName="Equity_In_Affiliates" />
+                <ScalarProperty Name="Net_Income_Before_Extra_Items" ColumnName="Net_Income_Before_Extra_Items" />
+                <ScalarProperty Name="Accounting_Change" ColumnName="Accounting_Change" />
+                <ScalarProperty Name="Discontinued_Operations" ColumnName="Discontinued_Operations" />
+                <ScalarProperty Name="Extraordinary_Item" ColumnName="Extraordinary_Item" />
+                <ScalarProperty Name="Net_Income" ColumnName="Net_Income" />
+                <ScalarProperty Name="Preferred_Dividends" ColumnName="Preferred_Dividends" />
+                <ScalarProperty Name="Income_Available_to_Common_Excl_Extra_Items" ColumnName="Income_Available_to_Common_Excl_Extra_Items" />
+                <ScalarProperty Name="Income_Available_to_Common_Incl_Extra_Items" ColumnName="Income_Available_to_Common_Incl_Extra_Items" />
+                <ScalarProperty Name="Basic_Weighted_Average_Shares" ColumnName="Basic_Weighted_Average_Shares" />
+                <ScalarProperty Name="Basic_EPS_Excluding_Extraordinary_Items" ColumnName="Basic_EPS_Excluding_Extraordinary_Items" />
+                <ScalarProperty Name="Basic_EPS_Including_Extraordinary_Items" ColumnName="Basic_EPS_Including_Extraordinary_Items" />
+                <ScalarProperty Name="Dilution_Adjustment" ColumnName="Dilution_Adjustment" />
+                <ScalarProperty Name="Diluted_Weighted_Average_Shares" ColumnName="Diluted_Weighted_Average_Shares" />
+                <ScalarProperty Name="Diluted_EPS_Excluding_Extraordinary_Items" ColumnName="Diluted_EPS_Excluding_Extraordinary_Items" />
+                <ScalarProperty Name="Diluted_EPS_Including_Extraordinary_Items" ColumnName="Diluted_EPS_Including_Extraordinary_Items" />
+                <ScalarProperty Name="Dividends_per_Share__less__Common_Stock_Primary_Issue" ColumnName="Dividends_per_Share__less__Common_Stock_Primary_Issue" />
+                <ScalarProperty Name="Gross_Dividends__less__Common_Stock" ColumnName="Gross_Dividends__less__Common_Stock" />
+                <ScalarProperty Name="Net_Income_after_Stock_Based_Comp_Expense" ColumnName="Net_Income_after_Stock_Based_Comp_Expense" />
+                <ScalarProperty Name="Basic_EPS_after_Stock_Based_Comp_Expense" ColumnName="Basic_EPS_after_Stock_Based_Comp_Expense" />
+                <ScalarProperty Name="Diluted_EPS_after_Stock_Based_Comp_Expense" ColumnName="Diluted_EPS_after_Stock_Based_Comp_Expense" />
+                <ScalarProperty Name="Depreciation_Supplemental" ColumnName="Depreciation_Supplemental" />
+                <ScalarProperty Name="Total_Special_Items" ColumnName="Total_Special_Items" />
+                <ScalarProperty Name="Normalized_Income_Before_Taxes" ColumnName="Normalized_Income_Before_Taxes" />
+                <ScalarProperty Name="Effect_of_Special_Items_on_Income_Taxes" ColumnName="Effect_of_Special_Items_on_Income_Taxes" />
+                <ScalarProperty Name="Income_Taxes_Ex_Impact_of_Special_Items" ColumnName="Income_Taxes_Ex_Impact_of_Special_Items" />
+                <ScalarProperty Name="Normalized_Income_After_Taxes" ColumnName="Normalized_Income_After_Taxes" />
+                <ScalarProperty Name="Normalized_Income_Avail_to_Common" ColumnName="Normalized_Income_Avail_to_Common" />
+                <ScalarProperty Name="Basic_Normalized_EPS" ColumnName="Basic_Normalized_EPS" />
+                <ScalarProperty Name="Diluted_Normalized_EPS" ColumnName="Diluted_Normalized_EPS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatementOfCashFlows">
+            <EntityTypeMapping TypeName="StockPortfolioModel.StatementOfCashFlow">
+              <MappingFragment StoreEntitySet="StatementOfCashFlow">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Annual" ColumnName="Annual" />
+                <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+                <ScalarProperty Name="Net_Income_and_Starting_Line" ColumnName="Net_Income_and_Starting_Line" />
+                <ScalarProperty Name="Depreciation_and_Depletion" ColumnName="Depreciation_and_Depletion" />
+                <ScalarProperty Name="Amortization" ColumnName="Amortization" />
+                <ScalarProperty Name="Deferred_Taxes" ColumnName="Deferred_Taxes" />
+                <ScalarProperty Name="NonCash_Items" ColumnName="NonCash_Items" />
+                <ScalarProperty Name="Changes_in_Working_Capital" ColumnName="Changes_in_Working_Capital" />
+                <ScalarProperty Name="Cash_from_Operating_Activities" ColumnName="Cash_from_Operating_Activities" />
+                <ScalarProperty Name="Capital_Expenditures" ColumnName="Capital_Expenditures" />
+                <ScalarProperty Name="Other_Investing_Cash_Flow_Items__Total" ColumnName="Other_Investing_Cash_Flow_Items__Total" />
+                <ScalarProperty Name="Cash_from_Investing_Activities" ColumnName="Cash_from_Investing_Activities" />
+                <ScalarProperty Name="Financing_Cash_Flow_Items" ColumnName="Financing_Cash_Flow_Items" />
+                <ScalarProperty Name="Total_Cash_Dividends_Paid" ColumnName="Total_Cash_Dividends_Paid" />
+                <ScalarProperty Name="Issuance__Retirement__of_Stock__Net" ColumnName="Issuance__Retirement__of_Stock__Net" />
+                <ScalarProperty Name="Issuance__Retirement__of_Debt__Net" ColumnName="Issuance__Retirement__of_Debt__Net" />
+                <ScalarProperty Name="Cash_from_Financing_Activities" ColumnName="Cash_from_Financing_Activities" />
+                <ScalarProperty Name="Foreign_Exchange_Effects" ColumnName="Foreign_Exchange_Effects" />
+                <ScalarProperty Name="Net_Change_in_Cash" ColumnName="Net_Change_in_Cash" />
+                <ScalarProperty Name="Cash_Interest_Paid__Supplemental" ColumnName="Cash_Interest_Paid__Supplemental" />
+                <ScalarProperty Name="Cash_Taxes_Paid__Supplemental" ColumnName="Cash_Taxes_Paid__Supplemental" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InfoIndustries">
+            <EntityTypeMapping TypeName="StockPortfolioModel.InfoIndustry">
+              <MappingFragment StoreEntitySet="InfoIndustry">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InfoLists">
+            <EntityTypeMapping TypeName="StockPortfolioModel.InfoList">
+              <MappingFragment StoreEntitySet="InfoList">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InfoSectors">
+            <EntityTypeMapping TypeName="StockPortfolioModel.InfoSector">
+              <MappingFragment StoreEntitySet="InfoSector">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="LinksExchange" TypeName="StockPortfolioModel.LinksExchange" StoreEntitySet="LinksExchange">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="InfoExchange">
+              <ScalarProperty Name="ID" ColumnName="ExchangeID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="CompanyBalanceSheet" TypeName="StockPortfolioModel.CompanyBalanceSheet" StoreEntitySet="CompanyBalanceSheet">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="BalanceSheet">
+              <ScalarProperty Name="ID" ColumnName="StatementID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="CompanyCashFlowStatement" TypeName="StockPortfolioModel.CompanyCashFlowStatement" StoreEntitySet="CompanyCashFlowStatement">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="StatementOfCashFlow">
+              <ScalarProperty Name="ID" ColumnName="StatementID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="CompanyIncomeStatement" TypeName="StockPortfolioModel.CompanyIncomeStatement" StoreEntitySet="CompanyIncomeStatement">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="IncomeStatement">
+              <ScalarProperty Name="ID" ColumnName="StatementID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Links" TypeName="StockPortfolioModel.Links" StoreEntitySet="Links">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="InfoIndustry">
+              <ScalarProperty Name="ID" ColumnName="IndustryID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="LinksList" TypeName="StockPortfolioModel.LinksList" StoreEntitySet="LinksList">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="InfoList">
+              <ScalarProperty Name="ID" ColumnName="ListID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="LinksSector" TypeName="StockPortfolioModel.LinksSector" StoreEntitySet="LinksSector">
+            <EndProperty Name="InfoCompany">
+              <ScalarProperty Name="ID" ColumnName="CompanyID" />
+            </EndProperty>
+            <EndProperty Name="InfoSector">
+              <ScalarProperty Name="ID" ColumnName="SectorID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

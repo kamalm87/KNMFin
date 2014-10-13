@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="StockPortfolioModelStoreContainer" CdmEntityContainer="StockPortfolioEntities7">
+    <EntitySetMapping Name="Addresses">
+      <EntityTypeMapping TypeName="StockPortfolioModel.Address">
+        <MappingFragment StoreEntitySet="Address">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="StreetName" ColumnName="StreetName" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Fax" ColumnName="Fax" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FinancialSnapshots">
+      <EntityTypeMapping TypeName="StockPortfolioModel.FinancialSnapshot">
+        <MappingFragment StoreEntitySet="FinancialSnapshot">
+          <ScalarProperty Name="QueryDate" ColumnName="QueryDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="Beta" ColumnName="Beta" />
+          <ScalarProperty Name="ClosePrice" ColumnName="ClosePrice" />
+          <ScalarProperty Name="OpenPrice" ColumnName="OpenPrice" />
+          <ScalarProperty Name="Dividend" ColumnName="Dividend" />
+          <ScalarProperty Name="DividendYield" ColumnName="DividendYield" />
+          <ScalarProperty Name="EarningsPerShare" ColumnName="EarningsPerShare" />
+          <ScalarProperty Name="FiftyTwoWeekLow" ColumnName="FiftyTwoWeekLow" />
+          <ScalarProperty Name="FiftyTwoWeekHigh" ColumnName="FiftyTwoWeekHigh" />
+          <ScalarProperty Name="InstitutionalOwnership" ColumnName="InstitutionalOwnership" />
+          <ScalarProperty Name="MarketCap" ColumnName="MarketCap" />
+          <ScalarProperty Name="PriceEarnings" ColumnName="PriceEarnings" />
+          <ScalarProperty Name="RangeLow" ColumnName="RangeLow" />
+          <ScalarProperty Name="RangeHigh" ColumnName="RangeHigh" />
+          <ScalarProperty Name="Shares" ColumnName="Shares" />
+          <ScalarProperty Name="VolumeAverage" ColumnName="VolumeAverage" />
+          <ScalarProperty Name="VolumeDaily" ColumnName="VolumeDaily" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InfoCompanies">
+      <EntityTypeMapping TypeName="StockPortfolioModel.InfoCompany">
+        <MappingFragment StoreEntitySet="InfoCompany">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Ticker" ColumnName="Ticker" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="KeyAccountingStats">
+      <EntityTypeMapping TypeName="StockPortfolioModel.KeyAccountingStat">
+        <MappingFragment StoreEntitySet="KeyAccountingStats">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="Period" ColumnName="Period" />
+          <ScalarProperty Name="Annual" ColumnName="Annual" />
+          <ScalarProperty Name="NetProfitMargin" ColumnName="NetProfitMargin" />
+          <ScalarProperty Name="OperatingMargin" ColumnName="OperatingMargin" />
+          <ScalarProperty Name="EBITDMargin" ColumnName="EBITDMargin" />
+          <ScalarProperty Name="ReturnOnAverageAssets" ColumnName="ReturnOnAverageAssets" />
+          <ScalarProperty Name="ReturnOnAverageEquity" ColumnName="ReturnOnAverageEquity" />
+          <ScalarProperty Name="Employees" ColumnName="Employees" />
+          <ScalarProperty Name="CDPScoreN" ColumnName="CDPScoreN" />
+          <ScalarProperty Name="CDPScoreL" ColumnName="CDPScoreL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InfoExchanges">
+      <EntityTypeMapping TypeName="StockPortfolioModel.InfoExchange">
+        <MappingFragment StoreEntitySet="InfoExchange">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BalanceSheets">
+      <EntityTypeMapping TypeName="StockPortfolioModel.BalanceSheet">
+        <MappingFragment StoreEntitySet="BalanceSheet">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Annual" ColumnName="Annual" />
+          <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+          <ScalarProperty Name="Cash_and_Equivalents" ColumnName="Cash_and_Equivalents" />
+          <ScalarProperty Name="Short_Term_Investments" ColumnName="Short_Term_Investments" />
+          <ScalarProperty Name="Cash_and_Short_Term_Investments" ColumnName="Cash_and_Short_Term_Investments" />
+          <ScalarProperty Name="Accounts_Receivable__Trade__Net" ColumnName="Accounts_Receivable__Trade__Net" />
+          <ScalarProperty Name="Receivables__Other" ColumnName="Receivables__Other" />
+          <ScalarProperty Name="Total_Receivables__Net" ColumnName="Total_Receivables__Net" />
+          <ScalarProperty Name="Total_Inventory" ColumnName="Total_Inventory" />
+          <ScalarProperty Name="Prepaid_Expenses" ColumnName="Prepaid_Expenses" />
+          <ScalarProperty Name="Other_Current_Assets__Total" ColumnName="Other_Current_Assets__Total" />
+          <ScalarProperty Name="Total_Current_Assets" ColumnName="Total_Current_Assets" />
+          <ScalarProperty Name="Property_and_Plant_and_Equipment__Total__Gross" ColumnName="Property_and_Plant_and_Equipment__Total__Gross" />
+          <ScalarProperty Name="Accumulated_Depreciation__Total" ColumnName="Accumulated_Depreciation__Total" />
+          <ScalarProperty Name="Goodwill__Net" ColumnName="Goodwill__Net" />
+          <ScalarProperty Name="Intangibles__Net" ColumnName="Intangibles__Net" />
+          <ScalarProperty Name="Long_Term_Investments" ColumnName="Long_Term_Investments" />
+          <ScalarProperty Name="Other_Long_Term_Assets__Total" ColumnName="Other_Long_Term_Assets__Total" />
+          <ScalarProperty Name="Total_Assets" ColumnName="Total_Assets" />
+          <ScalarProperty Name="Accounts_Payable" ColumnName="Accounts_Payable" />
+          <ScalarProperty Name="Accrued_Expenses" ColumnName="Accrued_Expenses" />
+          <ScalarProperty Name="Notes_Payable_and_Short_Term_Debt" ColumnName="Notes_Payable_and_Short_Term_Debt" />
+          <ScalarProperty Name="Current_Port_of_LT_Debt_and_Capital_Leases" ColumnName="Current_Port_of_LT_Debt_and_Capital_Leases" />
+          <ScalarProperty Name="Other_Current_liabilities__Total" ColumnName="Other_Current_liabilities__Total" />
+          <ScalarProperty Name="Total_Current_Liabilities" ColumnName="Total_Current_Liabilities" />
+          <ScalarProperty Name="Long_Term_Debt" ColumnName="Long_Term_Debt" />
+          <ScalarProperty Name="Capital_Lease_Obligations" ColumnName="Capital_Lease_Obligations" />
+          <ScalarProperty Name="Total_Long_Term_Debt" ColumnName="Total_Long_Term_Debt" />
+          <ScalarProperty Name="Total_Debt" ColumnName="Total_Debt" />
+          <ScalarProperty Name="Deferred_Income_Tax" ColumnName="Deferred_Income_Tax" />
+          <ScalarProperty Name="Minority_Interest" ColumnName="Minority_Interest" />
+          <ScalarProperty Name="Other_Liabilities__Total" ColumnName="Other_Liabilities__Total" />
+          <ScalarProperty Name="Total_Liabilities" ColumnName="Total_Liabilities" />
+          <ScalarProperty Name="Redeemable_Preferred_Stock__Total" ColumnName="Redeemable_Preferred_Stock__Total" />
+          <ScalarProperty Name="Preferred_Stock__Non_Redeemable__Net" ColumnName="Preferred_Stock__Non_Redeemable__Net" />
+          <ScalarProperty Name="Common_Stock__Total" ColumnName="Common_Stock__Total" />
+          <ScalarProperty Name="Additional_PaidIn_Capital" ColumnName="Additional_PaidIn_Capital" />
+          <ScalarProperty Name="Retained_Earnings__Accumulated_Deficit_" ColumnName="Retained_Earnings__Accumulated_Deficit_" />
+          <ScalarProperty Name="Treasury_Stock__Common" ColumnName="Treasury_Stock__Common" />
+          <ScalarProperty Name="Other_Equity__Total" ColumnName="Other_Equity__Total" />
+          <ScalarProperty Name="Total_Equity" ColumnName="Total_Equity" />
+          <ScalarProperty Name="Total_Liabilities_and_Shareholders_Equity" ColumnName="Total_Liabilities_and_Shareholders_Equity" />
+          <ScalarProperty Name="Shares_Outs__Common_Stock_Primary_Issue" ColumnName="Shares_Outs__Common_Stock_Primary_Issue" />
+          <ScalarProperty Name="Total_Common_Shares_Outstanding" ColumnName="Total_Common_Shares_Outstanding" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IncomeStatements">
+      <EntityTypeMapping TypeName="StockPortfolioModel.IncomeStatement">
+        <MappingFragment StoreEntitySet="IncomeStatement">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Annual" ColumnName="Annual" />
+          <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+          <ScalarProperty Name="Cash_and_Equivalents" ColumnName="Cash_and_Equivalents" />
+          <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+          <ScalarProperty Name="Other_Revenue_Total" ColumnName="Other_Revenue_Total" />
+          <ScalarProperty Name="Total_Revenue" ColumnName="Total_Revenue" />
+          <ScalarProperty Name="Cost_of_Revenue_Total" ColumnName="Cost_of_Revenue_Total" />
+          <ScalarProperty Name="Gross_Profit" ColumnName="Gross_Profit" />
+          <ScalarProperty Name="Selling_and_General_and_Admin_Expenses_Total" ColumnName="Selling_and_General_and_Admin_Expenses_Total" />
+          <ScalarProperty Name="Research_and_Development" ColumnName="Research_and_Development" />
+          <ScalarProperty Name="Depreciation_and_Amortization" ColumnName="Depreciation_and_Amortization" />
+          <ScalarProperty Name="Interest_Expense__Income___less_Net_Operating" ColumnName="Interest_Expense__Income___less_Net_Operating" />
+          <ScalarProperty Name="Unusual_Expense___Income__" ColumnName="Unusual_Expense___Income__" />
+          <ScalarProperty Name="Other_Operating_Expenses_Total" ColumnName="Other_Operating_Expenses_Total" />
+          <ScalarProperty Name="Total_Operating_Expense" ColumnName="Total_Operating_Expense" />
+          <ScalarProperty Name="Operating_Income" ColumnName="Operating_Income" />
+          <ScalarProperty Name="Interest_Income__Expense___Net_NonOperating" ColumnName="Interest_Income__Expense___Net_NonOperating" />
+          <ScalarProperty Name="Gain___Loss___on_Sale_of_Assets" ColumnName="Gain___Loss___on_Sale_of_Assets" />
+          <ScalarProperty Name="Other_Net" ColumnName="Other_Net" />
+          <ScalarProperty Name="Income_Before_Tax" ColumnName="Income_Before_Tax" />
+          <ScalarProperty Name="Income_After_Tax" ColumnName="Income_After_Tax" />
+          <ScalarProperty Name="Minority_Interest" ColumnName="Minority_Interest" />
+          <ScalarProperty Name="Equity_In_Affiliates" ColumnName="Equity_In_Affiliates" />
+          <ScalarProperty Name="Net_Income_Before_Extra_Items" ColumnName="Net_Income_Before_Extra_Items" />
+          <ScalarProperty Name="Accounting_Change" ColumnName="Accounting_Change" />
+          <ScalarProperty Name="Discontinued_Operations" ColumnName="Discontinued_Operations" />
+          <ScalarProperty Name="Extraordinary_Item" ColumnName="Extraordinary_Item" />
+          <ScalarProperty Name="Net_Income" ColumnName="Net_Income" />
+          <ScalarProperty Name="Preferred_Dividends" ColumnName="Preferred_Dividends" />
+          <ScalarProperty Name="Income_Available_to_Common_Excl_Extra_Items" ColumnName="Income_Available_to_Common_Excl_Extra_Items" />
+          <ScalarProperty Name="Income_Available_to_Common_Incl_Extra_Items" ColumnName="Income_Available_to_Common_Incl_Extra_Items" />
+          <ScalarProperty Name="Basic_Weighted_Average_Shares" ColumnName="Basic_Weighted_Average_Shares" />
+          <ScalarProperty Name="Basic_EPS_Excluding_Extraordinary_Items" ColumnName="Basic_EPS_Excluding_Extraordinary_Items" />
+          <ScalarProperty Name="Basic_EPS_Including_Extraordinary_Items" ColumnName="Basic_EPS_Including_Extraordinary_Items" />
+          <ScalarProperty Name="Dilution_Adjustment" ColumnName="Dilution_Adjustment" />
+          <ScalarProperty Name="Diluted_Weighted_Average_Shares" ColumnName="Diluted_Weighted_Average_Shares" />
+          <ScalarProperty Name="Diluted_EPS_Excluding_Extraordinary_Items" ColumnName="Diluted_EPS_Excluding_Extraordinary_Items" />
+          <ScalarProperty Name="Diluted_EPS_Including_Extraordinary_Items" ColumnName="Diluted_EPS_Including_Extraordinary_Items" />
+          <ScalarProperty Name="Dividends_per_Share__less__Common_Stock_Primary_Issue" ColumnName="Dividends_per_Share__less__Common_Stock_Primary_Issue" />
+          <ScalarProperty Name="Gross_Dividends__less__Common_Stock" ColumnName="Gross_Dividends__less__Common_Stock" />
+          <ScalarProperty Name="Net_Income_after_Stock_Based_Comp_Expense" ColumnName="Net_Income_after_Stock_Based_Comp_Expense" />
+          <ScalarProperty Name="Basic_EPS_after_Stock_Based_Comp_Expense" ColumnName="Basic_EPS_after_Stock_Based_Comp_Expense" />
+          <ScalarProperty Name="Diluted_EPS_after_Stock_Based_Comp_Expense" ColumnName="Diluted_EPS_after_Stock_Based_Comp_Expense" />
+          <ScalarProperty Name="Depreciation_Supplemental" ColumnName="Depreciation_Supplemental" />
+          <ScalarProperty Name="Total_Special_Items" ColumnName="Total_Special_Items" />
+          <ScalarProperty Name="Normalized_Income_Before_Taxes" ColumnName="Normalized_Income_Before_Taxes" />
+          <ScalarProperty Name="Effect_of_Special_Items_on_Income_Taxes" ColumnName="Effect_of_Special_Items_on_Income_Taxes" />
+          <ScalarProperty Name="Income_Taxes_Ex_Impact_of_Special_Items" ColumnName="Income_Taxes_Ex_Impact_of_Special_Items" />
+          <ScalarProperty Name="Normalized_Income_After_Taxes" ColumnName="Normalized_Income_After_Taxes" />
+          <ScalarProperty Name="Normalized_Income_Avail_to_Common" ColumnName="Normalized_Income_Avail_to_Common" />
+          <ScalarProperty Name="Basic_Normalized_EPS" ColumnName="Basic_Normalized_EPS" />
+          <ScalarProperty Name="Diluted_Normalized_EPS" ColumnName="Diluted_Normalized_EPS" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StatementOfCashFlows">
+      <EntityTypeMapping TypeName="StockPortfolioModel.StatementOfCashFlow">
+        <MappingFragment StoreEntitySet="StatementOfCashFlow">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Annual" ColumnName="Annual" />
+          <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+          <ScalarProperty Name="Net_Income_and_Starting_Line" ColumnName="Net_Income_and_Starting_Line" />
+          <ScalarProperty Name="Depreciation_and_Depletion" ColumnName="Depreciation_and_Depletion" />
+          <ScalarProperty Name="Amortization" ColumnName="Amortization" />
+          <ScalarProperty Name="Deferred_Taxes" ColumnName="Deferred_Taxes" />
+          <ScalarProperty Name="NonCash_Items" ColumnName="NonCash_Items" />
+          <ScalarProperty Name="Changes_in_Working_Capital" ColumnName="Changes_in_Working_Capital" />
+          <ScalarProperty Name="Cash_from_Operating_Activities" ColumnName="Cash_from_Operating_Activities" />
+          <ScalarProperty Name="Capital_Expenditures" ColumnName="Capital_Expenditures" />
+          <ScalarProperty Name="Other_Investing_Cash_Flow_Items__Total" ColumnName="Other_Investing_Cash_Flow_Items__Total" />
+          <ScalarProperty Name="Cash_from_Investing_Activities" ColumnName="Cash_from_Investing_Activities" />
+          <ScalarProperty Name="Financing_Cash_Flow_Items" ColumnName="Financing_Cash_Flow_Items" />
+          <ScalarProperty Name="Total_Cash_Dividends_Paid" ColumnName="Total_Cash_Dividends_Paid" />
+          <ScalarProperty Name="Issuance__Retirement__of_Stock__Net" ColumnName="Issuance__Retirement__of_Stock__Net" />
+          <ScalarProperty Name="Issuance__Retirement__of_Debt__Net" ColumnName="Issuance__Retirement__of_Debt__Net" />
+          <ScalarProperty Name="Cash_from_Financing_Activities" ColumnName="Cash_from_Financing_Activities" />
+          <ScalarProperty Name="Foreign_Exchange_Effects" ColumnName="Foreign_Exchange_Effects" />
+          <ScalarProperty Name="Net_Change_in_Cash" ColumnName="Net_Change_in_Cash" />
+          <ScalarProperty Name="Cash_Interest_Paid__Supplemental" ColumnName="Cash_Interest_Paid__Supplemental" />
+          <ScalarProperty Name="Cash_Taxes_Paid__Supplemental" ColumnName="Cash_Taxes_Paid__Supplemental" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InfoIndustries">
+      <EntityTypeMapping TypeName="StockPortfolioModel.InfoIndustry">
+        <MappingFragment StoreEntitySet="InfoIndustry">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InfoLists">
+      <EntityTypeMapping TypeName="StockPortfolioModel.InfoList">
+        <MappingFragment StoreEntitySet="InfoList">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InfoSectors">
+      <EntityTypeMapping TypeName="StockPortfolioModel.InfoSector">
+        <MappingFragment StoreEntitySet="InfoSector">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="LinksExchange" TypeName="StockPortfolioModel.LinksExchange" StoreEntitySet="LinksExchange">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="InfoExchange">
+        <ScalarProperty Name="ID" ColumnName="ExchangeID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CompanyBalanceSheet" TypeName="StockPortfolioModel.CompanyBalanceSheet" StoreEntitySet="CompanyBalanceSheet">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="BalanceSheet">
+        <ScalarProperty Name="ID" ColumnName="StatementID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CompanyCashFlowStatement" TypeName="StockPortfolioModel.CompanyCashFlowStatement" StoreEntitySet="CompanyCashFlowStatement">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="StatementOfCashFlow">
+        <ScalarProperty Name="ID" ColumnName="StatementID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CompanyIncomeStatement" TypeName="StockPortfolioModel.CompanyIncomeStatement" StoreEntitySet="CompanyIncomeStatement">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="IncomeStatement">
+        <ScalarProperty Name="ID" ColumnName="StatementID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="Links" TypeName="StockPortfolioModel.Links" StoreEntitySet="Links">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="InfoIndustry">
+        <ScalarProperty Name="ID" ColumnName="IndustryID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LinksList" TypeName="StockPortfolioModel.LinksList" StoreEntitySet="LinksList">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="InfoList">
+        <ScalarProperty Name="ID" ColumnName="ListID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LinksSector" TypeName="StockPortfolioModel.LinksSector" StoreEntitySet="LinksSector">
+      <EndProperty Name="InfoCompany">
+        <ScalarProperty Name="ID" ColumnName="CompanyID" />
+      </EndProperty>
+      <EndProperty Name="InfoSector">
+        <ScalarProperty Name="ID" ColumnName="SectorID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

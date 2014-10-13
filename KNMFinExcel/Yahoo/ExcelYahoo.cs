@@ -8,9 +8,53 @@ using KNMFin.Yahoo.HistoricalQuotes;
 using KNMFin.Yahoo.Aggregates;
 namespace KNMFinExcel.Yahoo
 {
-    
+
     public static class ExcelYahoo
     {
+
+        public static void GetCompanyInfo( string fileName, IList<AggregateResult> results )
+        {
+            System.IO.FileInfo fi = new System.IO.FileInfo( fileName );
+            pck = new ExcelPackage( fi );
+            var ws = pck.Workbook.Worksheets.Add( "Companies" );
+
+            ws.Cells [ "A1" ].Value = "Description";
+            ws.Cells [ "B1" ].Value = "Market Cap";
+            ws.Cells [ "C1" ].Value = "Sector";
+            ws.Cells [ "D1" ].Value = "Industry";
+            int j = 2;
+
+
+
+            foreach ( AggregateResult ag in results )
+            {
+                if ( ag.Companies != null )
+                {
+                    foreach ( Result r in ag.Companies )
+                    {
+                        ws.Cells [ j, 1 ].Value = r.Name;
+                        ws.Cells [ j, 2 ].Value = r.Values.Where( i => i.Key == AggregateProperty.MarketCap ).FirstOrDefault( ).Value;
+                        ws.Cells [ j, 2 ].Style.Numberformat.Format = "\"$\"#,##0;";
+                        ws.Cells [ j, 3 ].Value = ag.Sector.Name;
+                        ws.Cells [ j, 4 ].Value = ag.Industry.Name;
+                        j++;
+
+                    }
+                }
+                else
+                {
+                    var wut = ag;
+                    var one = 1;
+                }
+
+            }
+            pck.Save( );
+            pck = null;
+        }
+
+
+
+
 
         public static void SaveToExcel( string fileName, IList<AggregateResult> agrs )
         {
@@ -27,6 +71,7 @@ namespace KNMFinExcel.Yahoo
 
         static void CreateIndustryResultTab( AggregateResult agr )
         {
+            if ( agr.CompanyNames == null || agr.CompanyNames.Count == 0 ) return;
             var ws = pck.Workbook.Worksheets.Add( agr.Industry.Name );
             ws.Cells [ "A1" ].Value = "Description";
             ws.Cells [ "B1" ].Value = "1-Day Price Chg %";
@@ -45,8 +90,8 @@ namespace KNMFinExcel.Yahoo
                 ws.Cells [ j, 1 ].Value = r.Name;
                 foreach ( KeyValuePair<AggregateProperty, double?> kvp in r.Values )
                 {
-                    
-                    if ( kvp.Key == AggregateProperty.OneDayPriceChange)
+
+                    if ( kvp.Key == AggregateProperty.OneDayPriceChange )
                     {
                         ws.Cells [ j, 3 ].Value = kvp.Value;
                         ws.Cells [ j, 3 ].Style.Numberformat.Format = "#0\\.00%";
@@ -64,7 +109,7 @@ namespace KNMFinExcel.Yahoo
                         {
                             ws.Cells [ j, 3 ].Value = "-";
                         }
-                        
+
 
                     }
                     if ( kvp.Key == AggregateProperty.PriceOverEarnings )
@@ -77,7 +122,8 @@ namespace KNMFinExcel.Yahoo
                     }
                     if ( kvp.Key == AggregateProperty.ReturnOnEquity )
                     {
-                        if(kvp.Value != null){
+                        if ( kvp.Value != null )
+                        {
                             ws.Cells [ j, 5 ].Value = kvp.Value;
                             ws.Cells [ j, 5 ].Style.Numberformat.Format = "#0\\.00%";
                         }
@@ -95,18 +141,18 @@ namespace KNMFinExcel.Yahoo
                             ws.Cells [ j, 6 ].Value = "-";
 
                     }
-                    if ( kvp.Key == AggregateProperty.DebtToEquity)
+                    if ( kvp.Key == AggregateProperty.DebtToEquity )
                     {
-                        if(kvp.Value != null)
-                            ws.Cells [j, 7 ].Value = kvp.Value;
+                        if ( kvp.Value != null )
+                            ws.Cells [ j, 7 ].Value = kvp.Value;
                         else
                             ws.Cells [ j, 7 ].Value = "-";
 
                     }
                     if ( kvp.Key == AggregateProperty.PriceToBook )
                     {
-                        if(kvp.Value != null)
-                            ws.Cells [ j, 8].Value = kvp.Value;
+                        if ( kvp.Value != null )
+                            ws.Cells [ j, 8 ].Value = kvp.Value;
                         else
                             ws.Cells [ j, 8 ].Value = "-";
 
@@ -118,13 +164,13 @@ namespace KNMFinExcel.Yahoo
                             ws.Cells [ j, 9 ].Value = kvp.Value;
                             ws.Cells [ j, 9 ].Style.Numberformat.Format = "#0\\.00%";
                         }
-                            ws.Cells [ j, 9 ].Value = "-";
+                        ws.Cells [ j, 9 ].Value = "-";
 
                     }
 
-                    if ( kvp.Key == AggregateProperty.PriceToFreeCashFlow)
+                    if ( kvp.Key == AggregateProperty.PriceToFreeCashFlow )
                     {
-                        if(kvp.Value != null)
+                        if ( kvp.Value != null )
                             ws.Cells [ j, 10 ].Value = kvp.Value;
                         else
                             ws.Cells [ j, 10 ].Value = "-";
@@ -150,19 +196,21 @@ namespace KNMFinExcel.Yahoo
             pck = null;
         }
 
-        public static void SaveMarketQuotes(string fileName, Dictionary<string, Dictionary<string, string>> RawParsedData, bool OrderQuoteProperties = false) {
+        public static void SaveMarketQuotes( string fileName, Dictionary<string, Dictionary<string, string>> RawParsedData, bool OrderQuoteProperties = false )
+        {
             if ( System.IO.File.Exists( fileName ) )
-                fileName += DateTime.Now.Minute.ToString( ) + DateTime.Now.Second.ToString( ) + DateTime.Now.Millisecond.ToString();
-            var fi = new System.IO.FileInfo(fileName);
-            pck = new ExcelPackage(fi);
-            var ws = pck.Workbook.Worksheets.Add("Results");
-            
-            var headers = RawParsedData.Values.FirstOrDefault().Keys;
+                fileName += DateTime.Now.Minute.ToString( ) + DateTime.Now.Second.ToString( ) + DateTime.Now.Millisecond.ToString( );
+            var fi = new System.IO.FileInfo( fileName );
+            pck = new ExcelPackage( fi );
+            var ws = pck.Workbook.Worksheets.Add( "Results" );
+
+            var headers = RawParsedData.Values.FirstOrDefault( ).Keys;
             int i = 2, j = 2;
-            foreach(string s in headers){
-                ws.Cells[1, i++ ].Value = s;
+            foreach ( string s in headers )
+            {
+                ws.Cells [ 1, i++ ].Value = s;
             }
-            
+
             i = 2;
             if ( OrderQuoteProperties == false )
             {
@@ -198,7 +246,7 @@ namespace KNMFinExcel.Yahoo
                 }
 
             }
-            
+
 
             pck.Save( );
             pck = null;
@@ -207,14 +255,15 @@ namespace KNMFinExcel.Yahoo
 
         public static void SaveToExcel( string fileName, Dictionary<string, KNMFin.Yahoo.CompanyQuote.MarketData> data )
         {
-            if ( System.IO.File.Exists( fileName ) ){
-                fileName.Remove(fileName.Length-5);
+            if ( System.IO.File.Exists( fileName ) )
+            {
+                fileName.Remove( fileName.Length - 5 );
                 fileName = "dupe_" + fileName;
             }
 
             System.IO.FileInfo fi = new System.IO.FileInfo( fileName );
             pck = new ExcelPackage( fi );
-            var ws = pck.Workbook.Worksheets.Add("Results");
+            var ws = pck.Workbook.Worksheets.Add( "Results" );
             var headers = data.Values.FirstOrDefault( ).Items.Select( k => k.GetDescription( ) ).ToArray<string>( );
             int i = 2, j = 2;
             foreach ( string s in headers )
@@ -223,31 +272,31 @@ namespace KNMFinExcel.Yahoo
             }
 
             i = 2;
-                foreach ( KeyValuePair<string, KNMFin.Yahoo.CompanyQuote.MarketData> vals in data)
+            foreach ( KeyValuePair<string, KNMFin.Yahoo.CompanyQuote.MarketData> vals in data )
+            {
+
+                ws.Cells [ j, 1 ].Value = vals.Key;
+                var d = vals.Value;
+                var md = vals.Value;
+                foreach ( KNMFin.Yahoo.CompanyQuote.MarketDataItem mdi in md.Items )
                 {
 
-                    ws.Cells [ j, 1 ].Value = vals.Key;
-                    var d = vals.Value;
-                    var md = vals.Value;
-                    foreach ( KNMFin.Yahoo.CompanyQuote.MarketDataItem mdi in md.Items)
+
+                    if ( mdi.Type == KNMFin.Yahoo.Quotes.ResultType.Date )
                     {
-
-
-                        if ( mdi.Type == KNMFin.Yahoo.Quotes.ResultType.Date )
-                        {
-                            ws.Cells [ j, i ].Style.Numberformat.Format = "mm-dd-yy";
-                        }
-                        if ( mdi.Type == KNMFin.Yahoo.Quotes.ResultType.TruncuatedCurrency )
-                        {
-                            ws.Cells [ j, i ].Style.Numberformat.Format = "\"$\"#,##0;";
-                        }
-
-                        ws.Cells [ j, i ].Value = mdi.ActualData( ) != null ? mdi.ActualData( ) : "-";
-                        i++;
+                        ws.Cells [ j, i ].Style.Numberformat.Format = "mm-dd-yy";
                     }
-                    i = 2;
-                    j++;
+                    if ( mdi.Type == KNMFin.Yahoo.Quotes.ResultType.TruncuatedCurrency )
+                    {
+                        ws.Cells [ j, i ].Style.Numberformat.Format = "\"$\"#,##0;";
+                    }
+
+                    ws.Cells [ j, i ].Value = mdi.ActualData( ) != null ? mdi.ActualData( ) : "-";
+                    i++;
                 }
+                i = 2;
+                j++;
+            }
 
 
 
@@ -261,7 +310,7 @@ namespace KNMFinExcel.Yahoo
             if ( spr.Results == false ) return;
 
             string ticker = spr.Ticker.ToUpper( );
-            
+
             var ws = pck.Workbook.Worksheets.Add( ticker );
             ws.Cells [ "A1" ].Value = "Date";
             ws.Cells [ "B1" ].Value = "Open";
@@ -284,7 +333,7 @@ namespace KNMFinExcel.Yahoo
                 ws.Cells [ rowNumber, 7 ].Value = row.AdjClose;
                 rowNumber++;
             }
-            
+
         }
         static ExcelPackage pck;
     }

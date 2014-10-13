@@ -1,0 +1,13 @@
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\LookupTickers.exe.config
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\obj\Debug\LookupTickers.csprojResolveAssemblyReference.cache
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\LookupTickers.exe
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\LookupTickers.pdb
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\HtmlAgilityPack.dll
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\HtmlAgilityPack.pdb
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\HtmlAgilityPack.xml
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\obj\Debug\LookupTickers.exe
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\obj\Debug\LookupTickers.pdb
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\EntityFramework.dll
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\EntityFramework.SqlServer.dll
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\EntityFramework.xml
+c:\users\knm\documents\visual studio 2013\Projects\LookupTickers\LookupTickers\bin\Debug\EntityFramework.SqlServer.xml

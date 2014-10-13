@@ -1,0 +1,26 @@
+﻿CREATE TABLE [FS].[StatementOfCashFlow] (
+    [ID]                                     INT             IDENTITY (1, 1) NOT NULL,
+    [Annual]                                 BIT             NOT NULL,
+    [PeriodEnd]                              DATE            NOT NULL,
+    [Net_Income_and_Starting_Line]           DECIMAL (20, 2) NULL,
+    [Depreciation_and_Depletion]             DECIMAL (20, 2) NULL,
+    [Amortization]                           DECIMAL (20, 2) NULL,
+    [Deferred_Taxes]                         DECIMAL (20, 2) NULL,
+    [NonCash_Items]                          DECIMAL (20, 2) NULL,
+    [Changes_in_Working_Capital]             DECIMAL (20, 2) NULL,
+    [Cash_from_Operating_Activities]         DECIMAL (20, 2) NULL,
+    [Capital_Expenditures]                   DECIMAL (20, 2) NULL,
+    [Other_Investing_Cash_Flow_Items__Total] DECIMAL (20, 2) NULL,
+    [Cash_from_Investing_Activities]         DECIMAL (20, 2) NULL,
+    [Financing_Cash_Flow_Items]              DECIMAL (20, 2) NULL,
+    [Total_Cash_Dividends_Paid]              DECIMAL (20, 2) NULL,
+    [Issuance__Retirement__of_Stock__Net]    DECIMAL (20, 2) NULL,
+    [Issuance__Retirement__of_Debt__Net]     DECIMAL (20, 2) NULL,
+    [Cash_from_Financing_Activities]         DECIMAL (20, 2) NULL,
+    [Foreign_Exchange_Effects]               DECIMAL (20, 2) NULL,
+    [Net_Change_in_Cash]                     DECIMAL (20, 2) NULL,
+    [Cash_Interest_Paid__Supplemental]       DECIMAL (20, 2) NULL,
+    [Cash_Taxes_Paid__Supplemental]          DECIMAL (20, 2) NULL,
+    PRIMARY KEY CLUSTERED ([ID] ASC)
+);
+

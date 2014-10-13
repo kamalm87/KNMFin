@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="02ad66f72c9b406daed3d42dbdcbac48" Name="Diagram1">
+        <EntityTypeShape EntityType="StockPortfolioModel.Address" Width="1.5" PointX="3" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.FinancialSnapshot" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.InfoCompany" Width="1.5" PointX="0.75" PointY="20.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.KeyAccountingStat" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.InfoExchange" Width="1.5" PointX="3" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.BalanceSheet" Width="1.5" PointX="3" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.IncomeStatement" Width="1.5" PointX="3" PointY="29.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.StatementOfCashFlow" Width="1.5" PointX="3" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.InfoIndustry" Width="1.5" PointX="3" PointY="27.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.InfoList" Width="1.5" PointX="3" PointY="38" IsExpanded="true" />
+        <EntityTypeShape EntityType="StockPortfolioModel.InfoSector" Width="1.5" PointX="3" PointY="39.875" IsExpanded="true" />
+        <AssociationConnector Association="StockPortfolioModel.FK__Address__Company__58D1301D" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.FK__Financial__Compa__5BAD9CC8" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.FK__KeyAccoun__Compa__0E04126B" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.LinksExchange" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.CompanyBalanceSheet" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.CompanyCashFlowStatement" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.CompanyIncomeStatement" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.Links" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.LinksList" ManuallyRouted="false" />
+        <AssociationConnector Association="StockPortfolioModel.LinksSector" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
